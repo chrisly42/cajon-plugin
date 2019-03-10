@@ -1,0 +1,29 @@
+<idea-plugin>
+    <id>de.platon42.cajon</id>
+    <name>Concise AssertJ Optimizing Nitpicker (Cajon)</name>
+    <vendor email="chrisly@platon42.de" url="http://platon42.de">Platon Computer Products</vendor>
+
+    <description><![CDATA[
+    This plugin will add inspections and quick fixes to fully make use of the AssertJ methods
+    to make the intention clear and concise.
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="182.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection groupPath="Java" shortName="AssertThatObjectIsNull" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatObjectIsNullInspection"/>
+        <localInspection groupPath="Java" shortName="AssertThatObjectIsNotNull" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatObjectIsNotNullInspection"/>
+    </extensions>
+
+    <actions>
+    </actions>
+</idea-plugin>
