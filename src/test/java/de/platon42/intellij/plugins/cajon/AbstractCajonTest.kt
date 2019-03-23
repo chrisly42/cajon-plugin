@@ -59,8 +59,8 @@ abstract class AbstractCajonTest {
         }
     }
 
-    protected fun executeQuickFixes(myFixture: JavaCodeInsightTestFixture, expectedFixes: Int) {
-        val quickfixes = myFixture.getAllQuickFixes()
+    protected fun executeQuickFixes(myFixture: JavaCodeInsightTestFixture, regex: Regex, expectedFixes: Int) {
+        val quickfixes = myFixture.getAllQuickFixes().filter { it.familyName.matches(regex) }
         assertThat(quickfixes).hasSize(expectedFixes)
         quickfixes.forEach(myFixture::launchAction)
     }

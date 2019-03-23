@@ -1,28 +1,10 @@
-package de.platon42.intellij.playground;
-
-import java.util.ArrayList;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Playground {
-
-    private void sizeOfList() {
-        assertThat(new ArrayList<>().size()).isEqualTo(1);
-    }
-
-    private void sizeOfArray() {
-        assertThat(new String[1].length).isLessThanOrEqualTo(1);
-        assertThat(new String[1]).hasSameSizeAs(new Object());
-        assertThat("").isEqualTo(null);
-        assertThat(true).isTrue();
-        assertThat(true).isEqualTo(true);
-        assertThat(Boolean.TRUE).isEqualTo(Boolean.FALSE);
-        assertThat(Boolean.TRUE).isEqualTo(true);
-    }
+public class BooleanIsTrueOrFalse {
 
     private void booleanIsTrueOrFalse() {
         boolean primitive = false;
-        Boolean object = java.lang.Boolean.TRUE;
+        Boolean object = Boolean.TRUE;
 
         assertThat(primitive).isEqualTo(Boolean.TRUE);
         assertThat(primitive).isEqualTo(Boolean.FALSE);
@@ -47,5 +29,4 @@ public class Playground {
 
         assertThat("").isEqualTo(Boolean.TRUE);
     }
-
 }

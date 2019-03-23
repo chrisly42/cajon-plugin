@@ -19,12 +19,12 @@ This makes finding bugs and fixing failed tests easier.
 - AssertThatObjectIsNotNull
   > from: assertThat(object).isNotEqualTo(null);
   >   to: assertThat(object).isNotNull();
-
-## TODO
 - AssertThatBooleanIsTrueOrFalse
   > from: assertThat(booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);
   >   to: assertThat(booleanValue).isTrue()/isFalse();
-- AssertThatStringEmpty
+
+## TODO
+- AssertThatStringIsEmpty
   > from: assertThat(string).isEqualTo("")
   >   to: assertThat(string).isEmpty();
 - AssertThatArrayHasLiteralSize

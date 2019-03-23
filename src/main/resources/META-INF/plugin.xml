@@ -22,6 +22,9 @@
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatObjectIsNullInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatObjectIsNotNull" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatObjectIsNotNullInspection"/>
+        <localInspection groupPath="Java" shortName="AssertThatBooleanIsTrueOrFalse" enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBooleanIsTrueOrFalseInspection"/>
     </extensions>
 
     <actions>

@@ -13,7 +13,7 @@ class AssertThatObjectIsNotNullInspection : AbstractAssertJInspection() {
 
     companion object {
         @NonNls
-        private val DISPLAY_NAME = "Comparing to non-null"
+        private val DISPLAY_NAME = "Asserting non-null"
 
         @NonNls
         private val INSPECTION_MESSAGE = "isNotEqualTo(null) can be simplified to isNotNull()"

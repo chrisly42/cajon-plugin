@@ -14,7 +14,7 @@ internal class AssertThatObjectIsNotNullInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatObjectIsNotNullInspection::class.java)
             myFixture.configureByFile("ObjectIsNotNullBefore.java")
-            executeQuickFixes(myFixture, 3)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo(null) with isNotNull()"), 3)
             myFixture.checkResultByFile("ObjectIsNotNullAfter.java")
         }
     }
