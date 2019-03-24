@@ -14,7 +14,7 @@ internal class AssertThatStringIsEmptyInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatStringIsEmptyInspection::class.java)
             myFixture.configureByFile("StringIsEmptyBefore.java")
-            executeQuickFixes(myFixture, Regex("Replace is.*"), 1)
+            executeQuickFixes(myFixture, Regex("Replace .*"), 4)
             myFixture.checkResultByFile("StringIsEmptyAfter.java")
         }
     }

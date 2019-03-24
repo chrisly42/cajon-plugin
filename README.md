@@ -36,8 +36,9 @@ Then AssertJ would tell you the contents of the collection on failure.
   > from: assertThat(booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);
   >   to: assertThat(booleanValue).isTrue()/isFalse();
 - AssertThatStringIsEmpty
-  > from: assertThat(string).isEqualTo("")
-  >   to: assertThat(string).isEmpty();
+  > from: assertThat(charSequence/string).isEqualTo("");
+  > from: assertThat(charSequence/string).hasSize(0);
+  >   to: assertThat(charSequence/string).isEmpty();
 
 ## TODO
 - AssertThatArrayHasLiteralSize

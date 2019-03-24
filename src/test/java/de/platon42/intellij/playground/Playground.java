@@ -1,7 +1,5 @@
 package de.platon42.intellij.playground;
 
-import org.assertj.core.api.AbstractStringAssert;
-
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,8 +50,8 @@ public class Playground {
 
     private void stringIsEmpty() {
         String foo = "bar";
-        AbstractStringAssert<?> abstractStringAssert = assertThat(foo);
-        abstractStringAssert.isEqualTo("");
+        assertThat(foo).isEqualTo("");
+        assertThat(foo).hasSize(0);
     }
 
 }
