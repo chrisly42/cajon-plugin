@@ -9,6 +9,7 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
     companion object {
         const val ABSTRACT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractAssert"
         const val ABSTRACT_BOOLEAN_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractBooleanAssert"
+        const val ABSTRACT_STRING_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractStringAssert"
         const val IS_EQUAL_TO = "isEqualTo"
         const val IS_NOT_EQUAL_TO = "isNotEqualTo"
 

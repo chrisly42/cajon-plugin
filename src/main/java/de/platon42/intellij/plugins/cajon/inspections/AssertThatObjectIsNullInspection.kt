@@ -1,12 +1,13 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
-import com.intellij.codeInspection.LocalQuickFix
-import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.*
+import com.intellij.psi.JavaElementVisitor
+import com.intellij.psi.PsiElementVisitor
+import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.PsiType
+import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSimpleMethodCallQuickFix
 import org.jetbrains.annotations.NonNls
 
 class AssertThatObjectIsNullInspection : AbstractAssertJInspection() {
@@ -38,25 +39,10 @@ class AssertThatObjectIsNullInspection : AbstractAssertJInspection() {
                         INSPECTION_MESSAGE,
                         ProblemHighlightType.INFORMATION,
                         null as TextRange?,
-                        ReplaceWithIsNullQuickFix()
+                        ReplaceSimpleMethodCallQuickFix(QUICKFIX_DESCRIPTION, "isNull()")
                     )
                 }
             }
-        }
-    }
-
-    private class ReplaceWithIsNullQuickFix : LocalQuickFix {
-        override fun getFamilyName() = QUICKFIX_DESCRIPTION
-
-        override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
-            val element = descriptor.startElement
-            val factory = JavaPsiFacade.getElementFactory(element.project)
-            val methodCallExpression = element as? PsiMethodCallExpression ?: return
-            val oldQualifier = methodCallExpression.methodExpression.qualifierExpression ?: return
-            val isNullExpression =
-                factory.createExpressionFromText("a.isNull()", null) as PsiMethodCallExpression
-            isNullExpression.methodExpression.qualifierExpression!!.replace(oldQualifier)
-            element.replace(isNullExpression)
         }
     }
 }

@@ -1,13 +1,11 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
-import com.intellij.codeInspection.LocalQuickFix
-import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.util.TypeConversionUtil
+import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSimpleMethodCallQuickFix
 import org.jetbrains.annotations.NonNls
 
 class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
@@ -63,34 +61,17 @@ class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
                     }
                 }
                 val expectedResult = result as? Boolean ?: return
+                val description =
+                    if (flippedBooleanTest) QUICKFIX_DESCRIPTION_NOT_IS_TRUE else QUICKFIX_DESCRIPTION_IS_TRUE
+                val replacementMethod = if (expectedResult xor flippedBooleanTest) "isTrue()" else "isFalse()"
                 holder.registerProblem(
                     expression,
                     INSPECTION_MESSAGE,
                     ProblemHighlightType.INFORMATION,
                     null as TextRange?,
-                    ReplaceWithIsNullQuickFix(
-                        expectedResult xor flippedBooleanTest,
-                        if (flippedBooleanTest) QUICKFIX_DESCRIPTION_NOT_IS_TRUE else QUICKFIX_DESCRIPTION_IS_TRUE
-                    )
+                    ReplaceSimpleMethodCallQuickFix(description, replacementMethod)
                 )
             }
-        }
-    }
-
-
-    private class ReplaceWithIsNullQuickFix(val expectedResult: Boolean, val quickfixName: String) : LocalQuickFix {
-        override fun getFamilyName() = quickfixName
-
-        override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
-            val element = descriptor.startElement
-            val factory = JavaPsiFacade.getElementFactory(element.project)
-            val methodCallExpression = element as? PsiMethodCallExpression ?: return
-            val oldQualifier = methodCallExpression.methodExpression.qualifierExpression ?: return
-            val methodName = if (expectedResult) "isTrue()" else "isFalse()"
-            val isNullExpression =
-                factory.createExpressionFromText("a.$methodName", null) as PsiMethodCallExpression
-            isNullExpression.methodExpression.qualifierExpression!!.replace(oldQualifier)
-            element.replace(isNullExpression)
         }
     }
 }

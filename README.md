@@ -4,12 +4,25 @@ Cajon is an IntelliJ Plugin for shortening and optimizing AssertJ assertions.
 
 ## Why?
 
-First, code is easier to read, when is concise and reflects the intention clearly.
-AssertJ has plenty of different convenience methods that make describing the various intentions.
+First, code is easier to read, when it is concise and reflects the intention clearly.
+AssertJ has plenty of different convenience methods that describing various intentions precisely.
 Why write longer, more complex code that can be expressed in brevity?
 
 Second, AssertJ is able to output more meaningful descriptions when an assertion fails.
-This makes finding bugs and fixing failed tests easier.
+This makes finding bugs and fixing failed tests more efficient.
+
+For example:
+
+> assertThat(collection.size()).isEqualTo(5);
+
+If the collection has more or less than 5 elements, the assertion will fail, but will not
+tell you about the contents, making it hard to guess what went wrong.
+
+Instead, if you wrote the same assertion the following way:
+
+> assertThat(collection).hasSize(5);
+
+Then AssertJ would tell you the contents of the collection on failure.
 
 ## Implemented
 
@@ -22,11 +35,11 @@ This makes finding bugs and fixing failed tests easier.
 - AssertThatBooleanIsTrueOrFalse
   > from: assertThat(booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);
   >   to: assertThat(booleanValue).isTrue()/isFalse();
-
-## TODO
 - AssertThatStringIsEmpty
   > from: assertThat(string).isEqualTo("")
   >   to: assertThat(string).isEmpty();
+
+## TODO
 - AssertThatArrayHasLiteralSize
   > from: assertThat(array.length).isEqualTo(literal);  literal > 0
   >   to: assertThat(array).hasSize(literal);
@@ -62,3 +75,6 @@ This makes finding bugs and fixing failed tests easier.
   > from: assertThat(iterable.size()).isLessThan(1);
   > from: assertThat(iterable).hasSize(0);
   >   to: assertThat(iterable).isEmpty();
+- JUnit Assertion to AssertJ
+
+- AssertThatGuavaOptionalContains
