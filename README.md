@@ -39,6 +39,9 @@ Then AssertJ would tell you the contents of the collection on failure.
   > from: assertThat(charSequence/string).isEqualTo("");
   > from: assertThat(charSequence/string).hasSize(0);
   >   to: assertThat(charSequence/string).isEmpty();
+- AssertThatEnumerableIsEmpty
+  > from: assertThat(enumerable).hasSize(0);
+  >   to: assertThat(charSequence/string).isEmpty();
 
 ## TODO
 - AssertThatArrayHasLiteralSize

@@ -31,22 +31,21 @@ class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
                     return
                 }
 
-                val equalToExpression = expression.argumentList.expressions[0]!!
+                val equalToExpression = expression.argumentList.expressions[0] ?: return
                 if (!TypeConversionUtil.isBooleanType(equalToExpression.type)) {
                     return
                 }
-                val constantEvaluationHelper = JavaPsiFacade.getInstance(holder.project).constantEvaluationHelper
-                var result = constantEvaluationHelper.computeConstantExpression(equalToExpression)
-                if (result == null) {
+                var value = calculateConstantParameterValue(expression, 0)
+                if (value == null) {
                     val field = (equalToExpression as? PsiReferenceExpression)?.resolve() as? PsiField
                     if (field?.containingClass?.qualifiedName == CommonClassNames.JAVA_LANG_BOOLEAN) {
                         when {
-                            field.name == "TRUE" -> result = true
-                            field.name == "FALSE" -> result = false
+                            field.name == "TRUE" -> value = true
+                            field.name == "FALSE" -> value = false
                         }
                     }
                 }
-                val expectedResult = result as? Boolean ?: return
+                val expectedResult = value as? Boolean ?: return
 
                 val replacementMethod = if (expectedResult xor flippedBooleanTest) "isTrue()" else "isFalse()"
                 registerSimplifyMethod(holder, expression, replacementMethod)

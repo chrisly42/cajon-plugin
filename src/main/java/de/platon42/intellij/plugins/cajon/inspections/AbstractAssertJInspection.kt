@@ -27,19 +27,22 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         const val ABSTRACT_BOOLEAN_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractBooleanAssert"
         const val ABSTRACT_STRING_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractStringAssert"
         const val ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractCharSequenceAssert"
-        const val IS_EQUAL_TO = "isEqualTo"
-        const val IS_NOT_EQUAL_TO = "isNotEqualTo"
-        const val HAS_SIZE = "hasSize"
+        const val ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.EnumerableAssert"
 
-        val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_EQUAL_TO)
+        const val IS_EQUAL_TO_METHOD = "isEqualTo"
+        const val IS_NOT_EQUAL_TO_METHOD = "isNotEqualTo"
+        const val HAS_SIZE_METHOD = "hasSize"
+
+        val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
-        val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_NOT_EQUAL_TO)
+        val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_NOT_EQUAL_TO_METHOD)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
-        val IS_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_EQUAL_TO)
+        val IS_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
             .parameterTypes("boolean")!!
-        val IS_NOT_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_NOT_EQUAL_TO)
-            .parameterTypes("boolean")!!
-        val CHAR_SEQUENCE_HAS_SIZE = CallMatcher.instanceCall(ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME, HAS_SIZE)
+        val IS_NOT_EQUAL_TO_BOOLEAN =
+            CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_NOT_EQUAL_TO_METHOD)
+                .parameterTypes("boolean")!!
+        val HAS_SIZE = CallMatcher.instanceCall(ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME, HAS_SIZE_METHOD)
             .parameterTypes("int")!!
     }
 
@@ -76,5 +79,11 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
             null as TextRange?,
             ReplaceSimpleMethodCallQuickFix(description, replacementMethod)
         )
+    }
+
+    protected fun calculateConstantParameterValue(expression: PsiMethodCallExpression, argIndex: Int): Any? {
+        val valueExpression = expression.argumentList.expressions[argIndex] ?: return null
+        val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
+        return constantEvaluationHelper.computeConstantExpression(valueExpression)
     }
 }

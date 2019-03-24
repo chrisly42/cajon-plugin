@@ -1,12 +1,26 @@
 package de.platon42.intellij.playground;
 
+import org.assertj.core.api.ListAssert;
+
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
 public class Playground {
 
     private void sizeOfList() {
+        assertThat("string").as("foo").hasSize(0);
+        assertThat(new StringBuilder()).as("bar").hasSize(0);
+        ListAssert<String> etc = assertThat(new ArrayList<String>()).as("etc");
+        etc.hasSize(0);
+        assertThat(new Long[1]).as("etc").hasSize(0);
+
+        assertThat("string").as("foo").isEmpty();
+        assertThat(new StringBuilder()).as("bar").isEmpty();
+        assertThat(new ArrayList<Long>()).as("etc").isEmpty();
+        assertThat(new Long[1]).as("etc").isEmpty();
+
         assertThat(new ArrayList<>().size()).isEqualTo(1);
     }
 
@@ -52,6 +66,17 @@ public class Playground {
         String foo = "bar";
         assertThat(foo).isEqualTo("");
         assertThat(foo).hasSize(0);
+    }
+
+    private void junitAssertions() {
+        assertTrue(true);
+        assertTrue("message", true);
+        assertFalse(true);
+        assertFalse("message", true);
+        assertEquals(1L, 2L);
+        assertEquals("message", 1L, 2L);
+        assertNotEquals(1L, 2L);
+        assertNotEquals("message", 1L, 2L);
     }
 
 }
