@@ -33,6 +33,10 @@ class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
                     return
                 }
 
+                if (!checkAssertedType(expression, ABSTRACT_STRING_ASSERT_CLASSNAME)) {
+                    return
+                }
+
                 val psiExpression = expression.argumentList.expressions[0] as? PsiLiteralExpression ?: return
 
                 if (psiExpression.value == "") {
@@ -47,5 +51,4 @@ class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
             }
         }
     }
-
 }

@@ -2,6 +2,8 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool
 import com.intellij.psi.CommonClassNames
+import com.intellij.psi.PsiCapturedWildcardType
+import com.intellij.psi.PsiMethodCallExpression
 import com.siyeh.ig.callMatcher.CallMatcher
 
 open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
@@ -25,5 +27,13 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
 
     override fun getGroupDisplayName(): String {
         return "AssertJ"
+    }
+
+    protected fun checkAssertedType(expression: PsiMethodCallExpression, prefix: String): Boolean {
+        var assertedType = expression.methodExpression.qualifierExpression?.type
+        if (assertedType is PsiCapturedWildcardType) {
+            assertedType = assertedType.upperBound
+        }
+        return assertedType?.canonicalText?.startsWith(prefix) ?: false
     }
 }

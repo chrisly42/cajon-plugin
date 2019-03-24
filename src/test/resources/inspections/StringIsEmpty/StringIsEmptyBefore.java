@@ -6,6 +6,7 @@ public class StringIsEmpty {
         String string = "string";
 
         assertThat(string).isEqualTo("foo");
-        assertThat(string).isEqualTo("");
+        assertThat(string).as("foo").isEqualTo("");
+        assertThat(new Object()).isEqualTo("");
     }
 }

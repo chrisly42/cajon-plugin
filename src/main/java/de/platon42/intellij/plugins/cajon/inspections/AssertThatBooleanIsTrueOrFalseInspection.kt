@@ -39,14 +39,12 @@ class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
                 if (!(normalBooleanTest || flippedBooleanTest)) {
                     return
                 }
-                var assertedType = expression.methodExpression.qualifierExpression?.type
-                if (assertedType is PsiCapturedWildcardType) {
-                    assertedType = assertedType.upperBound
+                if (!checkAssertedType(expression, ABSTRACT_BOOLEAN_ASSERT_CLASSNAME)) {
+                    return
                 }
-                val assertedTypeIsBoolean =
-                    assertedType?.canonicalText?.startsWith(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME) ?: false
+
                 val equalToExpression = expression.argumentList.expressions[0]!!
-                if (!TypeConversionUtil.isBooleanType(equalToExpression.type) || !assertedTypeIsBoolean) {
+                if (!TypeConversionUtil.isBooleanType(equalToExpression.type)) {
                     return
                 }
                 val constantEvaluationHelper = JavaPsiFacade.getInstance(holder.project).constantEvaluationHelper
