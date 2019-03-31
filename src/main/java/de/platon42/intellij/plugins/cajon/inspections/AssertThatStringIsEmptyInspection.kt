@@ -4,13 +4,11 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.JavaElementVisitor
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
-import org.jetbrains.annotations.NonNls
 
 class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
 
     companion object {
-        @NonNls
-        private val DISPLAY_NAME = "Asserting an empty string"
+        private const val DISPLAY_NAME = "Asserting an empty string"
     }
 
     override fun getDisplayName() = DISPLAY_NAME

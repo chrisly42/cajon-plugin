@@ -5,13 +5,11 @@ import com.intellij.psi.JavaElementVisitor
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.PsiType
-import org.jetbrains.annotations.NonNls
 
 class AssertThatObjectIsNullInspection : AbstractAssertJInspection() {
 
     companion object {
-        @NonNls
-        private val DISPLAY_NAME = "Asserting null"
+        private const val DISPLAY_NAME = "Asserting null"
     }
 
     override fun getDisplayName() = DISPLAY_NAME

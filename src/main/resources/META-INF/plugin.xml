@@ -30,6 +30,10 @@
         <localInspection groupPath="Java" shortName="AssertThatEnumerableIsEmpty" enabledByDefault="true"
                          level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatEnumerableIsEmptyInspection"/>
+
+        <localInspection groupPath="Java" shortName="JUnitAssertToAssertJInspection" enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.JUnitAssertToAssertJInspection"/>
     </extensions>
 
     <actions>

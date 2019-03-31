@@ -3,13 +3,11 @@ package de.platon42.intellij.plugins.cajon.inspections
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.util.TypeConversionUtil
-import org.jetbrains.annotations.NonNls
 
 class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
 
     companion object {
-        @NonNls
-        private val DISPLAY_NAME = "Asserting true or false"
+        private const val DISPLAY_NAME = "Asserting true or false"
     }
 
     override fun getDisplayName() = DISPLAY_NAME

@@ -1,10 +1,12 @@
 package de.platon42.intellij.playground;
 
 import org.assertj.core.api.ListAssert;
+import org.assertj.core.data.Offset;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
 import static org.junit.Assert.*;
 
 public class Playground {
@@ -77,6 +79,106 @@ public class Playground {
         assertEquals("message", 1L, 2L);
         assertNotEquals(1L, 2L);
         assertNotEquals("message", 1L, 2L);
+        assertEquals(4.0, 4.4, 3.3);
+        assertThat(3.0).isCloseTo(4.0, Offset.offset(2.3));
+        assertThat(new int[1]).isEqualTo(new int[2]);
+
+        String foo = "foo";
+        String bar = "bar";
+
+        assertTrue(foo == "foo");
+        assertTrue("oh no!", foo == "foo");
+        assertFalse(foo == "bar");
+        assertFalse("boom!", foo == "bar");
+
+        assertNull(foo);
+        assertNull("oh no!", foo);
+        assertNotNull(foo);
+        assertNotNull("oh no!", foo);
+
+        assertEquals(bar, foo);
+        assertEquals("equals", bar, foo);
+        assertNotEquals(bar, foo);
+        assertNotEquals("equals", bar, foo);
+
+        assertSame(bar, foo);
+        assertSame("same", bar, foo);
+        assertNotSame(bar, foo);
+        assertNotSame("same", bar, foo);
+
+        assertEquals(1.0, 2.0);
+        assertEquals(1.0, 2.0, 0.1);
+        assertEquals("equals", 1.0, 2.0);
+        assertEquals("equals", 1.0, 2.0, 0.1);
+        assertEquals(1.0f, 2.0f);
+        assertEquals(1.0f, 2.0f, 0.1f);
+        assertEquals("equals", 1.0f, 2.0f);
+        assertEquals("equals", 1.0f, 2.0f, 0.1f);
+
+        assertNotEquals(1.0, 2.0);
+        assertNotEquals(1.0, 2.0, 0.1);
+        assertNotEquals("equals", 1.0, 2.0);
+        assertNotEquals("equals", 1.0, 2.0, 0.1);
+        assertNotEquals(1.0f, 2.0f);
+        assertNotEquals(1.0f, 2.0f, 0.1f);
+        assertNotEquals("equals", 1.0f, 2.0f);
+        assertNotEquals("equals", 1.0f, 2.0f, 0.1f);
+
+        assertArrayEquals(new int[2], new int[1]);
+        assertArrayEquals("array equals", new int[2], new int[1]);
+
+        assertArrayEquals(new double[2], new double[1], 1.0);
+        assertArrayEquals("array equals", new double[2], new double[1], 1.0);
+        assertArrayEquals(new float[2], new float[1], 1.0f);
+        assertArrayEquals("array equals", new float[2], new float[1], 1.0f);
+
+
+        assertThat(foo == "foo").isTrue();
+        assertThat(foo == "foo").as("oh no!").isTrue();
+        assertThat(foo == "bar").isFalse();
+        assertThat(foo == "bar").as("boom!").isFalse();
+
+        assertThat(foo).isNull();
+        assertThat(foo).as("oh no!").isNull();
+        assertThat(foo).isNotNull();
+        assertThat(foo).as("oh no!").isNotNull();
+
+        assertThat(foo).isEqualTo(bar);
+        assertThat(foo).as("equals").isEqualTo(bar);
+        assertThat(foo).isNotEqualTo(bar);
+        assertThat(foo).as("equals").isNotEqualTo(bar);
+
+        assertThat(foo).isSameAs(bar);
+        assertThat(foo).as("same").isSameAs(bar);
+        assertThat(foo).isNotSameAs(bar);
+        assertThat(foo).as("same").isNotSameAs(bar);
+
+        assertThat(2.0).isEqualTo(1.0);
+        assertThat(2.0).isCloseTo(1.0, offset(0.1));
+        assertThat(2.0).as("equals").isEqualTo(1.0);
+        assertThat(2.0).as("equals").isCloseTo(1.0, offset(0.1));
+        assertThat(2.0f).isEqualTo(1.0f);
+        assertThat(2.0f).isCloseTo(1.0f, offset(0.1f));
+        assertThat(2.0f).as("equals").isEqualTo(1.0f);
+        assertThat(2.0f).as("equals").isCloseTo(1.0f, offset(0.1f));
+
+        assertThat(2.0).isNotEqualTo(1.0);
+        assertThat(2.0).isNotCloseTo(1.0, offset(0.1));
+        assertThat(2.0).as("equals").isNotEqualTo(1.0);
+        assertThat(2.0).as("equals").isNotCloseTo(1.0, offset(0.1));
+        assertThat(2.0f).isNotEqualTo(1.0f);
+        assertThat(2.0f).isNotCloseTo(1.0f, offset(0.1f));
+        assertThat(2.0f).as("equals").isNotEqualTo(1.0f);
+        assertThat(2.0f).as("equals").isNotCloseTo(1.0f, offset(0.1f));
+
+        assertThat(new int[1]).isEqualTo(new int[2]);
+        assertThat(new int[1]).as("array equals").isEqualTo(new int[2]);
+
+        assertThat(new double[1]).containsExactly(new double[2], offset(1.0));
+        assertThat(new double[1]).as("array equals").containsExactly(new double[2], offset(1.0));
+        assertThat(new float[1]).containsExactly(new float[2], offset(1.0f));
+        assertThat(new float[1]).as("array equals").containsExactly(new float[2], offset(1.0f));
+
     }
 
 }

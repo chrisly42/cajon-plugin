@@ -17,20 +17,26 @@ import org.jetbrains.annotations.NonNls
 open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
 
     companion object {
-        @NonNls
         const val SIMPLIFY_MESSAGE_TEMPLATE = "%s can be simplified to %s"
 
-        @NonNls
         const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s with %s"
 
+        @NonNls
         const val ABSTRACT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractAssert"
+        @NonNls
         const val ABSTRACT_BOOLEAN_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractBooleanAssert"
+        @NonNls
         const val ABSTRACT_STRING_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractStringAssert"
+        @NonNls
         const val ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractCharSequenceAssert"
+        @NonNls
         const val ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.EnumerableAssert"
 
+        @NonNls
         const val IS_EQUAL_TO_METHOD = "isEqualTo"
+        @NonNls
         const val IS_NOT_EQUAL_TO_METHOD = "isNotEqualTo"
+        @NonNls
         const val HAS_SIZE_METHOD = "hasSize"
 
         val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
@@ -70,8 +76,8 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         replacementMethod: String
     ) {
         val originalMethod = getOriginalMethodName(expression) ?: return
-        val description = String.format(REPLACE_DESCRIPTION_TEMPLATE, originalMethod, replacementMethod)
-        val message = String.format(SIMPLIFY_MESSAGE_TEMPLATE, originalMethod, replacementMethod)
+        val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
+        val message = SIMPLIFY_MESSAGE_TEMPLATE.format(originalMethod, replacementMethod)
         holder.registerProblem(
             expression,
             message,
