@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '1.0-SNAPSHOT'
+version '0.1'
 
 repositories {
     mavenCentral()
@@ -40,7 +40,7 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-      <h2>V0.1 (10-Mar-2019)
+      <h2>V0.1 (31-Mar-19)
       <ul>
       <li>Initial release.
       </ul>
@@ -52,4 +52,8 @@ test {
 //    testLogging {
 //        events "passed", "skipped", "failed"
 //    }
+}
+
+publishPlugin {
+    token intellijPublishToken
 }
