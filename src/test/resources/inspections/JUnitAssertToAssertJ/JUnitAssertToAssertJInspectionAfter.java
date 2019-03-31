@@ -2,9 +2,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 import static org.junit.Assert.*;
 
-public class JUnitAssertToAssertJInspection {
+public class JUnitAssertToAssertJ {
 
-    private void jUnitAssertToAssertJInspection() {
+    private void jUnitAssertToAssertJ() {
         String foo = "foo";
         String bar = "bar";
         assertThat(foo == "foo").isTrue();

@@ -32,7 +32,7 @@ Then AssertJ would tell you the contents of the collection on failure.
 
 The plugin also supports the conversion of the most common JUnit 4 assertions to AssertJ.
 
-## Implemented
+## Implemented inspections
 
 - AssertThatObjectIsNull
   ```
@@ -59,6 +59,26 @@ The plugin also supports the conversion of the most common JUnit 4 assertions to
   ```
   from: assertThat(enumerable).hasSize(0);
     to: assertThat(enumerable).isEmpty();
+  ```
+- AssertThatSize
+  ```
+  from: assertThat(array.length).isEqualTo(0);
+  from: assertThat(array.length).isLessThanOrEqualTo(0);
+  from: assertThat(array.length).isLessThan(1);
+  from: assertThat(array.length).isZero();
+    to: assertThat(array).isEmpty();
+
+  from: assertThat(array.length).isGreaterThan(0);
+  from: assertThat(array.length).isGreaterThanOrEqualTo(1);
+  from: assertThat(array.length).isNotZero();
+    to: assertThat(array).isNotEmpty();
+
+  from: assertThat(array.length).isEqualTo(anotherArray.length);
+    to: assertThat(array).hasSameSizeAs(anotherArray);
+  ```
+
+  and analogously for collections...
+
 - JUnitAssertToAssertJ
   ```
   assertTrue(condition);
@@ -88,55 +108,5 @@ The plugin also supports the conversion of the most common JUnit 4 assertions to
   ```
 
 ## TODO
-- AssertThatArrayHasLiteralSize
-  ```
-  from: assertThat(array.length).isEqualTo(literal);  literal > 0
-    to: assertThat(array).hasSize(literal);
-  ```
-- AssertThatArrayHasEqualSize
-  ```
-  from: assertThat(array.length).isEqualTo(anotherArray.length);
-    to: assertThat(array).hasSameSizeAs(anotherArray);
-  from: assertThat(array.length).isEqualTo(iterable.size());
-    to: assertThat(array).hasSameSizeAs(iterable);
-  ```
-- AssertThatArrayIsEmpty
-  ```
-  from: assertThat(array.length).isEqualTo(0);
-  from: assertThat(array.length).isLessThanOrEqualTo(0);
-  from: assertThat(array.length).isLessThan(1);
-  from: assertThat(array).hasSize(0);
-    to: assertThat(array).isEmpty();
-  ```
-- AssertThatArrayIsNotEmpty
-  ```
-  from: assertThat(array.length).isGreaterThan(0);
-    to: assertThat(array).isNotEmpty();
-  ```
-- AssertThatCollectionHasLiteralSize
-  ```
-  from: assertThat(collection.size()).isEqualTo(literal);  literal > 0
-    to: assertThat(collection).hasSize(literal);
-  ```
-- AssertThatCollectionHasEqualSize
-  ```
-  from: assertThat(collection.size()).isEqualTo(anotherArray.length);
-    to: assertThat(collection).hasSameSizeAs(anotherArray);
-  from: assertThat(collection.size()).isEqualTo(anotherCollection.size());
-    to: assertThat(collection).hasSameSizeAs(anotherCollection);
-  ```
-- AssertThatCollectionIsNotEmpty
-  ```
-  from: assertThat(collection.size()).isGreaterThan(0);
-  from: assertThat(collection.size()).isGreaterThanOrEqualTo(1);
-    to: assertThat(collection).isNotEmpty();
-  ```
-- AssertThatCollectionIsEmpty
-  ```
-  from: assertThat(collection.size()).isEqualTo(0);
-  from: assertThat(collection.size()).isLessThanOrEqualTo(0);
-  from: assertThat(collection.size()).isLessThan(1);
-  from: assertThat(collection).hasSize(0);
-    to: assertThat(collection).isEmpty();
-  ```
 - AssertThatGuavaOptionalContains
+- extraction with property names to lambda with Java 8

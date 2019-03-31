@@ -1,8 +1,8 @@
 import static org.junit.Assert.*;
 
-public class JUnitAssertToAssertJInspection {
+public class JUnitAssertToAssertJ {
 
-    private void jUnitAssertToAssertJInspection() {
+    private void jUnitAssertToAssertJ() {
         String foo = "foo";
         String bar = "bar";
         assertTrue(foo == "foo");

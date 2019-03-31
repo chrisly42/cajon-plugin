@@ -31,6 +31,10 @@
                          level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatEnumerableIsEmptyInspection"/>
 
+        <localInspection groupPath="Java" shortName="AssertThatSize" enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatSizeInspection"/>
+
         <localInspection groupPath="Java" shortName="JUnitAssertToAssertJInspection" enabledByDefault="true"
                          level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.JUnitAssertToAssertJInspection"/>

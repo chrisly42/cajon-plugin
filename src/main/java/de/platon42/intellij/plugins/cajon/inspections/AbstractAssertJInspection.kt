@@ -22,9 +22,16 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s with %s"
 
         @NonNls
+        const val ASSERTIONS_CLASSNAME = "org.assertj.core.api.Assertions"
+
+        @NonNls
         const val ABSTRACT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractAssert"
         @NonNls
         const val ABSTRACT_BOOLEAN_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractBooleanAssert"
+        @NonNls
+        const val ABSTRACT_INTEGER_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIntegerAssert"
+        @NonNls
+        const val ABSTRACT_COMPARABLE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractComparableAssert"
         @NonNls
         const val ABSTRACT_STRING_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractStringAssert"
         @NonNls
@@ -33,11 +40,28 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         const val ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.EnumerableAssert"
 
         @NonNls
+        const val ASSERT_THAT_METHOD = "assertThat"
+        @NonNls
         const val IS_EQUAL_TO_METHOD = "isEqualTo"
         @NonNls
         const val IS_NOT_EQUAL_TO_METHOD = "isNotEqualTo"
         @NonNls
+        const val IS_GREATER_THAN_METHOD = "isGreaterThan"
+        @NonNls
+        const val IS_GREATER_THAN_OR_EQUAL_TO_METHOD = "isGreaterThanOrEqualTo"
+        @NonNls
+        const val IS_LESS_THAN_METHOD = "isLessThan"
+        @NonNls
+        const val IS_LESS_THAN_OR_EQUAL_TO_METHOD = "isLessThanOrEqualTo"
+        @NonNls
+        const val IS_ZERO_METHOD = "isZero"
+        @NonNls
+        const val IS_NOT_ZERO_METHOD = "isNotZero"
+        @NonNls
         const val HAS_SIZE_METHOD = "hasSize"
+
+        val ASSERT_THAT_INT = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, ASSERT_THAT_METHOD)
+            .parameterTypes("int")!!
 
         val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
@@ -50,6 +74,26 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
                 .parameterTypes("boolean")!!
         val HAS_SIZE = CallMatcher.instanceCall(ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME, HAS_SIZE_METHOD)
             .parameterTypes("int")!!
+
+        val IS_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
+            .parameterTypes("int")!!
+        val IS_GREATER_THAN_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, IS_GREATER_THAN_METHOD)
+            .parameterTypes("int")!!
+        val IS_GREATER_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, IS_GREATER_THAN_OR_EQUAL_TO_METHOD)
+            .parameterTypes("int")!!
+
+        val IS_LESS_THAN_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, IS_LESS_THAN_METHOD)
+            .parameterTypes("int")!!
+        val IS_LESS_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, IS_LESS_THAN_OR_EQUAL_TO_METHOD)
+            .parameterTypes("int")!!
+
+        val IS_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, IS_ZERO_METHOD)
+            .parameterCount(0)!!
+        val IS_NOT_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, IS_NOT_ZERO_METHOD)
+            .parameterCount(0)!!
+
+        val COLLECTION_SIZE = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, "size")
+            .parameterCount(0)!!
     }
 
     override fun getGroupDisplayName(): String {
@@ -88,6 +132,7 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
     }
 
     protected fun calculateConstantParameterValue(expression: PsiMethodCallExpression, argIndex: Int): Any? {
+        if (argIndex >= expression.argumentList.expressionCount) return null
         val valueExpression = expression.argumentList.expressions[argIndex] ?: return null
         val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
         return constantEvaluationHelper.computeConstantExpression(valueExpression)

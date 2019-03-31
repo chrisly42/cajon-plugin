@@ -24,6 +24,11 @@ public class Playground {
         assertThat(new Long[1]).as("etc").isEmpty();
 
         assertThat(new ArrayList<>().size()).isEqualTo(1);
+        assertThat(new ArrayList<String>().size()).isEqualTo(1);
+        assertThat(new ArrayList<String>().size()).isGreaterThanOrEqualTo(1);
+        assertThat(new ArrayList<String>().size()).isZero();
+        assertThat(new ArrayList<String>()).hasSameSizeAs(new ArrayList<>());
+        assertThat(new Long[1]).as("etc").hasSameSizeAs(new Long[2]);
     }
 
     private void sizeOfArray() {
@@ -178,7 +183,6 @@ public class Playground {
         assertThat(new double[1]).as("array equals").containsExactly(new double[2], offset(1.0));
         assertThat(new float[1]).containsExactly(new float[2], offset(1.0f));
         assertThat(new float[1]).as("array equals").containsExactly(new float[2], offset(1.0f));
-
     }
 
 }

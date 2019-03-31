@@ -12,9 +12,9 @@ class ReplaceSimpleMethodCallQuickFix(description: String, private val replaceme
         val factory = JavaPsiFacade.getElementFactory(element.project)
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
         val oldQualifier = methodCallExpression.methodExpression.qualifierExpression ?: return
-        val isEmptyExpression =
+        val expectedExpression =
             factory.createExpressionFromText("a.$replacementMethod", element) as PsiMethodCallExpression
-        isEmptyExpression.methodExpression.qualifierExpression!!.replace(oldQualifier)
-        element.replace(isEmptyExpression)
+        expectedExpression.methodExpression.qualifierExpression!!.replace(oldQualifier)
+        element.replace(expectedExpression)
     }
 }
