@@ -1,8 +1,6 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
-import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSizeMethodCallQuickFix
@@ -11,7 +9,7 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting the size of an collection or array"
-        private const val CONCISER_MESSAGE_TEMPLATE = "%s would be conciser than %s"
+        private const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s would be more concise than %s"
     }
 
     override fun getDisplayName() = DISPLAY_NAME
@@ -31,28 +29,28 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                     val constValue = calculateConstantParameterValue(expectedCallExpression, 0)
                     if (IS_EQUAL_TO_INT.test(expectedCallExpression)) {
                         if (constValue == 0) {
-                            registerSizeMethod(holder, expression, "isEmpty()", noExpectedExpression = true)
+                            registerSizeMethod(holder, expression, expectedCallExpression, "isEmpty()", noExpectedExpression = true)
                             return
                         }
                         val equalToExpression = expectedCallExpression.argumentList.expressions[0]
                         if (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) {
-                            registerSizeMethod(holder, expression, "hasSameSizeAs()", expectedIsCollection = true)
+                            registerSizeMethod(holder, expression, expectedCallExpression, "hasSameSizeAs()", expectedIsCollection = true)
                             return
                         }
-                        registerSizeMethod(holder, expression, "hasSize()")
+                        registerSizeMethod(holder, expression, expectedCallExpression, "hasSize()")
                     } else {
                         if ((IS_LESS_THAN_OR_EQUAL_TO_INT.test(expectedCallExpression) && (constValue == 0))
                             || (IS_LESS_THAN_INT.test(expectedCallExpression) && (constValue == 1))
                             || IS_ZERO.test(expectedCallExpression)
                         ) {
-                            registerSizeMethod(holder, expression, "isEmpty()", noExpectedExpression = true)
+                            registerSizeMethod(holder, expression, expectedCallExpression, "isEmpty()", noExpectedExpression = true)
                             return
                         }
                         if ((IS_GREATER_THAN_INT.test(expectedCallExpression) && (constValue == 0))
                             || (IS_GREATER_THAN_OR_EQUAL_TO_INT.test(expectedCallExpression) && (constValue == 1))
                             || IS_NOT_ZERO.test(expectedCallExpression)
                         ) {
-                            registerSizeMethod(holder, expression, "isNotEmpty()", noExpectedExpression = true)
+                            registerSizeMethod(holder, expression, expectedCallExpression, "isNotEmpty()", noExpectedExpression = true)
                             return
                         }
                     }
@@ -70,18 +68,17 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
             private fun registerSizeMethod(
                 holder: ProblemsHolder,
                 expression: PsiMethodCallExpression,
+                expectedCallExpression: PsiMethodCallExpression,
                 replacementMethod: String,
                 noExpectedExpression: Boolean = false,
                 expectedIsCollection: Boolean = false
             ) {
-                val originalMethod = getOriginalMethodName(expression) ?: return
-                val description = REPLACE_DESCRIPTION_TEMPLATE.format(replacementMethod, originalMethod)
-                val message = CONCISER_MESSAGE_TEMPLATE.format(originalMethod, replacementMethod)
+                val originalMethod = getOriginalMethodName(expectedCallExpression) ?: return
+                val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
+                val message = MORE_CONCISE_MESSAGE_TEMPLATE.format(replacementMethod, originalMethod)
                 holder.registerProblem(
                     expression,
                     message,
-                    ProblemHighlightType.INFORMATION,
-                    null as TextRange?,
                     ReplaceSizeMethodCallQuickFix(description, replacementMethod, noExpectedExpression, expectedIsCollection)
                 )
             }

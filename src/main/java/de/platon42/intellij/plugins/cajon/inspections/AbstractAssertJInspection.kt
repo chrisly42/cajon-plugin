@@ -1,9 +1,7 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool
-import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.CommonClassNames
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiCapturedWildcardType
@@ -125,8 +123,6 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         holder.registerProblem(
             expression,
             message,
-            ProblemHighlightType.INFORMATION,
-            null as TextRange?,
             ReplaceSimpleMethodCallQuickFix(description, replacementMethod)
         )
     }

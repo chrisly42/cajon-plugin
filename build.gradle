@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '0.1'
+version '0.2'
 
 repositories {
     mavenCentral()
@@ -40,7 +40,12 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-      <h2>V0.1 (31-Mar-19)
+      <h4>V0.2 (01-Apr-19)</h4>
+      <ul>
+      <li>Fixed descriptions and quick fix texts.
+      <li>Fixed highlighting of found problems and also 'Run inspection by Name' returning nothing.
+      </ul>
+      <h4>V0.1 (31-Mar-19)</h4>
       <ul>
       <li>Initial release.
       </ul>

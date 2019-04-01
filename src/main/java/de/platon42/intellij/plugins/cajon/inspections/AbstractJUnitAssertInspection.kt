@@ -40,5 +40,4 @@ open class AbstractJUnitAssertInspection : AbstractBaseJavaLocalInspectionTool()
 
     protected fun getOriginalMethodName(expression: PsiMethodCallExpression) =
         expression.resolveMethod()?.name?.plus("()")
-
 }
