@@ -2,10 +2,7 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.CommonClassNames
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiCapturedWildcardType
-import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTypesUtil
 import com.siyeh.ig.callMatcher.CallMatcher
@@ -132,5 +129,13 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val valueExpression = expression.argumentList.expressions[argIndex] ?: return null
         val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
         return constantEvaluationHelper.computeConstantExpression(valueExpression)
+    }
+
+    protected fun hasAssertJMethod(element: PsiElement, classAndMethod: String): Boolean {
+        val classname = "org.assertj.core.api.${classAndMethod.substringBeforeLast(".")}"
+        val findClass =
+            JavaPsiFacade.getInstance(element.project).findClass(classname, GlobalSearchScope.allScope(element.project))
+                ?: return false
+        return findClass.findMethodsByName(classAndMethod.substringAfterLast(".")).isNotEmpty()
     }
 }

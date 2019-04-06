@@ -4,9 +4,11 @@ import org.assertj.core.api.ListAssert;
 import org.assertj.core.data.Offset;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
+import static org.assertj.guava.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class Playground {
@@ -27,6 +29,7 @@ public class Playground {
         assertThat(new ArrayList<String>().size()).isEqualTo(1);
         assertThat(new ArrayList<String>().size()).isGreaterThanOrEqualTo(1);
         assertThat(new ArrayList<String>().size()).isZero();
+        assertThat(new ArrayList<String>()).hasSizeGreaterThan(1);
         assertThat(new ArrayList<String>()).hasSameSizeAs(new ArrayList<>());
         assertThat(new Long[1]).as("etc").hasSameSizeAs(new Long[2]);
     }
@@ -73,6 +76,30 @@ public class Playground {
         String foo = "bar";
         assertThat(foo).isEqualTo("");
         assertThat(foo).hasSize(0);
+    }
+
+    private void java8Optional() {
+        Optional<String> foo = Optional.empty();
+        assertThat(foo.get()).isEqualTo("bla");
+        assertThat(foo).contains("bla");
+        assertThat(foo.isPresent()).isTrue();
+        assertThat(!foo.isPresent()).isFalse();
+        assertThat(foo).isPresent();
+        assertThat(foo.isPresent()).isFalse();
+        assertThat(!foo.isPresent()).isTrue();
+        assertThat(foo).isNotPresent();
+    }
+
+    private void guavaOptional() {
+        com.google.common.base.Optional<String> foo = com.google.common.base.Optional.absent();
+        assertThat(foo.get()).isEqualTo("bla");
+        assertThat(foo).contains("bla");
+        assertThat(foo.isPresent()).isTrue();
+        assertThat(!foo.isPresent()).isFalse();
+        assertThat(foo).isPresent();
+        assertThat(foo.isPresent()).isFalse();
+        assertThat(!foo.isPresent()).isTrue();
+        assertThat(foo).isAbsent();
     }
 
     private void junitAssertions() {
@@ -183,6 +210,8 @@ public class Playground {
         assertThat(new double[1]).as("array equals").containsExactly(new double[2], offset(1.0));
         assertThat(new float[1]).containsExactly(new float[2], offset(1.0f));
         assertThat(new float[1]).as("array equals").containsExactly(new float[2], offset(1.0f));
+
+        assertThat(new Object()).extracting(Object::toString, Object::hashCode);
     }
 
 }

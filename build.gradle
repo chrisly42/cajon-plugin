@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '0.2'
+version '0.3'
 
 repositories {
     mavenCentral()
@@ -18,7 +18,8 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testCompile "org.assertj:assertj-core:3.11.1"
+    testCompile "org.assertj:assertj-core:3.12.2"
+    testCompile "org.assertj:assertj-guava:3.2.1"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.4.0'
@@ -33,13 +34,19 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2018.3.4'
+    version '2019.1'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
 }
 
 patchPluginXml {
     changeNotes """
+      <h4>V0.3 (xx-Apr-19)</h4>
+      <ul>
+      <li>Internally: Upgraded to AssertJ 13.2.2.
+      <li>Support for hasSizeLessThan(), hasSizeLessThanOrEqualTo(), hasSizeGreaterThanOrEqualTo(), and hasSizeGreaterThan() for AssertThatSizeInspection (with AssertJ >=13.2.0).
+      <li>Really fixed highlighting for JUnit conversion. Sorry.
+      </ul>
       <h4>V0.2 (01-Apr-19)</h4>
       <ul>
       <li>Fixed descriptions and quick fix texts.

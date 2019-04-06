@@ -14,7 +14,7 @@ internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatSizeInspection::class.java)
             myFixture.configureByFile("AssertThatSizeBefore.java")
-            executeQuickFixes(myFixture, Regex("Replace .*"), 20)
+            executeQuickFixes(myFixture, Regex("Replace .*"), 28)
             myFixture.checkResultByFile("AssertThatSizeAfter.java")
         }
     }

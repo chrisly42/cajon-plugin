@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class assertThatSize {
+public class AssertThatSize {
 
     private void assertThatSize() {
         ArrayList<String> list = new ArrayList<>();
@@ -20,6 +20,10 @@ public class assertThatSize {
         assertThat(list.size()).isEqualTo(otherList.size());
         assertThat(list.size()).isEqualTo(array.length);
         assertThat(list.size()).isEqualTo(1);
+        assertThat(list.size()).isGreaterThan(list.size() * 2);
+        assertThat(list.size()).isGreaterThanOrEqualTo(list.size() * 2);
+        assertThat(list.size()).isLessThan(list.size() * 2);
+        assertThat(list.size()).isLessThanOrEqualTo(list.size() * 2);
 
         assertThat(array.length).isEqualTo(0);
         assertThat(array.length).isZero();
@@ -31,5 +35,9 @@ public class assertThatSize {
         assertThat(array.length).isEqualTo(list.size());
         assertThat(array.length).isEqualTo(otherArray.length);
         assertThat(array.length).isEqualTo(1);
+        assertThat(array.length).isGreaterThan(otherArray.length - 1);
+        assertThat(array.length).isGreaterThanOrEqualTo(otherArray.length + 1);
+        assertThat(array.length).isLessThan(otherArray.length - 3);
+        assertThat(array.length).isLessThanOrEqualTo(1 - otherArray.length);
     }
 }

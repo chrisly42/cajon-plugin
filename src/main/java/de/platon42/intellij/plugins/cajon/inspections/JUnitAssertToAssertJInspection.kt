@@ -1,8 +1,6 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
-import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.CommonClassNames
 import com.intellij.psi.JavaElementVisitor
 import com.intellij.psi.PsiElementVisitor
@@ -147,8 +145,6 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
         holder.registerProblem(
             expression,
             message,
-            ProblemHighlightType.INFORMATION,
-            null as TextRange?,
             ReplaceJUnitAssertMethodCallQuickFix(description, hasExpected, replacementMethod)
         )
     }
@@ -164,8 +160,6 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
         holder.registerProblem(
             expression,
             message,
-            ProblemHighlightType.INFORMATION,
-            null as TextRange?,
             ReplaceJUnitDeltaAssertMethodCallQuickFix(description, replacementMethod)
         )
     }

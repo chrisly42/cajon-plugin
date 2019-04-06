@@ -131,7 +131,6 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
                 VirtualFile jarFile = LocalFileSystem.getInstance().findFileByIoFile(jarPath.toFile());
                 myFixture.allowTreeAccessForFile(jarFile);
                 PsiTestUtil.addLibrary(
-                        myFixture.getModule(),
                         model,
                         jarPath.getFileName().toString().replace(".jar", ""),
                         jarPath.getParent().toString(),

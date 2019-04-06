@@ -77,6 +77,22 @@ The plugin also supports the conversion of the most common JUnit 4 assertions to
     to: assertThat(array).hasSameSizeAs(anotherArray);
   ```
 
+  with AssertJ 13.2.0 or higher
+
+  ```
+  from: assertThat(array.length).isLessThanOrEqualTo(expression);
+    to: assertThat(array).hasSizeLessThanOrEqualTo(expression);
+    
+  from: assertThat(array.length).isLessThan(expression);
+    to: assertThat(array).hasSizeLessThan(expression);
+
+  from: assertThat(array.length).isGreaterThan(expression);
+    to: assertThat(array).hasSizeGreaterThan(expression);
+
+  from: assertThat(array.length).isGreaterThanOrEqualTo(expression);
+    to: assertThat(array).hasSizeGreaterThanOrEqualTo(expression);
+  ```
+
   and analogously for collections...
 
 - JUnitAssertToAssertJ
@@ -107,6 +123,64 @@ The plugin also supports the conversion of the most common JUnit 4 assertions to
   assertArrayEquals(message, expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
   ```
 
+## Development notice
+
+Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one that I'm aware of ;) ).
+The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and I took me quite a while to make it work with JUnit 5.
+Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
+
 ## TODO
+- AssertThatBinaryExpressionIsTrueOrFalse
+  ```
+  from: assertThat(actual == expected).isTrue();
+    to: assertThat(actual).isEqualTo(expected); (for primitive types)
+    to: assertThat(actual).isSameAs(expected); (for objects)
+
+  from: assertThat(actual != expected).isFalse();
+    to: assertThat(actual).isNotEqualTo(expected); (for primitive types)
+    to: assertThat(actual).isNotSameAs(expected); (for objects)
+  ```
+- AssertThatJava8OptionalContains
+  ```
+  from: assertThat(Optional.of("foo").get()).isEqualTo("foo");
+    to: assertThat(Optional.of("foo")).contains("foo");
+  ```
+- AssertThatJava8OptionalIsPresentOrAbsent
+  ```
+  from: assertThat(Optional.of("foo").isPresent()).isEqualTo(true);
+  from: assertThat(!Optional.of("foo").isPresent()).isEqualTo(false);
+  from: assertThat(Optional.of("foo").isPresent()).isTrue();
+  from: assertThat(!Optional.of("foo").isPresent()).isFalse();
+    to: assertThat(Optional.of("foo")).isPresent();
+
+  from: assertThat(Optional.of("foo").isPresent()).isEqualTo(false);
+  from: assertThat(!Optional.of("foo").isPresent()).isEqualTo(true);
+  from: assertThat(Optional.of("foo").isPresent()).isFalse();
+  from: assertThat(!Optional.of("foo").isPresent()).isTrue();
+    to: assertThat(Optional.of("foo")).isNotPresent();
+  ```
 - AssertThatGuavaOptionalContains
-- extraction with property names to lambda with Java 8
+  ```
+  from: assertThat(Optional.of("foo").get()).isEqualTo("foo");
+    to: assertThat(Optional.of("foo")).contains("foo");
+  ```
+- AssertThatGuavaOptionalIsPresentOrAbsent
+  ```
+  from: assertThat(Optional.of("foo").isPresent()).isEqualTo(true);
+  from: assertThat(!Optional.of("foo").isPresent()).isEqualTo(false);
+  from: assertThat(Optional.of("foo").isPresent()).isTrue();
+  from: assertThat(!Optional.of("foo").isPresent()).isFalse();
+    to: assertThat(Optional.of("foo")).isPresent();
+
+  from: assertThat(Optional.of("foo").isPresent()).isEqualTo(false);
+  from: assertThat(!Optional.of("foo").isPresent()).isEqualTo(true);
+  from: assertThat(Optional.of("foo").isPresent()).isFalse();
+  from: assertThat(!Optional.of("foo").isPresent()).isTrue();
+    to: assertThat(Optional.of("foo")).isAbsent();
+  ```
+- Referencing string properties inside extracting()
+- Extraction with property names to lambda with Java 8
+  ```
+  from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
+    to: assertThat(object).extracting(type::getPropOne, it -> it.propNoGetter, it -> it.getPropTwo().getInnerProp())...
+  ```

@@ -53,6 +53,19 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                             registerSizeMethod(holder, expression, expectedCallExpression, "isNotEmpty()", noExpectedExpression = true)
                             return
                         }
+                        // new stuff in AssertJ 13.2.0
+                        if (hasAssertJMethod(expression, "AbstractIterableAssert.hasSizeLessThan")) {
+                            val matchedMethod = listOf(
+                                Pair(IS_GREATER_THAN_INT, "hasSizeGreaterThan()"),
+                                Pair(IS_GREATER_THAN_OR_EQUAL_TO_INT, "hasSizeGreaterThanOrEqualTo()"),
+                                Pair(IS_LESS_THAN_OR_EQUAL_TO_INT, "hasSizeLessThanOrEqualTo()"),
+                                Pair(IS_LESS_THAN_INT, "hasSizeLessThan()")
+                            ).find { it.first.test(expectedCallExpression) }?.second
+                            if (matchedMethod != null) {
+                                registerSizeMethod(holder, expression, expectedCallExpression, matchedMethod)
+                                return
+                            }
+                        }
                     }
                 }
             }
