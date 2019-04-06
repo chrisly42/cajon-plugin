@@ -14,7 +14,7 @@ internal class AssertThatEnumerableIsEmptyInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatEnumerableIsEmptyInspection::class.java)
             myFixture.configureByFile("EnumerableIsEmptyBefore.java")
-            executeQuickFixes(myFixture, Regex("Replace hasSize.*"), 4)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace hasSize() with isEmpty()"), 4)
             myFixture.checkResultByFile("EnumerableIsEmptyAfter.java")
         }
     }

@@ -43,7 +43,7 @@ patchPluginXml {
     changeNotes """
       <h4>V0.3 (xx-Apr-19)</h4>
       <ul>
-      <li>Internally: Upgraded to AssertJ 13.2.2.
+      <li>Merged AssertThatObjectIsNull and AssertThatObjectIsNotNull to AssertThatObjectIsNullOrNotNull.
       <li>Support for hasSizeLessThan(), hasSizeLessThanOrEqualTo(), hasSizeGreaterThanOrEqualTo(), and hasSizeGreaterThan() for AssertThatSizeInspection (with AssertJ >=13.2.0).
       <li>Really fixed highlighting for JUnit conversion. Sorry.
       </ul>

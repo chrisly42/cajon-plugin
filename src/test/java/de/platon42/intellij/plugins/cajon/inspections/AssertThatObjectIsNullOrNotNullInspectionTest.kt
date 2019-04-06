@@ -6,16 +6,17 @@ import de.platon42.intellij.jupiter.TestDataSubPath
 import de.platon42.intellij.plugins.cajon.AbstractCajonTest
 import org.junit.jupiter.api.Test
 
-internal class AssertThatObjectIsNullInspectionTest : AbstractCajonTest() {
+internal class AssertThatObjectIsNullOrNotNullInspectionTest : AbstractCajonTest() {
 
     @Test
-    @TestDataSubPath("inspections/ObjectIsNull")
+    @TestDataSubPath("inspections/ObjectIsNullOrNotNull")
     internal fun assertThat_with_isEqualTo_null_can_use_isNull(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         runTest {
-            myFixture.enableInspections(AssertThatObjectIsNullInspection::class.java)
-            myFixture.configureByFile("ObjectIsNullBefore.java")
+            myFixture.enableInspections(AssertThatObjectIsNullOrNotNullInspection::class.java)
+            myFixture.configureByFile("ObjectIsNullOrNotNullBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isNull()"), 3)
-            myFixture.checkResultByFile("ObjectIsNullAfter.java")
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isNotNull()"), 3)
+            myFixture.checkResultByFile("ObjectIsNullOrNotNullAfter.java")
         }
     }
 }

@@ -34,13 +34,11 @@ The plugin also supports the conversion of the most common JUnit 4 assertions to
 
 ## Implemented inspections
 
-- AssertThatObjectIsNull
+- AssertThatObjectIsNullOrNotNull
   ```
   from: assertThat(object).isEqualTo(null);
     to: assertThat(object).isNull();
-  ```
-- AssertThatObjectIsNotNull
-  ```
+
   from: assertThat(object).isNotEqualTo(null);  
     to: assertThat(object).isNotNull();
   ```

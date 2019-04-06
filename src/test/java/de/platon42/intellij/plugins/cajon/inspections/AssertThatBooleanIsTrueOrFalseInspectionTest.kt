@@ -14,7 +14,10 @@ internal class AssertThatBooleanIsTrueOrFalseInspectionTest : AbstractCajonTest(
         runTest {
             myFixture.enableInspections(AssertThatBooleanIsTrueOrFalseInspection::class.java)
             myFixture.configureByFile("BooleanIsTrueOrFalseBefore.java")
-            executeQuickFixes(myFixture, Regex("Replace is.*"), 17)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isTrue()"), 4)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isFalse()"), 5)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isTrue()"), 4)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isFalse()"), 4)
             myFixture.checkResultByFile("BooleanIsTrueOrFalseAfter.java")
         }
     }
