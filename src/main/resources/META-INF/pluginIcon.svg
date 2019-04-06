@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Foo" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+     width="226.77px" height="226.77px" viewBox="0 0 226.77 226.77" enable-background="new 0 0 226.77 226.77" xml:space="preserve">
+<g>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="44.1792" y1="72.1201" x2="184.0214" y2="-8.6178">
+		<stop offset="0.2408" style="stop-color:#FFFFFF"/>
+        <stop offset="1" style="stop-color:#000000"/>
+	</linearGradient>
+    <path fill="url(#SVGID_1_)" stroke="#231F20" stroke-miterlimit="10" d="M210.1,36.551L122.5,7.75
+		C18.101,26.951,18.101,26.951,18.101,26.951L94.3,55.75L210.1,36.551"/>
+    <linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="-12.9795" y1="80.7827" x2="127.5331" y2="161.9077">
+		<stop offset="0.1763" style="stop-color:#FFFFFF"/>
+        <stop offset="0.2617" style="stop-color:#F9F9F9"/>
+        <stop offset="0.3726" style="stop-color:#E9E9E9"/>
+        <stop offset="0.4976" style="stop-color:#CFCECE"/>
+        <stop offset="0.6329" style="stop-color:#AAA9A9"/>
+        <stop offset="0.7765" style="stop-color:#7B7979"/>
+        <stop offset="0.9248" style="stop-color:#433F40"/>
+        <stop offset="1" style="stop-color:#231F20"/>
+	</linearGradient>
+    <polygon fill="url(#SVGID_2_)" stroke="#231F20" stroke-miterlimit="10" points="17.5,185.35 94.6,218.95 94.3,55.75
+		18.101,26.951 	"/>
+    <linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="88.6709" y1="122.3887" x2="214.4668" y2="133.3944">
+		<stop offset="0.1216" style="stop-color:#FFFFFF"/>
+        <stop offset="1" style="stop-color:#2B2728"/>
+        <stop offset="1" style="stop-color:#231F20"/>
+	</linearGradient>
+    <polygon fill="url(#SVGID_3_)" stroke="#231F20" stroke-miterlimit="10" points="94.5,55.75 94.5,56.35 94.5,55.75 95,219.25
+		209.5,190.15 209.5,36.65 	"/>
+</g>
+    <linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="51.6982" y1="79.75" x2="51.6982" y2="79.75">
+	<stop offset="0.1763" style="stop-color:#FFFFFF"/>
+        <stop offset="0.2617" style="stop-color:#F9F9F9"/>
+        <stop offset="0.3726" style="stop-color:#E9E9E9"/>
+        <stop offset="0.4976" style="stop-color:#CFCECE"/>
+        <stop offset="0.6329" style="stop-color:#AAA9A9"/>
+        <stop offset="0.7765" style="stop-color:#7B7979"/>
+        <stop offset="0.9248" style="stop-color:#433F40"/>
+        <stop offset="1" style="stop-color:#231F20"/>
+</linearGradient>
+    <path fill="url(#SVGID_4_)" stroke="#231F20" stroke-miterlimit="10" d="M51.699,79.75"/>
+    <path fill="#231F20" stroke="#231F20" stroke-miterlimit="10" d="M171.307,117.313c0.267,13.237-6.324,27.028-14.723,30.805
+	s-15.423-3.893-15.69-17.132c-0.267-13.236,6.323-27.029,14.723-30.805C164.015,96.405,171.039,104.076,171.307,117.313z"/>
+    <polygon fill="#39B54A" stroke="#231F20" stroke-width="0.25" stroke-miterlimit="10" points="175.6,143.05 176.2,99.7 183.55,97
+	191.95,132.25 193.3,92.95 198.1,91.45 196.3,136.6 188.95,138.85 180.85,103.45 180.7,141.55 "/>
+    <path fill="#009444" stroke="#231F20" stroke-width="0.25" stroke-miterlimit="10" d="M109.9,113.65c1.8,0,25.35-5.25,25.35-5.25
+	l1.2,38.7l-6.9,7.5l-11.25,3.15l-5.55-5.25l-1.5-6.75l5.1-1.35l1.95,6.6l3.45,1.05l5.25-1.95l4.5-4.35l-0.6-30.9l-19.2,4.051
+	L109.9,113.65z"/>
+    <path fill="#00A79D" stroke="#231F20" stroke-width="0.25" stroke-miterlimit="10" d="M46.15,102.4c0-0.45-2.85-6.45-2.85-6.45
+	l-6.75-3l-5.7,0.15l-1.916,1.667L26.2,97.15l-2.4,5.1l-0.9,8.55l-0.75,12.15l0.3,12.3l2.85,8.25l8.85,4.95l7.2,0.45l5.55-5.551
+	l1.8-3.6l-3.15-4.05l-2.85,2.25l-3,3.6l-5.4,1.351l-4.2-1.95l-2.4-5.7l-1.05-5.85l0.6-10.051L28,110.8l0.9-6.75l1.95-3.75l6-0.75
+	l3.45,1.95l2.25,2.7l1.95,1.5L46.15,102.4z"/>
+    <polygon fill="#2BB673" stroke="#231F20" stroke-width="0.25" stroke-miterlimit="10" points="52.9,151.9 70.4,101.549
+	76.1,104.249 85.2,164.05 79.1,160.85 73.1,111.05 71.4,110.149 67,127.15 73.7,129.749 74.5,136.351 65.5,132.7 58.1,154.049 "/>
+</svg>
