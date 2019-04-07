@@ -41,8 +41,9 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-      <h4>V0.3 (xx-Apr-19)</h4>
+      <h4>V0.3 (07-Apr-19)</h4>
       <ul>
+      <li>New inspection AssertThatBinaryExpressionIsTrueOrFalse that will find and fix common binary expressions and equals() statements (more than 150 combinations) inside assertThat().
       <li>Merged AssertThatObjectIsNull and AssertThatObjectIsNotNull to AssertThatObjectIsNullOrNotNull.
       <li>Support for hasSizeLessThan(), hasSizeLessThanOrEqualTo(), hasSizeGreaterThanOrEqualTo(), and hasSizeGreaterThan() for AssertThatSizeInspection (with AssertJ >=13.2.0).
       <li>Really fixed highlighting for JUnit conversion. Sorry.

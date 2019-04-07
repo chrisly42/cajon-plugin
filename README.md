@@ -93,6 +93,22 @@ The plugin also supports the conversion of the most common JUnit 4 assertions to
 
   and analogously for collections...
 
+- AssertThatBinaryExpressionIsTrueOrFalse
+  ```
+  from: assertThat(primActual == primExpected).isTrue();
+    to: assertThat(primActual).isEqualTo(primExpected);
+
+  from: assertThat(10 < primActual).isNotEqualTo(false);
+    to: assertThat(primActual).isGreaterThan(primExpected);
+
+  from: assertThat(objActual != objExpected).isEqualTo(true);
+    to: assertThat(objActual).isNotSameAs(objExpected);
+
+  from: assertThat(null == objActual).isFalse();
+    to: assertThat(objActual).isNotNull();
+  ```
+  and many, many more combinations (more than 150).
+  
 - JUnitAssertToAssertJ
   ```
   assertTrue(condition);
@@ -182,3 +198,4 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
     to: assertThat(object).extracting(type::getPropOne, it -> it.propNoGetter, it -> it.getPropTwo().getInnerProp())...
   ```
+- Kotlin support

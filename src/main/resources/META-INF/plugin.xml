@@ -21,21 +21,20 @@
     <extensions defaultExtensionNs="com.intellij">
         <localInspection groupPath="Java" shortName="AssertThatObjectIsNullOrNotNull" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatObjectIsNullOrNotNullInspection"/>
-        <localInspection groupPath="Java" shortName="AssertThatBooleanIsTrueOrFalse" enabledByDefault="true"
-                         level="WARNING"
+        <localInspection groupPath="Java" shortName="AssertThatBooleanIsTrueOrFalse" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBooleanIsTrueOrFalseInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatStringIsEmpty" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatStringIsEmptyInspection"/>
-        <localInspection groupPath="Java" shortName="AssertThatEnumerableIsEmpty" enabledByDefault="true"
-                         level="WARNING"
+        <localInspection groupPath="Java" shortName="AssertThatEnumerableIsEmpty" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatEnumerableIsEmptyInspection"/>
 
-        <localInspection groupPath="Java" shortName="AssertThatSize" enabledByDefault="true"
-                         level="WARNING"
+        <localInspection groupPath="Java" shortName="AssertThatSize" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatSizeInspection"/>
 
-        <localInspection groupPath="Java" shortName="JUnitAssertToAssertJ" enabledByDefault="true"
-                         level="WARNING"
+        <localInspection groupPath="Java" shortName="AssertThatBinaryExpressionIsTrueOrFalse" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBinaryExpressionIsTrueOrFalseInspection"/>
+
+        <localInspection groupPath="Java" shortName="JUnitAssertToAssertJ" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.JUnitAssertToAssertJInspection"/>
     </extensions>
 

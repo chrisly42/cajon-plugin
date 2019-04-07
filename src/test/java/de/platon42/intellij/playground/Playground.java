@@ -72,6 +72,56 @@ public class Playground {
         assertThat("").isEqualTo(Boolean.TRUE);
     }
 
+    private void binaryExpression() {
+        int primExp = 42;
+        int primAct = 1337;
+        Double numberObjExp = 42.0;
+        Double numberObjAct = 1337.0;
+        String stringExp = "foo";
+        String stringAct = "bar";
+
+        assertThat(primAct == primExp).isTrue();
+        assertThat(primAct == 1).isTrue();
+        assertThat(primAct == primExp).isEqualTo(false);
+        assertThat(primAct != primExp).isEqualTo(true);
+        assertThat(1 != primAct).isTrue();
+        assertThat(primAct != primExp).isNotEqualTo(true);
+        assertThat(primAct > primExp).isNotEqualTo(false);
+        assertThat(primAct > primExp).isFalse();
+        assertThat(primAct > 1).isFalse();
+        assertThat(primAct >= 1).isTrue();
+        assertThat(primAct >= primExp).isEqualTo(false);
+        assertThat(1 <= primAct).isFalse();
+        assertThat(1 > primAct).isTrue();
+        assertThat(primAct < primExp).isNotEqualTo(true);
+        assertThat(primAct <= primExp).isNotEqualTo(false);
+        assertThat(primAct <= primExp).isFalse();
+        assertThat(primAct <= 1).isFalse();
+        assertThat(numberObjAct == 1).isTrue();
+        assertThat(numberObjAct == numberObjExp).isEqualTo(false);
+        assertThat(numberObjAct != numberObjExp).isEqualTo(true);
+        assertThat(1 != numberObjAct).isTrue();
+        assertThat(numberObjAct != numberObjExp).isNotEqualTo(true);
+        assertThat(numberObjAct > numberObjExp).isNotEqualTo(false);
+        assertThat(numberObjAct > 1).isFalse();
+        assertThat(numberObjAct >= numberObjExp).isTrue();
+        assertThat(numberObjAct >= numberObjExp).isEqualTo(false);
+        assertThat(1 <= numberObjAct).isFalse();
+        assertThat(numberObjAct < numberObjExp).isEqualTo(true);
+        assertThat(numberObjAct < numberObjExp).isNotEqualTo(true);
+        assertThat(numberObjAct <= numberObjExp).isNotEqualTo(false);
+        assertThat(numberObjAct <= 1).isFalse();
+        assertThat(numberObjAct.equals(numberObjExp)).isFalse();
+        assertThat(stringAct == stringExp).isNotEqualTo(false);
+        assertThat(stringAct.equals(stringExp)).isEqualTo(true);
+        assertThat(stringAct != stringExp).isFalse();
+        assertThat(stringAct == null).isNotEqualTo(true);
+        assertThat(null == stringAct).isEqualTo(false);
+
+        assertThat(null == null).isTrue();
+        assertThat(!false).isTrue();
+    }
+
     private void stringIsEmpty() {
         String foo = "bar";
         assertThat(foo).isEqualTo("");
@@ -138,13 +188,9 @@ public class Playground {
         assertNotSame(bar, foo);
         assertNotSame("same", bar, foo);
 
-        assertEquals(1.0, 2.0);
         assertEquals(1.0, 2.0, 0.1);
-        assertEquals("equals", 1.0, 2.0);
         assertEquals("equals", 1.0, 2.0, 0.1);
-        assertEquals(1.0f, 2.0f);
         assertEquals(1.0f, 2.0f, 0.1f);
-        assertEquals("equals", 1.0f, 2.0f);
         assertEquals("equals", 1.0f, 2.0f, 0.1f);
 
         assertNotEquals(1.0, 2.0);
@@ -213,5 +259,4 @@ public class Playground {
 
         assertThat(new Object()).extracting(Object::toString, Object::hashCode);
     }
-
 }

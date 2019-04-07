@@ -53,10 +53,17 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         @NonNls
         const val IS_NOT_ZERO_METHOD = "isNotZero"
         @NonNls
+        const val IS_TRUE_METHOD = "isTrue"
+        @NonNls
+        const val IS_FALSE_METHOD = "isFalse"
+        @NonNls
         const val HAS_SIZE_METHOD = "hasSize"
 
         val ASSERT_THAT_INT = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, ASSERT_THAT_METHOD)
             .parameterTypes("int")!!
+
+        val ASSERT_THAT_BOOLEAN = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, ASSERT_THAT_METHOD)
+            .parameterTypes("boolean")!!
 
         val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
@@ -87,8 +94,15 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val IS_NOT_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, IS_NOT_ZERO_METHOD)
             .parameterCount(0)!!
 
+        val IS_TRUE = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_TRUE_METHOD)
+            .parameterCount(0)!!
+        val IS_FALSE = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_FALSE_METHOD)
+            .parameterCount(0)!!
+
         val COLLECTION_SIZE = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, "size")
             .parameterCount(0)!!
+        val OBJECT_EQUALS = CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_OBJECT, "equals")
+            .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
     }
 
     override fun getGroupDisplayName(): String {

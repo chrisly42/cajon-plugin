@@ -1,0 +1,11 @@
+<html>
+<body>
+Turns a binary expression in the kind of assertThat(actual &lt;operator&gt; expected) with .isTrue()/isFalse()/isEqualTo()/isNotEqualTo()
+into assertThat(actual).is&lt;operator&gt;(expected).
+<!-- tooltip end -->
+There are over 150 combinations that are found with this inspections.
+It also detects assertThat(actual.equals(expected)) assertions.
+Also works with constant expressions on the expected side.
+Swaps actual and expected when actual is a constant expression (correctly transforming the used operator).
+</body>
+</html>
