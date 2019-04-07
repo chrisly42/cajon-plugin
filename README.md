@@ -144,16 +144,6 @@ The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and
 Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
 
 ## TODO
-- AssertThatBinaryExpressionIsTrueOrFalse
-  ```
-  from: assertThat(actual == expected).isTrue();
-    to: assertThat(actual).isEqualTo(expected); (for primitive types)
-    to: assertThat(actual).isSameAs(expected); (for objects)
-
-  from: assertThat(actual != expected).isFalse();
-    to: assertThat(actual).isNotEqualTo(expected); (for primitive types)
-    to: assertThat(actual).isNotSameAs(expected); (for objects)
-  ```
 - AssertThatJava8OptionalContains
   ```
   from: assertThat(Optional.of("foo").get()).isEqualTo("foo");
