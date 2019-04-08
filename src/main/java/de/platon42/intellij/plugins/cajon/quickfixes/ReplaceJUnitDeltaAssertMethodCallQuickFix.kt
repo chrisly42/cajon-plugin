@@ -6,12 +6,14 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
+import de.platon42.intellij.plugins.cajon.firstArg
+import de.platon42.intellij.plugins.cajon.getArg
+import de.platon42.intellij.plugins.cajon.replaceQualifier
 
 class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
 
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.startElement
-        val factory = JavaPsiFacade.getElementFactory(element.project)
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
         val args = methodCallExpression.argumentList
         val count = args.expressionCount
@@ -20,31 +22,32 @@ class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val
         val expectedExpression = args.expressions[count - 3] ?: return
         val deltaExpression = args.expressions[count - 1] ?: return
 
+        val factory = JavaPsiFacade.getElementFactory(element.project)
         val offsetMethodCall = factory.createExpressionFromText(
             "org.assertj.core.data.Offset.offset(c)", element
         ) as PsiMethodCallExpression
 
-        offsetMethodCall.argumentList.expressions[0].replace(deltaExpression)
+        offsetMethodCall.firstArg.replace(deltaExpression)
 
         val expectedMethodCall = factory.createExpressionFromText(
             "a.${replacementMethod.removeSuffix("()")}(e, offs)", element
         ) as PsiMethodCallExpression
 
-        expectedMethodCall.argumentList.expressions[0].replace(expectedExpression)
-        expectedMethodCall.argumentList.expressions[1].replace(offsetMethodCall)
+        expectedMethodCall.firstArg.replace(expectedExpression)
+        expectedMethodCall.getArg(1).replace(offsetMethodCall)
 
         val newMethodCall = factory.createExpressionFromText(
             "org.assertj.core.api.Assertions.assertThat(a)", element
         ) as PsiMethodCallExpression
-        newMethodCall.argumentList.expressions[0].replace(actualExpression)
+        newMethodCall.firstArg.replace(actualExpression)
 
         if (messageExpression != null) {
             val asExpression = factory.createExpressionFromText("a.as(desc)", element) as PsiMethodCallExpression
-            asExpression.argumentList.expressions[0].replace(messageExpression)
-            asExpression.methodExpression.qualifierExpression!!.replace(newMethodCall)
-            expectedMethodCall.methodExpression.qualifierExpression!!.replace(asExpression)
+            asExpression.firstArg.replace(messageExpression)
+            asExpression.replaceQualifier(newMethodCall)
+            expectedMethodCall.replaceQualifier(asExpression)
         } else {
-            expectedMethodCall.methodExpression.qualifierExpression!!.replace(newMethodCall)
+            expectedMethodCall.replaceQualifier(newMethodCall)
         }
 
         val assertThatMethod = newMethodCall.resolveMethod() ?: return

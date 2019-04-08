@@ -3,6 +3,7 @@ package de.platon42.intellij.plugins.cajon.inspections
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
+import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSizeMethodCallQuickFix
 
 class AssertThatSizeInspection : AbstractAssertJInspection() {
@@ -21,7 +22,7 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                 if (!ASSERT_THAT_INT.test(expression)) {
                     return
                 }
-                val actualExpression = expression.argumentList.expressions[0] ?: return
+                val actualExpression = expression.firstArg
 
                 if (isArrayLength(actualExpression) || isCollectionSize(actualExpression)) {
                     val statement = PsiTreeUtil.getParentOfType(expression, PsiStatement::class.java) ?: return
@@ -32,7 +33,7 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                             registerSizeMethod(holder, expression, expectedCallExpression, "isEmpty()", noExpectedExpression = true)
                             return
                         }
-                        val equalToExpression = expectedCallExpression.argumentList.expressions[0]
+                        val equalToExpression = expectedCallExpression.firstArg
                         if (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) {
                             registerSizeMethod(holder, expression, expectedCallExpression, "hasSameSizeAs()", expectedIsCollection = true)
                             return
@@ -56,10 +57,10 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                         // new stuff in AssertJ 13.2.0
                         if (hasAssertJMethod(expression, "AbstractIterableAssert.hasSizeLessThan")) {
                             val matchedMethod = listOf(
-                                Pair(IS_GREATER_THAN_INT, "hasSizeGreaterThan()"),
-                                Pair(IS_GREATER_THAN_OR_EQUAL_TO_INT, "hasSizeGreaterThanOrEqualTo()"),
-                                Pair(IS_LESS_THAN_OR_EQUAL_TO_INT, "hasSizeLessThanOrEqualTo()"),
-                                Pair(IS_LESS_THAN_INT, "hasSizeLessThan()")
+                                IS_GREATER_THAN_INT to "hasSizeGreaterThan()",
+                                IS_GREATER_THAN_OR_EQUAL_TO_INT to "hasSizeGreaterThanOrEqualTo()",
+                                IS_LESS_THAN_OR_EQUAL_TO_INT to "hasSizeLessThanOrEqualTo()",
+                                IS_LESS_THAN_INT to "hasSizeLessThan()"
                             ).find { it.first.test(expectedCallExpression) }?.second
                             if (matchedMethod != null) {
                                 registerSizeMethod(holder, expression, expectedCallExpression, matchedMethod)
@@ -89,11 +90,8 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                 val originalMethod = getOriginalMethodName(expectedCallExpression) ?: return
                 val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
                 val message = MORE_CONCISE_MESSAGE_TEMPLATE.format(replacementMethod, originalMethod)
-                holder.registerProblem(
-                    expression,
-                    message,
-                    ReplaceSizeMethodCallQuickFix(description, replacementMethod, noExpectedExpression, expectedIsCollection)
-                )
+                val quickfix = ReplaceSizeMethodCallQuickFix(description, replacementMethod, noExpectedExpression, expectedIsCollection)
+                holder.registerProblem(expression, message, quickfix)
             }
         }
     }

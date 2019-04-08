@@ -6,6 +6,8 @@ import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTypesUtil
 import com.siyeh.ig.callMatcher.CallMatcher
+import de.platon42.intellij.plugins.cajon.getArg
+import de.platon42.intellij.plugins.cajon.qualifierExpression
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSimpleMethodCallQuickFix
 import org.jetbrains.annotations.NonNls
 
@@ -110,8 +112,8 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
     }
 
     protected fun checkAssertedType(expression: PsiMethodCallExpression, classname: String): Boolean {
-        var assertedType = expression.methodExpression.qualifierExpression?.type ?: return false
-        if (assertedType is PsiCapturedWildcardType) {
+        var assertedType = expression.qualifierExpression.type ?: return false
+        while (assertedType is PsiCapturedWildcardType) {
             assertedType = assertedType.upperBound
         }
         val assertedClass = PsiTypesUtil.getPsiClass(assertedType) ?: return false
@@ -131,18 +133,26 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val originalMethod = getOriginalMethodName(expression) ?: return
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = SIMPLIFY_MESSAGE_TEMPLATE.format(originalMethod, replacementMethod)
-        holder.registerProblem(
-            expression,
-            message,
-            ReplaceSimpleMethodCallQuickFix(description, replacementMethod)
-        )
+        val quickFix = ReplaceSimpleMethodCallQuickFix(description, replacementMethod)
+        holder.registerProblem(expression, message, quickFix)
     }
 
     protected fun calculateConstantParameterValue(expression: PsiMethodCallExpression, argIndex: Int): Any? {
         if (argIndex >= expression.argumentList.expressionCount) return null
-        val valueExpression = expression.argumentList.expressions[argIndex] ?: return null
+        val valueExpression = expression.getArg(argIndex)
         val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
-        return constantEvaluationHelper.computeConstantExpression(valueExpression)
+        val value = constantEvaluationHelper.computeConstantExpression(valueExpression)
+        if (value == null) {
+            val field = (valueExpression as? PsiReferenceExpression)?.resolve() as? PsiField
+            if (field?.containingClass?.qualifiedName == CommonClassNames.JAVA_LANG_BOOLEAN) {
+                return when (field.name) {
+                    "TRUE" -> true
+                    "FALSE" -> false
+                    else -> null
+                }
+            }
+        }
+        return value
     }
 
     protected fun hasAssertJMethod(element: PsiElement, classAndMethod: String): Boolean {

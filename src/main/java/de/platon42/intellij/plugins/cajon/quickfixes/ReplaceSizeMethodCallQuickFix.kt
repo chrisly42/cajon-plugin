@@ -4,6 +4,9 @@ import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
+import de.platon42.intellij.plugins.cajon.firstArg
+import de.platon42.intellij.plugins.cajon.qualifierExpression
+import de.platon42.intellij.plugins.cajon.replaceQualifierFromMethodCall
 
 class ReplaceSizeMethodCallQuickFix(
     description: String,
@@ -14,21 +17,22 @@ class ReplaceSizeMethodCallQuickFix(
 
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.startElement
-        val factory = JavaPsiFacade.getElementFactory(element.project)
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
-        val assertExpression = methodCallExpression.argumentList.expressions[0] ?: return
+        val assertExpression = methodCallExpression.firstArg
         replaceCollectionSizeOrArrayLength(assertExpression)
         val statement = PsiTreeUtil.getParentOfType(element, PsiStatement::class.java) ?: return
         val oldExpectedExpression = PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java) ?: return
+
+        val factory = JavaPsiFacade.getElementFactory(element.project)
         val expectedExpression =
             factory.createExpressionFromText("a.${if (noExpectedExpression) replacementMethod else replacementMethod.replace("()", "(e)")}", element) as PsiMethodCallExpression
         if (!noExpectedExpression) {
             if (expectedIsCollection) {
-                replaceCollectionSizeOrArrayLength(oldExpectedExpression.argumentList.expressions[0])
+                replaceCollectionSizeOrArrayLength(oldExpectedExpression.firstArg)
             }
-            expectedExpression.argumentList.expressions[0].replace(oldExpectedExpression.argumentList.expressions[0])
+            expectedExpression.firstArg.replace(oldExpectedExpression.firstArg)
         }
-        expectedExpression.methodExpression.qualifierExpression!!.replace(oldExpectedExpression.methodExpression.qualifierExpression!!)
+        expectedExpression.replaceQualifierFromMethodCall(oldExpectedExpression)
         oldExpectedExpression.replace(expectedExpression)
     }
 
@@ -36,7 +40,7 @@ class ReplaceSizeMethodCallQuickFix(
         assertExpression.replace(
             when (assertExpression) {
                 is PsiReferenceExpression -> assertExpression.qualifierExpression!!
-                is PsiMethodCallExpression -> assertExpression.methodExpression.qualifierExpression!!
+                is PsiMethodCallExpression -> assertExpression.qualifierExpression
                 else -> return
             }
         )

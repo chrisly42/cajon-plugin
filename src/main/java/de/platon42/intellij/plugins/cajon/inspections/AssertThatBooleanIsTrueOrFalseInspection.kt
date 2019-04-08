@@ -1,8 +1,11 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.*
+import com.intellij.psi.JavaElementVisitor
+import com.intellij.psi.PsiElementVisitor
+import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.util.TypeConversionUtil
+import de.platon42.intellij.plugins.cajon.firstArg
 
 class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
 
@@ -16,34 +19,23 @@ class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                val isEqualToObject = IS_EQUAL_TO_OBJECT.test(expression)
-                val isEqualToBoolean = IS_EQUAL_TO_BOOLEAN.test(expression)
-                val isNotEqualToObject = IS_NOT_EQUAL_TO_OBJECT.test(expression)
-                val isNotEqualToBoolean = IS_NOT_EQUAL_TO_BOOLEAN.test(expression)
-                val normalBooleanTest = isEqualToObject || isEqualToBoolean
-                val flippedBooleanTest = isNotEqualToObject || isNotEqualToBoolean
-                if (!(normalBooleanTest || flippedBooleanTest)) {
+                val matchingCalls = listOf(
+                    IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_BOOLEAN,
+                    IS_NOT_EQUAL_TO_OBJECT, IS_NOT_EQUAL_TO_BOOLEAN
+                ).map { it.test(expression) }
+                if (matchingCalls.none { it }) {
                     return
                 }
                 if (!checkAssertedType(expression, ABSTRACT_BOOLEAN_ASSERT_CLASSNAME)) {
                     return
                 }
 
-                val equalToExpression = expression.argumentList.expressions[0] ?: return
+                val equalToExpression = expression.firstArg
                 if (!TypeConversionUtil.isBooleanType(equalToExpression.type)) {
                     return
                 }
-                var value = calculateConstantParameterValue(expression, 0)
-                if (value == null) {
-                    val field = (equalToExpression as? PsiReferenceExpression)?.resolve() as? PsiField
-                    if (field?.containingClass?.qualifiedName == CommonClassNames.JAVA_LANG_BOOLEAN) {
-                        when {
-                            field.name == "TRUE" -> value = true
-                            field.name == "FALSE" -> value = false
-                        }
-                    }
-                }
-                val expectedResult = value as? Boolean ?: return
+                val expectedResult = calculateConstantParameterValue(expression, 0)as? Boolean ?: return
+                val flippedBooleanTest = matchingCalls.drop(2).any { it }
 
                 val replacementMethod = if (expectedResult xor flippedBooleanTest) "isTrue()" else "isFalse()"
                 registerSimplifyMethod(holder, expression, replacementMethod)

@@ -142,11 +142,8 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
         val originalMethod = getOriginalMethodName(expression) ?: return
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = CONVERT_MESSAGE_TEMPLATE.format(originalMethod)
-        holder.registerProblem(
-            expression,
-            message,
-            ReplaceJUnitAssertMethodCallQuickFix(description, hasExpected, replacementMethod)
-        )
+        val quickFix = ReplaceJUnitAssertMethodCallQuickFix(description, hasExpected, replacementMethod)
+        holder.registerProblem(expression, message, quickFix)
     }
 
     private fun registerDeltaReplacementMethod(
@@ -157,11 +154,8 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
         val originalMethod = getOriginalMethodName(expression) ?: return
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = CONVERT_MESSAGE_TEMPLATE.format(originalMethod)
-        holder.registerProblem(
-            expression,
-            message,
-            ReplaceJUnitDeltaAssertMethodCallQuickFix(description, replacementMethod)
-        )
+        val quickFix = ReplaceJUnitDeltaAssertMethodCallQuickFix(description, replacementMethod)
+        holder.registerProblem(expression, message, quickFix)
     }
 
     private class Mapping(

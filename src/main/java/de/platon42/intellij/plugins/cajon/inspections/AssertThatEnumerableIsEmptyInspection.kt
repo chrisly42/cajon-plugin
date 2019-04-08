@@ -17,8 +17,7 @@ class AssertThatEnumerableIsEmptyInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                val hasSize = HAS_SIZE.test(expression)
-                if (!hasSize) {
+                if (!HAS_SIZE.test(expression)) {
                     return
                 }
 

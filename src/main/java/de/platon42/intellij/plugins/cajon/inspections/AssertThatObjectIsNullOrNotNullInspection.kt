@@ -5,6 +5,7 @@ import com.intellij.psi.JavaElementVisitor
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.PsiType
+import de.platon42.intellij.plugins.cajon.firstArg
 
 class AssertThatObjectIsNullOrNotNullInspection : AbstractAssertJInspection() {
 
@@ -24,7 +25,7 @@ class AssertThatObjectIsNullOrNotNullInspection : AbstractAssertJInspection() {
                     return
                 }
 
-                if (expression.argumentList.expressions[0].type == PsiType.NULL) {
+                if (expression.firstArg.type == PsiType.NULL) {
                     registerSimplifyMethod(holder, expression, if (isEqualTo) "isNull()" else "isNotNull()")
                 }
             }

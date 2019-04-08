@@ -5,6 +5,7 @@ import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.TypeConversionUtil
+import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.quickfixes.SplitBinaryExpressionMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.SplitEqualsExpressionMethodCallQuickFix
 
@@ -26,18 +27,16 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
             Mapping(JavaTokenType.LE, "isLessThanOrEqualTo()", "isGreaterThan()")
         )
 
-        private val PRIMITIVE_MAPPINGS_SWAPPED = listOf(
-            Mapping(JavaTokenType.EQEQ, "isEqualTo()", "isNotEqualTo()"),
-            Mapping(JavaTokenType.NE, "isNotEqualTo()", "isEqualTo()"),
-            Mapping(JavaTokenType.GT, "isLessThan()", "isGreaterThanOrEqualTo()"),
-            Mapping(JavaTokenType.GE, "isLessThanOrEqualTo()", "isGreaterThan()"),
-            Mapping(JavaTokenType.LT, "isGreaterThan()", "isLessThanOrEqualTo()"),
-            Mapping(JavaTokenType.LE, "isGreaterThanOrEqualTo()", "isLessThan()")
-        )
-
         private val OBJECT_MAPPINGS = listOf(
             Mapping(JavaTokenType.EQEQ, "isSameAs()", "isNotSameAs()"),
             Mapping(JavaTokenType.NE, "isNotSameAs()", "isSameAs()")
+        )
+
+        private val SWAP_BINARY_OPERATOR = mapOf<IElementType, IElementType>(
+            JavaTokenType.GT to JavaTokenType.LT,
+            JavaTokenType.GE to JavaTokenType.LE,
+            JavaTokenType.LT to JavaTokenType.GT,
+            JavaTokenType.LE to JavaTokenType.GE
         )
     }
 
@@ -55,14 +54,11 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 val expectedCallExpression = PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java) ?: return
                 val isInverted = getExpectedResult(expectedCallExpression) ?: return
 
-                val assertThatArgument = expression.argumentList.expressions[0] ?: return
+                val assertThatArgument = expression.firstArg
                 if (assertThatArgument is PsiMethodCallExpression && OBJECT_EQUALS.test(assertThatArgument)) {
                     val replacementMethod = if (isInverted) "isNotEqualTo()" else "isEqualTo()"
-                    holder.registerProblem(
-                        expression,
-                        EQUALS_MORE_MEANINGFUL_MESSAGE,
-                        SplitEqualsExpressionMethodCallQuickFix(SPLIT_EQUALS_EXPRESSION_DESCRIPTION, replacementMethod)
-                    )
+                    val quickFix = SplitEqualsExpressionMethodCallQuickFix(SPLIT_EQUALS_EXPRESSION_DESCRIPTION, replacementMethod)
+                    holder.registerProblem(expression, EQUALS_MORE_MEANINGFUL_MESSAGE, quickFix)
                     return
                 }
 
@@ -71,8 +67,8 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 val leftType = binaryExpression.lOperand.type ?: return
                 val rightType = binaryExpression.rOperand?.type ?: return
 
-                val isLeftNull = TypeConversionUtil.isNullType(leftType)
-                val isRightNull = TypeConversionUtil.isNullType(rightType)
+                val bothTypes = listOf(leftType, rightType)
+                val (isLeftNull, isRightNull) = bothTypes.map(TypeConversionUtil::isNullType)
                 if (isLeftNull && isRightNull) {
                     return
                 } else if (isLeftNull || isRightNull) {
@@ -86,15 +82,17 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                     return
                 }
 
-                val isPrimitive = TypeConversionUtil.isPrimitiveAndNotNull(leftType) && TypeConversionUtil.isPrimitiveAndNotNull(rightType)
-                val isNumericType = TypeConversionUtil.isNumericType(leftType) && TypeConversionUtil.isNumericType(rightType)
+                val isPrimitive = bothTypes.all(TypeConversionUtil::isPrimitiveAndNotNull)
+                val isNumericType = bothTypes.all(TypeConversionUtil::isNumericType)
                 val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
                 val swapExpectedAndActual = constantEvaluationHelper.computeConstantExpression(binaryExpression.lOperand) != null
 
-                val tokenType = binaryExpression.operationSign.tokenType
+                val tokenType = binaryExpression.operationSign.tokenType.let {
+                    if (swapExpectedAndActual) SWAP_BINARY_OPERATOR.getOrDefault(it, it) else it
+                } ?: return
                 val mappingToUse =
                     if (isPrimitive || isNumericType) {
-                        if (swapExpectedAndActual) PRIMITIVE_MAPPINGS_SWAPPED else PRIMITIVE_MAPPINGS
+                        PRIMITIVE_MAPPINGS
                     } else {
                         OBJECT_MAPPINGS
                     }
@@ -127,11 +125,8 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 pickRightOperand: Boolean = false,
                 noExpectedExpression: Boolean = false
             ) {
-                holder.registerProblem(
-                    expression,
-                    BINARY_MORE_MEANINGFUL_MESSAGE,
-                    SplitBinaryExpressionMethodCallQuickFix(SPLIT_BINARY_EXPRESSION_DESCRIPTION, replacementMethod, pickRightOperand, noExpectedExpression)
-                )
+                val quickFix = SplitBinaryExpressionMethodCallQuickFix(SPLIT_BINARY_EXPRESSION_DESCRIPTION, replacementMethod, pickRightOperand, noExpectedExpression)
+                holder.registerProblem(expression, BINARY_MORE_MEANINGFUL_MESSAGE, quickFix)
             }
         }
     }
