@@ -28,5 +28,7 @@ class AssertJClassNames {
         const val GUAVA_OPTIONAL_CLASSNAME = "com.google.common.base.Optional"
         @NonNls
         const val GUAVA_ASSERTIONS_CLASSNAME = "org.assertj.guava.api.Assertions"
+        @NonNls
+        const val GUAVA_OPTIONAL_ASSERT_CLASSNAME = "org.assertj.guava.api.OptionalAssert"
     }
 }

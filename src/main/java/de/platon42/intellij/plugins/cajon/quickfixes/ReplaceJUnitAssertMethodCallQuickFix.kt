@@ -19,7 +19,7 @@ class ReplaceJUnitAssertMethodCallQuickFix(description: String, private val noEx
         val element = descriptor.startElement
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
         val args = methodCallExpression.argumentList
-        val count = args.expressionCount
+        val count = args.expressions.size
         val actualExpression = args.expressions[count - 1] ?: return
         val (expectedExpression, messageExpression) = if (noExpectedExpression) {
             val message = if (count > 1) args.expressions[0] else null

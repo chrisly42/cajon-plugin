@@ -17,7 +17,7 @@ class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val
         val element = descriptor.startElement
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
         val args = methodCallExpression.argumentList
-        val count = args.expressionCount
+        val count = args.expressions.size
         val actualExpression = args.expressions[count - 2] ?: return
         val messageExpression = if (count > 3) args.expressions[0] else null
         val expectedExpression = args.expressions[count - 3] ?: return

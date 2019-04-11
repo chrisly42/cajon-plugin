@@ -10,7 +10,7 @@
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="182.0"/>
+    <idea-version since-build="172.0"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -36,6 +36,8 @@
 
         <localInspection groupPath="Java" shortName="AssertThatJava8Optional" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatJava8OptionalInspection"/>
+        <localInspection groupPath="Java" shortName="AssertThatGuavaOptional" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatGuavaOptionalInspection"/>
 
         <localInspection groupPath="Java" shortName="JUnitAssertToAssertJ" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.JUnitAssertToAssertJInspection"/>

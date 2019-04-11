@@ -51,22 +51,26 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(object).isNotEqualTo(null);  
     to: assertThat(object).isNotNull();
   ```
+  
 - AssertThatBooleanIsTrueOrFalse
   ```
   from: assertThat(booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);  
     to: assertThat(booleanValue).isTrue()/isFalse();
   ```
+  
 - AssertThatStringIsEmpty
   ```
   from: assertThat(charSequence/string).isEqualTo("");
   from: assertThat(charSequence/string).hasSize(0);
     to: assertThat(charSequence/string).isEmpty();
   ```
+  
 - AssertThatEnumerableIsEmpty
   ```
   from: assertThat(enumerable).hasSize(0);
     to: assertThat(enumerable).isEmpty();
   ```
+  
 - AssertThatSize
   ```
   from: assertThat(array.length).isEqualTo(0);
@@ -174,17 +178,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   assertArrayEquals(expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
   assertArrayEquals(message, expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
   ```
-
-## Development notice
-
-Cajon is written in Kotlin 1.3.
-
-Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one that I'm aware of ;) ).
-The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and I took me quite a while to make it work with JUnit 5.
-Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
-
-## TODO
-- AssertThatNegatedBooleanExpression
+  
 - AssertThatGuavaOptional
   ```
   from: assertThat(opt.isPresent()).isEqualTo(true);
@@ -200,9 +194,6 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
   from: assertThat(opt.get()).isEqualTo("foo");
     to: assertThat(opt).contains("foo");
      
-  from: assertThat(opt.get()).isSameAs("foo");
-    to: assertThat(opt).containsSame("foo"); 
-
   from: assertThat(opt).isEqualTo(Optional.of("foo"));
   from: assertThat(opt).isEqualTo(Optional.fromNullable("foo"));
     to: assertThat(opt).contains("foo"); 
@@ -214,6 +205,19 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
     to: assertThat(opt).isPresent();
   ```
 
+  AssertJ for Guava needs to be available in the classpath.
+
+## Development notice
+
+Cajon is written in Kotlin 1.3.
+
+Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one that I'm aware of ;) ).
+The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and I took me quite a while to make it work with JUnit 5.
+Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
+
+## TODO
+- AssertThatNegatedBooleanExpression
+- AssertThatInstanceOf
 - Referencing string properties inside extracting()
 - Extraction with property names to lambda with Java 8
   ```
@@ -223,6 +227,12 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 - Kotlin support
 
 ## Changelog
+
+#### V0.4 (11-Apr-19)
+- Reduced minimal supported IDEA version from 2018.2 to 2017.2.
+- New inspection AssertThatJava8Optional that operates on Java 8 Optional objects and tries to use contains(), containsSame(), isPresent(), and isNotPresent() instead.
+- New inspection AssertThatGuavaOptional that operates on Guava Optional objects and tries to use contains(), isPresent(), and isAbsent() instead.
+- Added support in AssertThatBinaryExpressionIsTrueOrFalse for is(Not)EqualTo(Boolean.TRUE/FALSE).
 
 #### V0.3 (07-Apr-19)
 - New inspection AssertThatBinaryExpressionIsTrueOrFalse that will find and fix common binary expressions and equals() statements (more than 150 combinations) inside assertThat().

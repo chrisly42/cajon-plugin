@@ -14,18 +14,19 @@ import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_E
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_INTEGER_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERTIONS_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_ASSERTIONS_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_OPTIONAL_CLASSNAME
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.getArg
 import de.platon42.intellij.plugins.cajon.qualifierExpression
 import de.platon42.intellij.plugins.cajon.quickfixes.RemoveActualOutmostMethodCallQuickFix
-import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceExpectedOutmostMethodCallQuickFix
+import de.platon42.intellij.plugins.cajon.quickfixes.RemoveExpectedOutmostMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSimpleMethodCallQuickFix
 
 open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
 
     companion object {
         const val SIMPLIFY_MESSAGE_TEMPLATE = "%s() can be simplified to %s()"
-        const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s() would be more concise than %s"
+        const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s() would be more concise than %s()"
 
         const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s() with %s()"
 
@@ -73,7 +74,7 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
             .parameterTypes(CommonClassNames.JAVA_UTIL_OPTIONAL)!!
 
         val ASSERT_THAT_GUAVA_OPTIONAL = CallMatcher.staticCall(GUAVA_ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
-            .parameterTypes()!!
+            .parameterTypes(GUAVA_OPTIONAL_CLASSNAME)!!
 
         val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
@@ -130,6 +131,18 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
             .parameterCount(1)!!
         val OPTIONAL_EMPTY = CallMatcher.staticCall(CommonClassNames.JAVA_UTIL_OPTIONAL, "empty")
             .parameterCount(0)!!
+
+        val GUAVA_OPTIONAL_GET = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, "get")
+            .parameterCount(0)!!
+        val GUAVA_OPTIONAL_IS_PRESENT = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, "isPresent")
+            .parameterCount(0)!!
+
+        val GUAVA_OPTIONAL_OF = CallMatcher.staticCall(GUAVA_OPTIONAL_CLASSNAME, "of")
+            .parameterCount(1)!!
+        val GUAVA_OPTIONAL_FROM_NULLABLE = CallMatcher.staticCall(GUAVA_OPTIONAL_CLASSNAME, "fromNullable")
+            .parameterCount(1)!!
+        val GUAVA_OPTIONAL_ABSENT = CallMatcher.staticCall(GUAVA_OPTIONAL_CLASSNAME, "absent")
+            .parameterCount(0)!!
     }
 
     override fun getGroupDisplayName(): String {
@@ -184,12 +197,12 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val originalMethod = getOriginalMethodName(expectedCallExpression) ?: return
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = MORE_CONCISE_MESSAGE_TEMPLATE.format(replacementMethod, originalMethod)
-        val quickfix = ReplaceExpectedOutmostMethodCallQuickFix(description, replacementMethod)
+        val quickfix = RemoveExpectedOutmostMethodCallQuickFix(description, replacementMethod)
         holder.registerProblem(expression, message, quickfix)
     }
 
     protected fun calculateConstantParameterValue(expression: PsiMethodCallExpression, argIndex: Int): Any? {
-        if (argIndex >= expression.argumentList.expressionCount) return null
+        if (argIndex >= expression.argumentList.expressions.size) return null
         val valueExpression = expression.getArg(argIndex)
         val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
         val value = constantEvaluationHelper.computeConstantExpression(valueExpression)

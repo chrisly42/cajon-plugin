@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.3'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.30'
 }
 
 group 'de.platon42'
@@ -41,9 +41,12 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V0.4 (xx-Apr-19)</h4>
+  <h4>V0.4 (11-Apr-19)</h4>
     <ul>
-      <li>New inspection AssertThatJava8Optional that operates on Java 8 Optional objects and tries to use contains(), isPresent() and isNotPresent() instead.
+      <li>Reduced minimal supported IDEA version from 2018.2 to 2017.2.
+      <li>New inspection AssertThatJava8Optional that operates on Java 8 Optional objects and tries to use contains(), containsSame(), isPresent(), and isNotPresent() instead.
+      <li>New inspection AssertThatGuavaOptional that operates on Guava Optional objects and tries to use contains(), isPresent(), and isAbsent() instead.
+      <li>Added support in AssertThatBinaryExpressionIsTrueOrFalse for is(Not)EqualTo(Boolean.TRUE/FALSE).
     </ul>
   <h4>V0.3 (07-Apr-19)</h4>
     <ul>
@@ -51,15 +54,6 @@ patchPluginXml {
       <li>Merged AssertThatObjectIsNull and AssertThatObjectIsNotNull to AssertThatObjectIsNullOrNotNull.
       <li>Support for hasSizeLessThan(), hasSizeLessThanOrEqualTo(), hasSizeGreaterThanOrEqualTo(), and hasSizeGreaterThan() for AssertThatSizeInspection (with AssertJ >=13.2.0).
       <li>Really fixed highlighting for JUnit conversion. Sorry.
-    </ul>
-  <h4>V0.2 (01-Apr-19)</h4>
-    <ul>
-      <li>Fixed descriptions and quick fix texts.
-      <li>Fixed highlighting of found problems and also 'Run inspection by Name' returning nothing.
-    </ul>
-  <h4>V0.1 (31-Mar-19)</h4>
-    <ul>
-      <li>Initial release.
     </ul>
 """
 }

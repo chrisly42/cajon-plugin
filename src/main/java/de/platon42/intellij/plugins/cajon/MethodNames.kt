@@ -72,6 +72,7 @@ class MethodNames {
         const val IS_PRESENT = "isPresent"
         @NonNls
         const val IS_NOT_PRESENT = "isNotPresent"
+
         @NonNls
         const val IS_ABSENT = "isAbsent"
     }

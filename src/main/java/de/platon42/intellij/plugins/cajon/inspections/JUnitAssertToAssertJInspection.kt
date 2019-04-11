@@ -1,12 +1,11 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.CommonClassNames
-import com.intellij.psi.JavaElementVisitor
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.*
+import com.intellij.psi.search.GlobalSearchScope
 import com.siyeh.ig.callMatcher.CallMatcher
 import com.siyeh.ig.callMatcher.CallMatcher.anyOf
+import de.platon42.intellij.plugins.cajon.AssertJClassNames
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceJUnitAssertMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceJUnitDeltaAssertMethodCallQuickFix
@@ -120,6 +119,8 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
                 if (!isJUnitAssertCall) {
                     return // early exit
                 }
+                JavaPsiFacade.getInstance(expression.project)
+                    .findClass(AssertJClassNames.ASSERTIONS_CLASSNAME, GlobalSearchScope.allScope(expression.project)) ?: return
                 for (mapping in MAPPINGS) {
                     if (mapping.callMatcher.test(expression)) {
                         if (mapping.hasDelta) {

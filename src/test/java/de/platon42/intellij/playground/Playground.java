@@ -153,9 +153,10 @@ public class Playground {
 
         assertThat(opt).isEqualTo(Optional.empty());
         assertThat(opt).isNotEqualTo(Optional.empty());
+        assertThat(opt).isPresent();
     }
 
-    private void guavaOptional() {
+    private void assertThatGuavaOptional() {
         com.google.common.base.Optional<String> opt = com.google.common.base.Optional.absent();
 
         assertThat(opt.isPresent()).isEqualTo(true);
@@ -172,6 +173,8 @@ public class Playground {
 
         assertThat(opt.get()).isEqualTo("foo");
         assertThat(opt.get()).isSameAs("foo");
+        assertThat(opt.get()).isNotEqualTo("foo");
+        assertThat(opt.get()).isNotSameAs("foo");
 
         assertThat(opt).isEqualTo(com.google.common.base.Optional.of("foo"));
         assertThat(opt).isEqualTo(com.google.common.base.Optional.fromNullable("foo"));
@@ -180,6 +183,7 @@ public class Playground {
 
         assertThat(opt).isEqualTo(com.google.common.base.Optional.absent());
         assertThat(opt).isNotEqualTo(com.google.common.base.Optional.absent());
+        assertThat(opt).isAbsent();
     }
 
     private void junitAssertions() {
