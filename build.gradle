@@ -43,7 +43,7 @@ patchPluginXml {
     changeNotes """
   <h4>V0.4 (xx-Apr-19)</h4>
     <ul>
-      <li>Yo.
+      <li>New inspection AssertThatJava8Optional that operates on Java 8 Optional objects and tries to use contains(), isPresent() and isNotPresent() instead.
     </ul>
   <h4>V0.3 (07-Apr-19)</h4>
     <ul>

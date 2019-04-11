@@ -13,8 +13,12 @@ public class BinaryExpression {
         assertThat(primAct).isEqualTo(primExp);
         assertThat(primAct).isEqualTo(primExp);
         assertThat(primAct).isEqualTo(primExp);
+        assertThat(primAct).isEqualTo(primExp);
+        assertThat(primAct).isEqualTo(primExp);
         assertThat(primAct).isEqualTo(1);
         assertThat(primAct).isEqualTo(1);
+        assertThat(primAct).isNotEqualTo(primExp);
+        assertThat(primAct).isNotEqualTo(primExp);
         assertThat(primAct).isNotEqualTo(primExp);
         assertThat(primAct).isNotEqualTo(primExp);
         assertThat(primAct).isNotEqualTo(primExp);

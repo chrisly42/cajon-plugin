@@ -32,6 +32,15 @@ Then AssertJ would tell you the contents of the collection on failure.
 
 The plugin also supports the conversion of the most common JUnit 4 assertions to AssertJ.
 
+## Usage
+
+The plugin will report inspections in your opened editor file as warnings.
+You can then quick-fix these with your quick-fix hotkey (usually Alt-Return or Opt-Return).
+
+Or, you can use the "Run Inspection by Name..." action to run one inspection on a bigger scope (e.g. the whole project).
+
+You can toggle the various inspections in the Settings/Editor/Inspections in the AssertJ group.
+
 ## Implemented inspections
 
 - AssertThatObjectIsNullOrNotNull
@@ -108,7 +117,36 @@ The plugin also supports the conversion of the most common JUnit 4 assertions to
     to: assertThat(objActual).isNotNull();
   ```
   and many, many more combinations (more than 150).
-  
+
+- AssertThatJava8Optional
+  ```
+  from: assertThat(opt.isPresent()).isEqualTo(true);
+  from: assertThat(opt.isPresent()).isNotEqualTo(false);
+  from: assertThat(opt.isPresent()).isTrue();
+    to: assertThat(opt).isPresent();
+
+  from: assertThat(opt.isPresent()).isEqualTo(false);
+  from: assertThat(opt.isPresent()).isNotEqualTo(true);
+  from: assertThat(opt.isPresent()).isFalse();
+    to: assertThat(opt).isNotPresent();
+    
+  from: assertThat(opt.get()).isEqualTo("foo");
+    to: assertThat(opt).contains("foo");
+     
+  from: assertThat(opt.get()).isSameAs("foo");
+    to: assertThat(opt).containsSame("foo"); 
+
+  from: assertThat(opt).isEqualTo(Optional.of("foo"));
+  from: assertThat(opt).isEqualTo(Optional.ofNullable("foo"));
+    to: assertThat(opt).contains("foo"); 
+
+  from: assertThat(opt).isEqualTo(Optional.empty());
+    to: assertThat(opt).isNotPresent();
+
+  from: assertThat(opt).isNotEqualTo(Optional.empty());
+    to: assertThat(opt).isPresent();
+  ```
+
 - JUnitAssertToAssertJ
   ```
   assertTrue(condition);
@@ -139,49 +177,43 @@ The plugin also supports the conversion of the most common JUnit 4 assertions to
 
 ## Development notice
 
+Cajon is written in Kotlin 1.3.
+
 Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one that I'm aware of ;) ).
 The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and I took me quite a while to make it work with JUnit 5.
 Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
 
 ## TODO
-- AssertThatJava8OptionalContains
+- AssertThatNegatedBooleanExpression
+- AssertThatGuavaOptional
   ```
-  from: assertThat(Optional.of("foo").get()).isEqualTo("foo");
-    to: assertThat(Optional.of("foo")).contains("foo");
-  ```
-- AssertThatJava8OptionalIsPresentOrAbsent
-  ```
-  from: assertThat(Optional.of("foo").isPresent()).isEqualTo(true);
-  from: assertThat(!Optional.of("foo").isPresent()).isEqualTo(false);
-  from: assertThat(Optional.of("foo").isPresent()).isTrue();
-  from: assertThat(!Optional.of("foo").isPresent()).isFalse();
-    to: assertThat(Optional.of("foo")).isPresent();
+  from: assertThat(opt.isPresent()).isEqualTo(true);
+  from: assertThat(opt.isPresent()).isNotEqualTo(false);
+  from: assertThat(opt.isPresent()).isTrue();
+    to: assertThat(opt).isPresent();
 
-  from: assertThat(Optional.of("foo").isPresent()).isEqualTo(false);
-  from: assertThat(!Optional.of("foo").isPresent()).isEqualTo(true);
-  from: assertThat(Optional.of("foo").isPresent()).isFalse();
-  from: assertThat(!Optional.of("foo").isPresent()).isTrue();
-    to: assertThat(Optional.of("foo")).isNotPresent();
-  ```
-- AssertThatGuavaOptionalContains
-  ```
-  from: assertThat(Optional.of("foo").get()).isEqualTo("foo");
-    to: assertThat(Optional.of("foo")).contains("foo");
-  ```
-- AssertThatGuavaOptionalIsPresentOrAbsent
-  ```
-  from: assertThat(Optional.of("foo").isPresent()).isEqualTo(true);
-  from: assertThat(!Optional.of("foo").isPresent()).isEqualTo(false);
-  from: assertThat(Optional.of("foo").isPresent()).isTrue();
-  from: assertThat(!Optional.of("foo").isPresent()).isFalse();
-    to: assertThat(Optional.of("foo")).isPresent();
+  from: assertThat(opt.isPresent()).isEqualTo(false);
+  from: assertThat(opt.isPresent()).isNotEqualTo(true);
+  from: assertThat(opt.isPresent()).isFalse();
+    to: assertThat(opt).isAbsent();
+    
+  from: assertThat(opt.get()).isEqualTo("foo");
+    to: assertThat(opt).contains("foo");
+     
+  from: assertThat(opt.get()).isSameAs("foo");
+    to: assertThat(opt).containsSame("foo"); 
 
-  from: assertThat(Optional.of("foo").isPresent()).isEqualTo(false);
-  from: assertThat(!Optional.of("foo").isPresent()).isEqualTo(true);
-  from: assertThat(Optional.of("foo").isPresent()).isFalse();
-  from: assertThat(!Optional.of("foo").isPresent()).isTrue();
-    to: assertThat(Optional.of("foo")).isAbsent();
+  from: assertThat(opt).isEqualTo(Optional.of("foo"));
+  from: assertThat(opt).isEqualTo(Optional.fromNullable("foo"));
+    to: assertThat(opt).contains("foo"); 
+
+  from: assertThat(opt).isEqualTo(Optional.absent());
+    to: assertThat(opt).isAbsent();
+
+  from: assertThat(opt).isNotEqualTo(Optional.absent());
+    to: assertThat(opt).isPresent();
   ```
+
 - Referencing string properties inside extracting()
 - Extraction with property names to lambda with Java 8
   ```
@@ -189,3 +221,18 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
     to: assertThat(object).extracting(type::getPropOne, it -> it.propNoGetter, it -> it.getPropTwo().getInnerProp())...
   ```
 - Kotlin support
+
+## Changelog
+
+#### V0.3 (07-Apr-19)
+- New inspection AssertThatBinaryExpressionIsTrueOrFalse that will find and fix common binary expressions and equals() statements (more than 150 combinations) inside assertThat().
+- Merged AssertThatObjectIsNull and AssertThatObjectIsNotNull to AssertThatObjectIsNullOrNotNull.
+- Support for hasSizeLessThan(), hasSizeLessThanOrEqualTo(), hasSizeGreaterThanOrEqualTo(), and hasSizeGreaterThan() for AssertThatSizeInspection (with AssertJ >=13.2.0).
+- Really fixed highlighting for JUnit conversion. Sorry.
+
+#### V0.2 (01-Apr-19)
+- Fixed descriptions and quick fix texts.
+- Fixed highlighting of found problems and also 'Run inspection by Name' returning nothing.
+
+#### V0.1 (31-Mar-19)
+- Initial release.

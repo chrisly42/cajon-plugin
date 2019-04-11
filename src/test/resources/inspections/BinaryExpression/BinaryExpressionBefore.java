@@ -12,12 +12,16 @@ public class BinaryExpression {
 
         assertThat(primAct == primExp).isTrue();
         assertThat(primAct == primExp).isEqualTo(true);
+        assertThat(primAct == primExp).isEqualTo(Boolean.TRUE);
         assertThat(primAct == primExp).isNotEqualTo(false);
+        assertThat(primAct == primExp).isNotEqualTo(Boolean.FALSE);
         assertThat(primAct == 1).isTrue();
         assertThat(1 == primAct).isTrue();
         assertThat(primAct == primExp).isFalse();
         assertThat(primAct == primExp).isEqualTo(false);
+        assertThat(primAct == primExp).isEqualTo(Boolean.FALSE);
         assertThat(primAct == primExp).isNotEqualTo(true);
+        assertThat(primAct == primExp).isNotEqualTo(Boolean.TRUE);
         assertThat(primAct == 1).isFalse();
         assertThat(1 == primAct).isFalse();
 

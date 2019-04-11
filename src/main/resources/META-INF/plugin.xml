@@ -34,6 +34,9 @@
         <localInspection groupPath="Java" shortName="AssertThatBinaryExpressionIsTrueOrFalse" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBinaryExpressionIsTrueOrFalseInspection"/>
 
+        <localInspection groupPath="Java" shortName="AssertThatJava8Optional" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatJava8OptionalInspection"/>
+
         <localInspection groupPath="Java" shortName="JUnitAssertToAssertJ" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.JUnitAssertToAssertJInspection"/>
     </extensions>

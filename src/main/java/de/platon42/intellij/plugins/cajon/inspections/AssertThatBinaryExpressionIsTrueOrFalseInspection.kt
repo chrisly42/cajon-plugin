@@ -2,7 +2,6 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
-import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.TypeConversionUtil
 import de.platon42.intellij.plugins.cajon.firstArg
@@ -17,27 +16,6 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
         private const val SPLIT_EQUALS_EXPRESSION_DESCRIPTION = "Split equals() expression out of assertThat()"
         private const val BINARY_MORE_MEANINGFUL_MESSAGE = "Moving binary expression out of assertThat() would be more meaningful"
         private const val EQUALS_MORE_MEANINGFUL_MESSAGE = "Moving equals() expression out of assertThat() would be more meaningful"
-
-        private val PRIMITIVE_MAPPINGS = listOf(
-            Mapping(JavaTokenType.EQEQ, "isEqualTo()", "isNotEqualTo()"),
-            Mapping(JavaTokenType.NE, "isNotEqualTo()", "isEqualTo()"),
-            Mapping(JavaTokenType.GT, "isGreaterThan()", "isLessThanOrEqualTo()"),
-            Mapping(JavaTokenType.GE, "isGreaterThanOrEqualTo()", "isLessThan()"),
-            Mapping(JavaTokenType.LT, "isLessThan()", "isGreaterThanOrEqualTo()"),
-            Mapping(JavaTokenType.LE, "isLessThanOrEqualTo()", "isGreaterThan()")
-        )
-
-        private val OBJECT_MAPPINGS = listOf(
-            Mapping(JavaTokenType.EQEQ, "isSameAs()", "isNotSameAs()"),
-            Mapping(JavaTokenType.NE, "isNotSameAs()", "isSameAs()")
-        )
-
-        private val SWAP_BINARY_OPERATOR = mapOf<IElementType, IElementType>(
-            JavaTokenType.GT to JavaTokenType.LT,
-            JavaTokenType.GE to JavaTokenType.LE,
-            JavaTokenType.LT to JavaTokenType.GT,
-            JavaTokenType.LE to JavaTokenType.GE
-        )
     }
 
     override fun getDisplayName() = DISPLAY_NAME
@@ -52,11 +30,11 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
 
                 val statement = PsiTreeUtil.getParentOfType(expression, PsiStatement::class.java) ?: return
                 val expectedCallExpression = PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java) ?: return
-                val isInverted = getExpectedResult(expectedCallExpression) ?: return
+                val expectedResult = getExpectedBooleanResult(expectedCallExpression) ?: return
 
                 val assertThatArgument = expression.firstArg
                 if (assertThatArgument is PsiMethodCallExpression && OBJECT_EQUALS.test(assertThatArgument)) {
-                    val replacementMethod = if (isInverted) "isNotEqualTo()" else "isEqualTo()"
+                    val replacementMethod = if (expectedResult) "isEqualTo()" else "isNotEqualTo()"
                     val quickFix = SplitEqualsExpressionMethodCallQuickFix(SPLIT_EQUALS_EXPRESSION_DESCRIPTION, replacementMethod)
                     holder.registerProblem(expression, EQUALS_MORE_MEANINGFUL_MESSAGE, quickFix)
                     return
@@ -72,13 +50,8 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 if (isLeftNull && isRightNull) {
                     return
                 } else if (isLeftNull || isRightNull) {
-                    registerSplitBinaryExpressionMethod(
-                        holder,
-                        expression,
-                        if (isInverted) "isNotNull()" else "isNull()",
-                        pickRightOperand = isLeftNull,
-                        noExpectedExpression = true
-                    )
+                    val replacementMethod = if (expectedResult) "isNull()" else "isNotNull()"
+                    registerSplitBinaryExpressionMethod(holder, expression, replacementMethod, pickRightOperand = isLeftNull, noExpectedExpression = true)
                     return
                 }
 
@@ -87,35 +60,22 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
                 val swapExpectedAndActual = constantEvaluationHelper.computeConstantExpression(binaryExpression.lOperand) != null
 
-                val tokenType = binaryExpression.operationSign.tokenType.let {
-                    if (swapExpectedAndActual) SWAP_BINARY_OPERATOR.getOrDefault(it, it) else it
-                } ?: return
+                val tokenType = binaryExpression.operationSign.tokenType
+                    .let {
+                        if (swapExpectedAndActual) SWAP_SIDE_OF_BINARY_OPERATOR.getOrDefault(it, it) else it
+                    }
+                    .let {
+                        if (expectedResult) it else INVERT_BINARY_OPERATOR.getOrDefault(it, it)
+                    } ?: return
                 val mappingToUse =
                     if (isPrimitive || isNumericType) {
-                        PRIMITIVE_MAPPINGS
+                        TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP
                     } else {
-                        OBJECT_MAPPINGS
+                        TOKEN_TO_ASSERTJ_FOR_OBJECT_MAPPINGS
                     }
-                val mapping = mappingToUse.find { it.tokenType == tokenType } ?: return
-                val replacementMethod = if (isInverted) mapping.replacementInverted else mapping.replacement
+                val replacementMethod = mappingToUse[tokenType] ?: return
 
-                registerSplitBinaryExpressionMethod(holder, expression, replacementMethod, pickRightOperand = swapExpectedAndActual)
-            }
-
-            private fun getExpectedResult(expectedCallExpression: PsiMethodCallExpression): Boolean? {
-                val isTrue = IS_TRUE.test(expectedCallExpression)
-                val isFalse = IS_FALSE.test(expectedCallExpression)
-                if (isTrue || isFalse) {
-                    return isFalse
-                } else {
-                    val isEqualTo = IS_EQUAL_TO_BOOLEAN.test(expectedCallExpression)
-                    val isNotEqualTo = IS_NOT_EQUAL_TO_BOOLEAN.test(expectedCallExpression)
-                    if (isEqualTo || isNotEqualTo) {
-                        val constValue = calculateConstantParameterValue(expectedCallExpression, 0) as? Boolean ?: return null
-                        return isEqualTo xor constValue
-                    }
-                }
-                return null
+                registerSplitBinaryExpressionMethod(holder, expression, "$replacementMethod()", pickRightOperand = swapExpectedAndActual)
             }
 
             private fun registerSplitBinaryExpressionMethod(
@@ -130,10 +90,4 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
             }
         }
     }
-
-    private class Mapping(
-        val tokenType: IElementType,
-        val replacement: String,
-        val replacementInverted: String
-    )
 }

@@ -14,7 +14,7 @@ internal class AssertThatBinaryExpressionIsTrueOrFalseInspectionTest : AbstractC
         runTest {
             myFixture.enableInspections(AssertThatBinaryExpressionIsTrueOrFalseInspection::class.java)
             myFixture.configureByFile("BinaryExpressionBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Split binary expression out of assertThat()"), 144)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Split binary expression out of assertThat()"), 148)
             executeQuickFixes(myFixture, Regex.fromLiteral("Split equals() expression out of assertThat()"), 12)
             myFixture.checkResultByFile("BinaryExpressionAfter.java")
         }

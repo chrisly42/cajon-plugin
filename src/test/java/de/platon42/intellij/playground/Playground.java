@@ -129,27 +129,57 @@ public class Playground {
     }
 
     private void java8Optional() {
-        Optional<String> foo = Optional.empty();
-        assertThat(foo.get()).isEqualTo("bla");
-        assertThat(foo).contains("bla");
-        assertThat(foo.isPresent()).isTrue();
-        assertThat(!foo.isPresent()).isFalse();
-        assertThat(foo).isPresent();
-        assertThat(foo.isPresent()).isFalse();
-        assertThat(!foo.isPresent()).isTrue();
-        assertThat(foo).isNotPresent();
+        Optional<String> opt = Optional.empty();
+
+        assertThat(opt.isPresent()).isEqualTo(true);
+        assertThat(opt.isPresent()).isEqualTo(Boolean.TRUE);
+        assertThat(opt.isPresent()).isNotEqualTo(false);
+        assertThat(opt.isPresent()).isNotEqualTo(Boolean.FALSE);
+        assertThat(opt.isPresent()).isTrue();
+
+        assertThat(opt.isPresent()).isEqualTo(false);
+        assertThat(opt.isPresent()).isEqualTo(Boolean.FALSE);
+        assertThat(opt.isPresent()).isNotEqualTo(true);
+        assertThat(opt.isPresent()).isNotEqualTo(Boolean.TRUE);
+        assertThat(opt.isPresent()).isFalse();
+
+        assertThat(opt.get()).isEqualTo("foo");
+        assertThat(opt.get()).isSameAs("foo");
+
+        assertThat(opt).isEqualTo(Optional.of("foo"));
+        assertThat(opt).isEqualTo(Optional.ofNullable("foo"));
+        assertThat(opt).isNotEqualTo(Optional.of("foo"));
+        assertThat(opt).isNotEqualTo(Optional.ofNullable("foo"));
+
+        assertThat(opt).isEqualTo(Optional.empty());
+        assertThat(opt).isNotEqualTo(Optional.empty());
     }
 
     private void guavaOptional() {
-        com.google.common.base.Optional<String> foo = com.google.common.base.Optional.absent();
-        assertThat(foo.get()).isEqualTo("bla");
-        assertThat(foo).contains("bla");
-        assertThat(foo.isPresent()).isTrue();
-        assertThat(!foo.isPresent()).isFalse();
-        assertThat(foo).isPresent();
-        assertThat(foo.isPresent()).isFalse();
-        assertThat(!foo.isPresent()).isTrue();
-        assertThat(foo).isAbsent();
+        com.google.common.base.Optional<String> opt = com.google.common.base.Optional.absent();
+
+        assertThat(opt.isPresent()).isEqualTo(true);
+        assertThat(opt.isPresent()).isEqualTo(Boolean.TRUE);
+        assertThat(opt.isPresent()).isNotEqualTo(false);
+        assertThat(opt.isPresent()).isNotEqualTo(Boolean.FALSE);
+        assertThat(opt.isPresent()).isTrue();
+
+        assertThat(opt.isPresent()).isEqualTo(false);
+        assertThat(opt.isPresent()).isEqualTo(Boolean.FALSE);
+        assertThat(opt.isPresent()).isNotEqualTo(true);
+        assertThat(opt.isPresent()).isNotEqualTo(Boolean.TRUE);
+        assertThat(opt.isPresent()).isFalse();
+
+        assertThat(opt.get()).isEqualTo("foo");
+        assertThat(opt.get()).isSameAs("foo");
+
+        assertThat(opt).isEqualTo(com.google.common.base.Optional.of("foo"));
+        assertThat(opt).isEqualTo(com.google.common.base.Optional.fromNullable("foo"));
+        assertThat(opt).isNotEqualTo(com.google.common.base.Optional.of("foo"));
+        assertThat(opt).isNotEqualTo(com.google.common.base.Optional.fromNullable("foo"));
+
+        assertThat(opt).isEqualTo(com.google.common.base.Optional.absent());
+        assertThat(opt).isNotEqualTo(com.google.common.base.Optional.absent());
     }
 
     private void junitAssertions() {

@@ -10,7 +10,12 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting the size of an collection or array"
-        private const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s would be more concise than %s"
+        private val BONUS_EXPRESSIONS_CALL_MATCHER_MAP = listOf(
+            IS_GREATER_THAN_INT to "hasSizeGreaterThan()",
+            IS_GREATER_THAN_OR_EQUAL_TO_INT to "hasSizeGreaterThanOrEqualTo()",
+            IS_LESS_THAN_OR_EQUAL_TO_INT to "hasSizeLessThanOrEqualTo()",
+            IS_LESS_THAN_INT to "hasSizeLessThan()"
+        )
     }
 
     override fun getDisplayName() = DISPLAY_NAME
@@ -30,41 +35,29 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                     val constValue = calculateConstantParameterValue(expectedCallExpression, 0)
                     if (IS_EQUAL_TO_INT.test(expectedCallExpression)) {
                         if (constValue == 0) {
-                            registerSizeMethod(holder, expression, expectedCallExpression, "isEmpty()", noExpectedExpression = true)
-                            return
+                            registerReplaceSizeMethod(holder, expression, expectedCallExpression, "isEmpty()", noExpectedExpression = true)
+                        } else {
+                            val equalToExpression = expectedCallExpression.firstArg
+                            if (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) {
+                                registerReplaceSizeMethod(holder, expression, expectedCallExpression, "hasSameSizeAs()", expectedIsCollection = true)
+                            } else {
+                                registerReplaceSizeMethod(holder, expression, expectedCallExpression, "hasSize()")
+                            }
                         }
-                        val equalToExpression = expectedCallExpression.firstArg
-                        if (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) {
-                            registerSizeMethod(holder, expression, expectedCallExpression, "hasSameSizeAs()", expectedIsCollection = true)
-                            return
-                        }
-                        registerSizeMethod(holder, expression, expectedCallExpression, "hasSize()")
                     } else {
-                        if ((IS_LESS_THAN_OR_EQUAL_TO_INT.test(expectedCallExpression) && (constValue == 0))
-                            || (IS_LESS_THAN_INT.test(expectedCallExpression) && (constValue == 1))
-                            || IS_ZERO.test(expectedCallExpression)
-                        ) {
-                            registerSizeMethod(holder, expression, expectedCallExpression, "isEmpty()", noExpectedExpression = true)
-                            return
-                        }
-                        if ((IS_GREATER_THAN_INT.test(expectedCallExpression) && (constValue == 0))
-                            || (IS_GREATER_THAN_OR_EQUAL_TO_INT.test(expectedCallExpression) && (constValue == 1))
-                            || IS_NOT_ZERO.test(expectedCallExpression)
-                        ) {
-                            registerSizeMethod(holder, expression, expectedCallExpression, "isNotEmpty()", noExpectedExpression = true)
-                            return
-                        }
-                        // new stuff in AssertJ 13.2.0
-                        if (hasAssertJMethod(expression, "AbstractIterableAssert.hasSizeLessThan")) {
-                            val matchedMethod = listOf(
-                                IS_GREATER_THAN_INT to "hasSizeGreaterThan()",
-                                IS_GREATER_THAN_OR_EQUAL_TO_INT to "hasSizeGreaterThanOrEqualTo()",
-                                IS_LESS_THAN_OR_EQUAL_TO_INT to "hasSizeLessThanOrEqualTo()",
-                                IS_LESS_THAN_INT to "hasSizeLessThan()"
-                            ).find { it.first.test(expectedCallExpression) }?.second
-                            if (matchedMethod != null) {
-                                registerSizeMethod(holder, expression, expectedCallExpression, matchedMethod)
-                                return
+                        val isTestForEmpty = ((IS_LESS_THAN_OR_EQUAL_TO_INT.test(expectedCallExpression) && (constValue == 0))
+                                || (IS_LESS_THAN_INT.test(expectedCallExpression) && (constValue == 1))
+                                || IS_ZERO.test(expectedCallExpression))
+                        val isTestForNotEmpty = ((IS_GREATER_THAN_INT.test(expectedCallExpression) && (constValue == 0))
+                                || (IS_GREATER_THAN_OR_EQUAL_TO_INT.test(expectedCallExpression) && (constValue == 1))
+                                || IS_NOT_ZERO.test(expectedCallExpression))
+                        when {
+                            isTestForEmpty -> registerReplaceSizeMethod(holder, expression, expectedCallExpression, "isEmpty()", noExpectedExpression = true)
+                            isTestForNotEmpty -> registerReplaceSizeMethod(holder, expression, expectedCallExpression, "isNotEmpty()", noExpectedExpression = true)
+                            // new stuff in AssertJ 13.2.0
+                            hasAssertJMethod(expression, "AbstractIterableAssert.hasSizeLessThan") -> {
+                                val matchedMethod = BONUS_EXPRESSIONS_CALL_MATCHER_MAP.find { it.first.test(expectedCallExpression) }?.second ?: return
+                                registerReplaceSizeMethod(holder, expression, expectedCallExpression, matchedMethod)
                             }
                         }
                     }
@@ -79,7 +72,7 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                         && ((psiReferenceExpression.resolve() as? PsiField)?.name == "length"))
             }
 
-            private fun registerSizeMethod(
+            private fun registerReplaceSizeMethod(
                 holder: ProblemsHolder,
                 expression: PsiMethodCallExpression,
                 expectedCallExpression: PsiMethodCallExpression,

@@ -30,11 +30,11 @@ class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
                     return
                 }
 
-                val equalToExpression = expression.firstArg
-                if (!TypeConversionUtil.isBooleanType(equalToExpression.type)) {
+                val expectedExpression = expression.firstArg
+                if (!TypeConversionUtil.isBooleanType(expectedExpression.type)) {
                     return
                 }
-                val expectedResult = calculateConstantParameterValue(expression, 0)as? Boolean ?: return
+                val expectedResult = calculateConstantParameterValue(expression, 0) as? Boolean ?: return
                 val flippedBooleanTest = matchingCalls.drop(2).any { it }
 
                 val replacementMethod = if (expectedResult xor flippedBooleanTest) "isTrue()" else "isFalse()"
