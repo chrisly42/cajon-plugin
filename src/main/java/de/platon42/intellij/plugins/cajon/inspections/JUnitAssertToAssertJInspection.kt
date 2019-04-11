@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
 import com.siyeh.ig.callMatcher.CallMatcher
 import com.siyeh.ig.callMatcher.CallMatcher.anyOf
+import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceJUnitAssertMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceJUnitDeltaAssertMethodCallQuickFix
 
@@ -21,28 +22,28 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_TRUE_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_STRING, "boolean"),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_TRUE_METHOD).parameterTypes("boolean")
                 ),
-                "isTrue()", false
+                MethodNames.IS_TRUE, false
             ),
             Mapping(
                 anyOf(
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_FALSE_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_STRING, "boolean"),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_FALSE_METHOD).parameterTypes("boolean")
                 ),
-                "isFalse()", false
+                MethodNames.IS_FALSE, false
             ),
             Mapping(
                 anyOf(
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NULL_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_STRING, CommonClassNames.JAVA_LANG_OBJECT),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NULL_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)
                 ),
-                "isNull()", false
+                MethodNames.IS_NULL, false
             ),
             Mapping(
                 anyOf(
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NOT_NULL_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_STRING, CommonClassNames.JAVA_LANG_OBJECT),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NOT_NULL_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)
                 ),
-                "isNotNull()", false
+                MethodNames.IS_NOT_NULL, false
             ),
             Mapping(
                 anyOf(
@@ -51,14 +52,14 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_STRING, "float", "float", "float"),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes("float", "float", "float")
                 ),
-                "isCloseTo()", hasDelta = true
+                MethodNames.IS_CLOSE_TO, hasDelta = true
             ),
             Mapping(
                 anyOf(
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterCount(3),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterCount(2)
                 ),
-                "isEqualTo()"
+                MethodNames.IS_EQUAL_TO
             ),
             Mapping(
                 anyOf(
@@ -67,28 +68,28 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_STRING, "float", "float", "float"),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes("float", "float", "float")
                 ),
-                "isNotCloseTo()", hasDelta = true
+                MethodNames.IS_NOT_CLOSE_TO, hasDelta = true
             ),
             Mapping(
                 anyOf(
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterCount(3),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterCount(2)
                 ),
-                "isNotEqualTo()"
+                MethodNames.IS_NOT_EQUAL_TO
             ),
             Mapping(
                 anyOf(
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_SAME_METHOD).parameterCount(3),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_SAME_METHOD).parameterCount(2)
                 ),
-                "isSameAs()"
+                MethodNames.IS_SAME_AS
             ),
             Mapping(
                 anyOf(
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NOT_SAME_METHOD).parameterCount(3),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_NOT_SAME_METHOD).parameterCount(2)
                 ),
-                "isNotSameAs()"
+                MethodNames.IS_NOT_SAME_AS
             ),
             Mapping(
                 anyOf(
@@ -97,14 +98,14 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(CommonClassNames.JAVA_LANG_STRING, "float[]", "float[]", "float"),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes("float[]", "float[]", "float")
                 ),
-                "containsExactly()", hasDelta = true
+                MethodNames.CONTAINS_EXACTLY, hasDelta = true
             ),
             Mapping(
                 anyOf(
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterCount(2),
                     CallMatcher.staticCall(JUNIT_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterCount(3)
                 ),
-                "containsExactly()"
+                MethodNames.CONTAINS_EXACTLY
             )
         )
     }
@@ -142,7 +143,7 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
         val originalMethod = getOriginalMethodName(expression) ?: return
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = CONVERT_MESSAGE_TEMPLATE.format(originalMethod)
-        val quickFix = ReplaceJUnitAssertMethodCallQuickFix(description, hasExpected, replacementMethod)
+        val quickFix = ReplaceJUnitAssertMethodCallQuickFix(description, !hasExpected, replacementMethod)
         holder.registerProblem(expression, message, quickFix)
     }
 

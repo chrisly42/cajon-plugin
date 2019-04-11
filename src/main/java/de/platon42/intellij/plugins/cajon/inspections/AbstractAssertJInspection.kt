@@ -7,81 +7,40 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTypesUtil
 import com.siyeh.ig.callMatcher.CallMatcher
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_BOOLEAN_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_COMPARABLE_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_INTEGER_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERTIONS_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_ASSERTIONS_CLASSNAME
+import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.getArg
 import de.platon42.intellij.plugins.cajon.qualifierExpression
 import de.platon42.intellij.plugins.cajon.quickfixes.RemoveActualOutmostMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceExpectedOutmostMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSimpleMethodCallQuickFix
-import org.jetbrains.annotations.NonNls
 
 open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
 
     companion object {
-        const val SIMPLIFY_MESSAGE_TEMPLATE = "%s can be simplified to %s"
-        const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s would be more concise than %s"
+        const val SIMPLIFY_MESSAGE_TEMPLATE = "%s() can be simplified to %s()"
+        const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s() would be more concise than %s"
 
-        const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s with %s"
-
-        @NonNls
-        const val ASSERTIONS_CLASSNAME = "org.assertj.core.api.Assertions"
-
-        @NonNls
-        const val ABSTRACT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractAssert"
-        @NonNls
-        const val ABSTRACT_BOOLEAN_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractBooleanAssert"
-        @NonNls
-        const val ABSTRACT_INTEGER_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIntegerAssert"
-        @NonNls
-        const val ABSTRACT_COMPARABLE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractComparableAssert"
-        @NonNls
-        const val ABSTRACT_STRING_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractStringAssert"
-        @NonNls
-        const val ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractCharSequenceAssert"
-        @NonNls
-        const val ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.EnumerableAssert"
-
-        @NonNls
-        const val ASSERT_THAT_METHOD = "assertThat"
-        @NonNls
-        const val IS_EQUAL_TO_METHOD = "isEqualTo"
-        @NonNls
-        const val IS_NOT_EQUAL_TO_METHOD = "isNotEqualTo"
-        @NonNls
-        const val IS_SAME_AS_METHOD = "isSameAs"
-        @NonNls
-        const val IS_NOT_SAME_AS_METHOD = "isNotSameAs"
-        @NonNls
-        const val IS_GREATER_THAN_METHOD = "isGreaterThan"
-        @NonNls
-        const val IS_GREATER_THAN_OR_EQUAL_TO_METHOD = "isGreaterThanOrEqualTo"
-        @NonNls
-        const val IS_LESS_THAN_METHOD = "isLessThan"
-        @NonNls
-        const val IS_LESS_THAN_OR_EQUAL_TO_METHOD = "isLessThanOrEqualTo"
-        @NonNls
-        const val IS_ZERO_METHOD = "isZero"
-        @NonNls
-        const val IS_NOT_ZERO_METHOD = "isNotZero"
-        @NonNls
-        const val IS_TRUE_METHOD = "isTrue"
-        @NonNls
-        const val IS_FALSE_METHOD = "isFalse"
-        @NonNls
-        const val HAS_SIZE_METHOD = "hasSize"
-
+        const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s() with %s()"
 
         val TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP = mapOf<IElementType, String>(
-            JavaTokenType.EQEQ to IS_EQUAL_TO_METHOD,
-            JavaTokenType.NE to IS_NOT_EQUAL_TO_METHOD,
-            JavaTokenType.GT to IS_GREATER_THAN_METHOD,
-            JavaTokenType.GE to IS_GREATER_THAN_OR_EQUAL_TO_METHOD,
-            JavaTokenType.LT to IS_LESS_THAN_METHOD,
-            JavaTokenType.LE to IS_LESS_THAN_OR_EQUAL_TO_METHOD
+            JavaTokenType.EQEQ to MethodNames.IS_EQUAL_TO,
+            JavaTokenType.NE to MethodNames.IS_NOT_EQUAL_TO,
+            JavaTokenType.GT to MethodNames.IS_GREATER_THAN,
+            JavaTokenType.GE to MethodNames.IS_GREATER_THAN_OR_EQUAL_TO,
+            JavaTokenType.LT to MethodNames.IS_LESS_THAN,
+            JavaTokenType.LE to MethodNames.IS_LESS_THAN_OR_EQUAL_TO
         )
 
         val TOKEN_TO_ASSERTJ_FOR_OBJECT_MAPPINGS = mapOf<IElementType, String>(
-            JavaTokenType.EQEQ to IS_SAME_AS_METHOD,
-            JavaTokenType.NE to IS_NOT_SAME_AS_METHOD
+            JavaTokenType.EQEQ to MethodNames.IS_SAME_AS,
+            JavaTokenType.NE to MethodNames.IS_NOT_SAME_AS
         )
 
         val SWAP_SIDE_OF_BINARY_OPERATOR = mapOf<IElementType, IElementType>(
@@ -101,55 +60,58 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         )
 
 
-        val ASSERT_THAT_INT = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, ASSERT_THAT_METHOD)
+        val ASSERT_THAT_INT = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
             .parameterTypes("int")!!
 
-        val ASSERT_THAT_BOOLEAN = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, ASSERT_THAT_METHOD)
+        val ASSERT_THAT_BOOLEAN = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
             .parameterTypes("boolean")!!
 
-        val ASSERT_THAT_ANY = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, ASSERT_THAT_METHOD)
+        val ASSERT_THAT_ANY = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
             .parameterCount(1)!!
 
-        val ASSERT_THAT_JAVA8_OPTIONAL = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, ASSERT_THAT_METHOD)
+        val ASSERT_THAT_JAVA8_OPTIONAL = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
             .parameterTypes(CommonClassNames.JAVA_UTIL_OPTIONAL)!!
 
-        val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
+        val ASSERT_THAT_GUAVA_OPTIONAL = CallMatcher.staticCall(GUAVA_ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
+            .parameterTypes()!!
+
+        val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
-        val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_NOT_EQUAL_TO_METHOD)
+        val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
-        val IS_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
+        val IS_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes("boolean")!!
         val IS_NOT_EQUAL_TO_BOOLEAN =
-            CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_NOT_EQUAL_TO_METHOD)
+            CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
                 .parameterTypes("boolean")!!
-        val IS_SAME_AS_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_SAME_AS_METHOD)
+        val IS_SAME_AS_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_SAME_AS)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
-        val IS_NOT_SAME_AS_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_NOT_SAME_AS_METHOD)
+        val IS_NOT_SAME_AS_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_NOT_SAME_AS)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
 
-        val HAS_SIZE = CallMatcher.instanceCall(ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME, HAS_SIZE_METHOD)
+        val HAS_SIZE = CallMatcher.instanceCall(ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME, MethodNames.HAS_SIZE)
             .parameterTypes("int")!!
 
-        val IS_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, IS_EQUAL_TO_METHOD)
+        val IS_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes("int")!!
-        val IS_GREATER_THAN_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, IS_GREATER_THAN_METHOD)
+        val IS_GREATER_THAN_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_GREATER_THAN)
             .parameterTypes("int")!!
-        val IS_GREATER_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, IS_GREATER_THAN_OR_EQUAL_TO_METHOD)
-            .parameterTypes("int")!!
-
-        val IS_LESS_THAN_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, IS_LESS_THAN_METHOD)
-            .parameterTypes("int")!!
-        val IS_LESS_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, IS_LESS_THAN_OR_EQUAL_TO_METHOD)
+        val IS_GREATER_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_GREATER_THAN_OR_EQUAL_TO)
             .parameterTypes("int")!!
 
-        val IS_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, IS_ZERO_METHOD)
+        val IS_LESS_THAN_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_LESS_THAN)
+            .parameterTypes("int")!!
+        val IS_LESS_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_LESS_THAN_OR_EQUAL_TO)
+            .parameterTypes("int")!!
+
+        val IS_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_ZERO)
             .parameterCount(0)!!
-        val IS_NOT_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, IS_NOT_ZERO_METHOD)
+        val IS_NOT_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_NOT_ZERO)
             .parameterCount(0)!!
 
-        val IS_TRUE = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_TRUE_METHOD)
+        val IS_TRUE = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_TRUE)
             .parameterCount(0)!!
-        val IS_FALSE = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, IS_FALSE_METHOD)
+        val IS_FALSE = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_FALSE)
             .parameterCount(0)!!
 
         val COLLECTION_SIZE = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, "size")
@@ -185,8 +147,7 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         return assertedClass.isEquivalentTo(expectedClass) || assertedClass.isInheritor(expectedClass, true)
     }
 
-    protected fun getOriginalMethodName(expression: PsiMethodCallExpression) =
-        expression.resolveMethod()?.name?.plus("()")
+    protected fun getOriginalMethodName(expression: PsiMethodCallExpression) = expression.resolveMethod()?.name
 
     protected fun registerSimplifyMethod(
         holder: ProblemsHolder,
@@ -261,11 +222,10 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         return null
     }
 
-    protected fun hasAssertJMethod(element: PsiElement, classAndMethod: String): Boolean {
-        val classname = "org.assertj.core.api.${classAndMethod.substringBeforeLast(".")}"
+    protected fun hasAssertJMethod(element: PsiElement, classname: String, methodname: String): Boolean {
         val findClass =
             JavaPsiFacade.getInstance(element.project).findClass(classname, GlobalSearchScope.allScope(element.project))
                 ?: return false
-        return findClass.findMethodsByName(classAndMethod.substringAfterLast(".")).isNotEmpty()
+        return findClass.findMethodsByName(methodname).isNotEmpty()
     }
 }

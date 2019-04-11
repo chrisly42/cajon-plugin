@@ -23,8 +23,9 @@ class SplitEqualsExpressionMethodCallQuickFix(description: String, private val r
         val oldExpectedExpression = PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java) ?: return
 
         val factory = JavaPsiFacade.getElementFactory(element.project)
-        val expectedExpression =
-            factory.createExpressionFromText("a.${replacementMethod.replace("()", "(e)")}", element) as PsiMethodCallExpression
+        val expectedExpression = factory.createExpressionFromText(
+            "a.$replacementMethod(e)", element
+        ) as PsiMethodCallExpression
         expectedExpression.firstArg.replace(expectedArgument)
         expectedExpression.replaceQualifierFromMethodCall(oldExpectedExpression)
         oldExpectedExpression.replace(expectedExpression)

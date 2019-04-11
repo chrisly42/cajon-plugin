@@ -18,7 +18,7 @@ class ReplaceExpectedOutmostMethodCallQuickFix(description: String, private val 
 
         val factory = JavaPsiFacade.getElementFactory(element.project)
         val expectedExpression =
-            factory.createExpressionFromText("a.${replacementMethod.replace("()", "(e)")}", element) as PsiMethodCallExpression
+            factory.createExpressionFromText("a.$replacementMethod(e)", element) as PsiMethodCallExpression
         val expectedMethodCallExpression = oldExpectedExpression.firstArg as? PsiMethodCallExpression ?: return
         expectedExpression.firstArg.replace(expectedMethodCallExpression.firstArg)
         expectedExpression.replaceQualifierFromMethodCall(oldExpectedExpression)

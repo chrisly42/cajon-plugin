@@ -9,7 +9,7 @@ open class AbstractJUnitAssertInspection : AbstractBaseJavaLocalInspectionTool()
     companion object {
         const val CONVERT_MESSAGE_TEMPLATE = "%s can be converted to AssertJ style"
 
-        const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s with assertThat().%s"
+        const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s() with assertThat().%s()"
 
         @NonNls
         const val JUNIT_ASSERT_CLASSNAME = "org.junit.Assert"
@@ -38,6 +38,5 @@ open class AbstractJUnitAssertInspection : AbstractBaseJavaLocalInspectionTool()
         return "AssertJ"
     }
 
-    protected fun getOriginalMethodName(expression: PsiMethodCallExpression) =
-        expression.resolveMethod()?.name?.plus("()")
+    protected fun getOriginalMethodName(expression: PsiMethodCallExpression) = expression.resolveMethod()?.name
 }

@@ -4,7 +4,11 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.TypeConversionUtil
+import de.platon42.intellij.plugins.cajon.MethodNames
+import de.platon42.intellij.plugins.cajon.MethodNames.Companion.IS_NOT_NULL
+import de.platon42.intellij.plugins.cajon.MethodNames.Companion.IS_NULL
 import de.platon42.intellij.plugins.cajon.firstArg
+import de.platon42.intellij.plugins.cajon.map
 import de.platon42.intellij.plugins.cajon.quickfixes.SplitBinaryExpressionMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.SplitEqualsExpressionMethodCallQuickFix
 
@@ -12,10 +16,8 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
 
     companion object {
         private const val DISPLAY_NAME = "Asserting a binary expression"
-        private const val SPLIT_BINARY_EXPRESSION_DESCRIPTION = "Split binary expression out of assertThat()"
-        private const val SPLIT_EQUALS_EXPRESSION_DESCRIPTION = "Split equals() expression out of assertThat()"
-        private const val BINARY_MORE_MEANINGFUL_MESSAGE = "Moving binary expression out of assertThat() would be more meaningful"
-        private const val EQUALS_MORE_MEANINGFUL_MESSAGE = "Moving equals() expression out of assertThat() would be more meaningful"
+        private const val SPLIT_EXPRESSION_DESCRIPTION_TEMPLATE = "Split %s expression out of assertThat()"
+        private const val MORE_MEANINGFUL_MESSAGE_TEMPLATE = "Moving %s expression out of assertThat() would be more meaningful"
     }
 
     override fun getDisplayName() = DISPLAY_NAME
@@ -34,9 +36,12 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
 
                 val assertThatArgument = expression.firstArg
                 if (assertThatArgument is PsiMethodCallExpression && OBJECT_EQUALS.test(assertThatArgument)) {
-                    val replacementMethod = if (expectedResult) "isEqualTo()" else "isNotEqualTo()"
-                    val quickFix = SplitEqualsExpressionMethodCallQuickFix(SPLIT_EQUALS_EXPRESSION_DESCRIPTION, replacementMethod)
-                    holder.registerProblem(expression, EQUALS_MORE_MEANINGFUL_MESSAGE, quickFix)
+                    val replacementMethod = if (expectedResult) MethodNames.IS_EQUAL_TO else MethodNames.IS_NOT_EQUAL_TO
+                    val type = "${MethodNames.EQUALS}()"
+                    val description = SPLIT_EXPRESSION_DESCRIPTION_TEMPLATE.format(type)
+                    val message = MORE_MEANINGFUL_MESSAGE_TEMPLATE.format(type)
+                    val quickFix = SplitEqualsExpressionMethodCallQuickFix(description, replacementMethod)
+                    holder.registerProblem(expression, message, quickFix)
                     return
                 }
 
@@ -50,7 +55,7 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 if (isLeftNull && isRightNull) {
                     return
                 } else if (isLeftNull || isRightNull) {
-                    val replacementMethod = if (expectedResult) "isNull()" else "isNotNull()"
+                    val replacementMethod = if (expectedResult) IS_NULL else IS_NOT_NULL
                     registerSplitBinaryExpressionMethod(holder, expression, replacementMethod, pickRightOperand = isLeftNull, noExpectedExpression = true)
                     return
                 }
@@ -68,14 +73,10 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                         if (expectedResult) it else INVERT_BINARY_OPERATOR.getOrDefault(it, it)
                     } ?: return
                 val mappingToUse =
-                    if (isPrimitive || isNumericType) {
-                        TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP
-                    } else {
-                        TOKEN_TO_ASSERTJ_FOR_OBJECT_MAPPINGS
-                    }
+                    (isPrimitive || isNumericType).map(TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP, TOKEN_TO_ASSERTJ_FOR_OBJECT_MAPPINGS)
                 val replacementMethod = mappingToUse[tokenType] ?: return
 
-                registerSplitBinaryExpressionMethod(holder, expression, "$replacementMethod()", pickRightOperand = swapExpectedAndActual)
+                registerSplitBinaryExpressionMethod(holder, expression, replacementMethod, pickRightOperand = swapExpectedAndActual)
             }
 
             private fun registerSplitBinaryExpressionMethod(
@@ -85,8 +86,11 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 pickRightOperand: Boolean = false,
                 noExpectedExpression: Boolean = false
             ) {
-                val quickFix = SplitBinaryExpressionMethodCallQuickFix(SPLIT_BINARY_EXPRESSION_DESCRIPTION, replacementMethod, pickRightOperand, noExpectedExpression)
-                holder.registerProblem(expression, BINARY_MORE_MEANINGFUL_MESSAGE, quickFix)
+                val type = "binary"
+                val description = SPLIT_EXPRESSION_DESCRIPTION_TEMPLATE.format(type)
+                val message = MORE_MEANINGFUL_MESSAGE_TEMPLATE.format(type)
+                val quickFix = SplitBinaryExpressionMethodCallQuickFix(description, replacementMethod, pickRightOperand, noExpectedExpression)
+                holder.registerProblem(expression, message, quickFix)
             }
         }
     }

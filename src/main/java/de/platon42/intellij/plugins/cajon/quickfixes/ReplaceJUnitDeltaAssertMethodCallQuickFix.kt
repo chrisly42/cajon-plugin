@@ -6,6 +6,7 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_ASSERTIONS_CLASSNAME
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.getArg
 import de.platon42.intellij.plugins.cajon.replaceQualifier
@@ -30,16 +31,13 @@ class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val
         offsetMethodCall.firstArg.replace(deltaExpression)
 
         val expectedMethodCall = factory.createExpressionFromText(
-            "a.${replacementMethod.removeSuffix("()")}(e, offs)", element
+            "a.$replacementMethod(e, offs)", element
         ) as PsiMethodCallExpression
 
         expectedMethodCall.firstArg.replace(expectedExpression)
         expectedMethodCall.getArg(1).replace(offsetMethodCall)
 
-        val newMethodCall = factory.createExpressionFromText(
-            "org.assertj.core.api.Assertions.assertThat(a)", element
-        ) as PsiMethodCallExpression
-        newMethodCall.firstArg.replace(actualExpression)
+        val newMethodCall = createAssertThat(element, actualExpression)
 
         if (messageExpression != null) {
             val asExpression = factory.createExpressionFromText("a.as(desc)", element) as PsiMethodCallExpression

@@ -1,20 +1,14 @@
 package de.platon42.intellij.plugins.cajon.quickfixes
 
 import com.intellij.codeInspection.LocalQuickFix
-import com.intellij.psi.PsiElementFactory
-import com.intellij.psi.PsiJavaFile
-import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiMethodCallExpression
-import org.jetbrains.annotations.NonNls
+import com.intellij.psi.*
+import de.platon42.intellij.plugins.cajon.AssertJClassNames
+import de.platon42.intellij.plugins.cajon.MethodNames
+import de.platon42.intellij.plugins.cajon.firstArg
 
 abstract class AbstractCommonQuickFix(private val description: String) : LocalQuickFix {
 
     override fun getFamilyName() = description
-
-    companion object {
-        @NonNls
-        const val GUAVA_ASSERTIONS_CLASSNAME = "org.assertj.guava.api.Assertions"
-    }
 
     protected fun addStaticImport(method: PsiMethod, element: PsiMethodCallExpression, factory: PsiElementFactory, vararg allowedClashes: String) {
         val methodName = method.name
@@ -28,5 +22,14 @@ abstract class AbstractCommonQuickFix(private val description: String) : LocalQu
         if (notImportedStatically) {
             importList.add(factory.createImportStaticStatement(containingClass, methodName))
         }
+    }
+
+    protected fun createAssertThat(context: PsiElement, actualExpression: PsiExpression): PsiMethodCallExpression {
+        val factory = JavaPsiFacade.getElementFactory(context.project)
+        val newMethodCall = factory.createExpressionFromText(
+            "${AssertJClassNames.ASSERTIONS_CLASSNAME}.${MethodNames.ASSERT_THAT}(a)", context
+        ) as PsiMethodCallExpression
+        newMethodCall.firstArg.replace(actualExpression)
+        return newMethodCall
     }
 }

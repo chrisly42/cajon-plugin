@@ -7,6 +7,7 @@ import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.PsiStatement
 import com.intellij.psi.util.PsiTreeUtil
 import de.platon42.intellij.plugins.cajon.firstArg
+import de.platon42.intellij.plugins.cajon.map
 import de.platon42.intellij.plugins.cajon.qualifierExpression
 import de.platon42.intellij.plugins.cajon.replaceQualifierFromMethodCall
 
@@ -25,8 +26,9 @@ class RemoveActualOutmostMethodCallQuickFix(
         val oldExpectedExpression = PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java) ?: return
 
         val factory = JavaPsiFacade.getElementFactory(element.project)
-        val expectedExpression =
-            factory.createExpressionFromText("a.${if (noExpectedExpression) replacementMethod else replacementMethod.replace("()", "(e)")}", element) as PsiMethodCallExpression
+        val expectedExpression = factory.createExpressionFromText(
+            "a.$replacementMethod${noExpectedExpression.map("()", "(e)")}", element
+        ) as PsiMethodCallExpression
         if (!noExpectedExpression) {
             expectedExpression.firstArg.replace(oldExpectedExpression.firstArg)
         }

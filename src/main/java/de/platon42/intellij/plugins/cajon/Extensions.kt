@@ -15,3 +15,5 @@ fun PsiMethodCallExpression.replaceQualifierFromMethodCall(oldMethodCall: PsiMet
 }
 
 fun PsiMethodCallExpression.getArg(n: Int): PsiExpression = this.argumentList.expressions[n]
+
+fun <T> Boolean.map(forTrue: T, forFalse: T) = if (this) forTrue else forFalse
