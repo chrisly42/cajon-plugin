@@ -1,5 +1,6 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
+import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
@@ -121,43 +122,29 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
                 }
                 JavaPsiFacade.getInstance(expression.project)
                     .findClass(AssertJClassNames.ASSERTIONS_CLASSNAME, GlobalSearchScope.allScope(expression.project)) ?: return
-                for (mapping in MAPPINGS) {
-                    if (mapping.callMatcher.test(expression)) {
-                        if (mapping.hasDelta) {
-                            registerDeltaReplacementMethod(holder, expression, mapping.replacement)
-                        } else {
-                            registerSimpleReplacementMethod(holder, expression, mapping.hasExpected, mapping.replacement)
-                        }
-                        return
+                val mapping = MAPPINGS.firstOrNull { it.callMatcher.test(expression) } ?: return
+                if (mapping.hasDelta) {
+                    registerConvertMethod(holder, expression, mapping.replacement, ::ReplaceJUnitDeltaAssertMethodCallQuickFix)
+                } else {
+                    registerConvertMethod(holder, expression, mapping.replacement) { desc, method ->
+                        ReplaceJUnitAssertMethodCallQuickFix(desc, method, !mapping.hasExpected)
                     }
                 }
             }
         }
     }
 
-    private fun registerSimpleReplacementMethod(
+    private fun registerConvertMethod(
         holder: ProblemsHolder,
         expression: PsiMethodCallExpression,
-        hasExpected: Boolean,
-        replacementMethod: String
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix
     ) {
         val originalMethod = getOriginalMethodName(expression) ?: return
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = CONVERT_MESSAGE_TEMPLATE.format(originalMethod)
-        val quickFix = ReplaceJUnitAssertMethodCallQuickFix(description, !hasExpected, replacementMethod)
-        holder.registerProblem(expression, message, quickFix)
-    }
-
-    private fun registerDeltaReplacementMethod(
-        holder: ProblemsHolder,
-        expression: PsiMethodCallExpression,
-        replacementMethod: String
-    ) {
-        val originalMethod = getOriginalMethodName(expression) ?: return
-        val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
-        val message = CONVERT_MESSAGE_TEMPLATE.format(originalMethod)
-        val quickFix = ReplaceJUnitDeltaAssertMethodCallQuickFix(description, replacementMethod)
-        holder.registerProblem(expression, message, quickFix)
+        val quickfix = quickFixSupplier(description, replacementMethod)
+        holder.registerProblem(expression, message, quickfix)
     }
 
     private class Mapping(

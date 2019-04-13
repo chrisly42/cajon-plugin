@@ -10,6 +10,8 @@ class AssertJClassNames {
         @NonNls
         const val ABSTRACT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractAssert"
         @NonNls
+        const val ABSTRACT_OBJECT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractObjectAssert"
+        @NonNls
         const val ABSTRACT_BOOLEAN_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractBooleanAssert"
         @NonNls
         const val ABSTRACT_INTEGER_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIntegerAssert"

@@ -2,9 +2,9 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
-import com.intellij.psi.util.PsiTreeUtil
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ITERABLE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.MethodNames
+import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.map
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSizeMethodCallQuickFix
@@ -34,18 +34,23 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                 val actualExpression = expression.firstArg
 
                 if (isArrayLength(actualExpression) || isCollectionSize(actualExpression)) {
-                    val statement = PsiTreeUtil.getParentOfType(expression, PsiStatement::class.java) ?: return
-                    val expectedCallExpression = PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java) ?: return
+                    val expectedCallExpression = expression.findOutmostMethodCall() ?: return
                     val constValue = calculateConstantParameterValue(expectedCallExpression, 0)
                     if (IS_EQUAL_TO_INT.test(expectedCallExpression)) {
                         if (constValue == 0) {
-                            registerReplaceSizeMethod(holder, expression, expectedCallExpression, MethodNames.IS_EMPTY, noExpectedExpression = true)
+                            registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.IS_EMPTY) { desc, method ->
+                                ReplaceSizeMethodCallQuickFix(desc, method, noExpectedExpression = true)
+                            }
                         } else {
                             val equalToExpression = expectedCallExpression.firstArg
                             if (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) {
-                                registerReplaceSizeMethod(holder, expression, expectedCallExpression, MethodNames.HAS_SAME_SIZE_AS, expectedIsCollection = true)
+                                registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.HAS_SAME_SIZE_AS) { desc, method ->
+                                    ReplaceSizeMethodCallQuickFix(desc, method, expectedIsCollection = true)
+                                }
                             } else {
-                                registerReplaceSizeMethod(holder, expression, expectedCallExpression, MethodNames.HAS_SIZE)
+                                registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.HAS_SIZE) { desc, method ->
+                                    ReplaceSizeMethodCallQuickFix(desc, method)
+                                }
                             }
                         }
                     } else {
@@ -57,11 +62,15 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                                 || IS_NOT_ZERO.test(expectedCallExpression))
                         if (isTestForEmpty || isTestForNotEmpty) {
                             val replacementMethod = isTestForEmpty.map(MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY)
-                            registerReplaceSizeMethod(holder, expression, expectedCallExpression, replacementMethod, noExpectedExpression = true)
+                            registerReplaceMethod(holder, expression, expectedCallExpression, replacementMethod) { desc, method ->
+                                ReplaceSizeMethodCallQuickFix(desc, method, noExpectedExpression = true)
+                            }
                         } else if (hasAssertJMethod(expression, ABSTRACT_ITERABLE_ASSERT_CLASSNAME, MethodNames.HAS_SIZE_LESS_THAN)) {
                             // new stuff in AssertJ 13.2.0
                             val matchedMethod = BONUS_EXPRESSIONS_CALL_MATCHER_MAP.find { it.first.test(expectedCallExpression) }?.second ?: return
-                            registerReplaceSizeMethod(holder, expression, expectedCallExpression, matchedMethod)
+                            registerReplaceMethod(holder, expression, expectedCallExpression, matchedMethod) { desc, method ->
+                                ReplaceSizeMethodCallQuickFix(desc, method)
+                            }
                         }
                     }
                 }
@@ -73,21 +82,6 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                 val psiReferenceExpression = expression as? PsiReferenceExpression ?: return false
                 return ((psiReferenceExpression.qualifierExpression?.type is PsiArrayType)
                         && ((psiReferenceExpression.resolve() as? PsiField)?.name == "length"))
-            }
-
-            private fun registerReplaceSizeMethod(
-                holder: ProblemsHolder,
-                expression: PsiMethodCallExpression,
-                expectedCallExpression: PsiMethodCallExpression,
-                replacementMethod: String,
-                noExpectedExpression: Boolean = false,
-                expectedIsCollection: Boolean = false
-            ) {
-                val originalMethod = getOriginalMethodName(expectedCallExpression) ?: return
-                val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
-                val message = MORE_CONCISE_MESSAGE_TEMPLATE.format(replacementMethod, originalMethod)
-                val quickfix = ReplaceSizeMethodCallQuickFix(description, replacementMethod, noExpectedExpression, expectedIsCollection)
-                holder.registerProblem(expression, message, quickfix)
             }
         }
     }

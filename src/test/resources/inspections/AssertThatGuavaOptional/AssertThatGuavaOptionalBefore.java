@@ -32,5 +32,21 @@ public class AssertThatGuavaOptional {
 
         assertThat(opt).isEqualTo(Optional.absent());
         assertThat(opt).isNotEqualTo(Optional.absent());
+
+        org.assertj.guava.api.Assertions.assertThat(opt).isEqualTo(Optional.of("foo"));
+        org.assertj.guava.api.Assertions.assertThat(opt).isEqualTo(Optional.fromNullable("foo"));
+        org.assertj.guava.api.Assertions.assertThat(opt).isNotEqualTo(Optional.of("foo"));
+        org.assertj.guava.api.Assertions.assertThat(opt).isNotEqualTo(Optional.fromNullable("foo"));
+
+        org.assertj.guava.api.Assertions.assertThat(opt).isEqualTo(Optional.absent());
+        org.assertj.guava.api.Assertions.assertThat(opt).isNotEqualTo(Optional.absent());
+
+        org.assertj.core.api.Assertions.assertThat(opt).isEqualTo(Optional.of("foo"));
+        org.assertj.core.api.Assertions.assertThat(opt).isEqualTo(Optional.fromNullable("foo"));
+        org.assertj.core.api.Assertions.assertThat(opt).isNotEqualTo(Optional.of("foo"));
+        org.assertj.core.api.Assertions.assertThat(opt).isNotEqualTo(Optional.fromNullable("foo"));
+
+        org.assertj.core.api.Assertions.assertThat(opt).isEqualTo(Optional.absent());
+        org.assertj.core.api.Assertions.assertThat(opt).isNotEqualTo(Optional.absent());
     }
 }

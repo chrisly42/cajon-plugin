@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '0.4'
+version '0.5'
 
 repositories {
     mavenCentral()
@@ -41,6 +41,11 @@ intellij {
 
 patchPluginXml {
     changeNotes """
+  <h4>V0.5 (13-Apr-19)</h4>
+    <ul>
+      <li>Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection).
+      <li>Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.
+    </ul>
   <h4>V0.4 (11-Apr-19)</h4>
     <ul>
       <li>Reduced minimal supported IDEA version from 2018.2 to 2017.2.

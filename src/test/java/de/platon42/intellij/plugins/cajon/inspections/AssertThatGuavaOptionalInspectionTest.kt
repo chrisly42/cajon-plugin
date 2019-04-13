@@ -18,13 +18,36 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
             myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
             myFixture.configureByFile("AssertThatGuavaOptionalBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isPresent()"), 3)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isAbsent()"), 3)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isPresent()"), 5)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isAbsent()"), 5)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isAbsent()"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isTrue() with isPresent()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isFalse() with isAbsent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with contains()"), 3)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with contains()"), 7)
             myFixture.checkResultByFile("AssertThatGuavaOptionalAfter.java")
+        }
+    }
+
+    @Test
+    @TestDataSubPath("inspections/AssertThatGuavaOptional")
+    internal fun adds_missing_Guava_import_any_order(@MyFixture myFixture: JavaCodeInsightTestFixture) {
+        runTest {
+            myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
+            myFixture.configureByFile("WithoutPriorGuavaImportBefore.java")
+            executeQuickFixes(myFixture, Regex("Replace .* with .*"), 7)
+            myFixture.checkResultByFile("WithoutPriorGuavaImportAfter.java")
+        }
+    }
+
+    @Test
+    @TestDataSubPath("inspections/AssertThatGuavaOptional")
+    internal fun adds_missing_Guava_import_isAbsent_first(@MyFixture myFixture: JavaCodeInsightTestFixture) {
+        runTest {
+            myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
+            myFixture.configureByFile("WithoutPriorGuavaImportBefore.java")
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isAbsent()"), 1)
+            executeQuickFixes(myFixture, Regex("Replace .* with .*"), 6)
+            myFixture.checkResultByFile("WithoutPriorGuavaImportAfter.java")
         }
     }
 }

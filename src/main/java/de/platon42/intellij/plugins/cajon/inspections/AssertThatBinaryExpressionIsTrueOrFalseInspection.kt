@@ -1,12 +1,13 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
+import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.TypeConversionUtil
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.MethodNames.Companion.IS_NOT_NULL
 import de.platon42.intellij.plugins.cajon.MethodNames.Companion.IS_NULL
+import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.map
 import de.platon42.intellij.plugins.cajon.quickfixes.SplitBinaryExpressionMethodCallQuickFix
@@ -30,18 +31,13 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                     return
                 }
 
-                val statement = PsiTreeUtil.getParentOfType(expression, PsiStatement::class.java) ?: return
-                val expectedCallExpression = PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java) ?: return
+                val expectedCallExpression = expression.findOutmostMethodCall() ?: return
                 val expectedResult = getExpectedBooleanResult(expectedCallExpression) ?: return
 
                 val assertThatArgument = expression.firstArg
                 if (assertThatArgument is PsiMethodCallExpression && OBJECT_EQUALS.test(assertThatArgument)) {
                     val replacementMethod = if (expectedResult) MethodNames.IS_EQUAL_TO else MethodNames.IS_NOT_EQUAL_TO
-                    val type = "${MethodNames.EQUALS}()"
-                    val description = SPLIT_EXPRESSION_DESCRIPTION_TEMPLATE.format(type)
-                    val message = MORE_MEANINGFUL_MESSAGE_TEMPLATE.format(type)
-                    val quickFix = SplitEqualsExpressionMethodCallQuickFix(description, replacementMethod)
-                    holder.registerProblem(expression, message, quickFix)
+                    registerSplitMethod(holder, expression, "${MethodNames.EQUALS}()", replacementMethod, ::SplitEqualsExpressionMethodCallQuickFix)
                     return
                 }
 
@@ -56,7 +52,9 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                     return
                 } else if (isLeftNull || isRightNull) {
                     val replacementMethod = if (expectedResult) IS_NULL else IS_NOT_NULL
-                    registerSplitBinaryExpressionMethod(holder, expression, replacementMethod, pickRightOperand = isLeftNull, noExpectedExpression = true)
+                    registerSplitMethod(holder, expression, "binary", replacementMethod) { desc, method ->
+                        SplitBinaryExpressionMethodCallQuickFix(desc, method, pickRightOperand = isLeftNull, noExpectedExpression = true)
+                    }
                     return
                 }
 
@@ -76,21 +74,22 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                     (isPrimitive || isNumericType).map(TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP, TOKEN_TO_ASSERTJ_FOR_OBJECT_MAPPINGS)
                 val replacementMethod = mappingToUse[tokenType] ?: return
 
-                registerSplitBinaryExpressionMethod(holder, expression, replacementMethod, pickRightOperand = swapExpectedAndActual)
+                registerSplitMethod(holder, expression, "binary", replacementMethod) { desc, method ->
+                    SplitBinaryExpressionMethodCallQuickFix(desc, method, pickRightOperand = swapExpectedAndActual)
+                }
             }
 
-            private fun registerSplitBinaryExpressionMethod(
+            private fun registerSplitMethod(
                 holder: ProblemsHolder,
                 expression: PsiMethodCallExpression,
+                type: String,
                 replacementMethod: String,
-                pickRightOperand: Boolean = false,
-                noExpectedExpression: Boolean = false
+                quickFixSupplier: (String, String) -> LocalQuickFix
             ) {
-                val type = "binary"
                 val description = SPLIT_EXPRESSION_DESCRIPTION_TEMPLATE.format(type)
                 val message = MORE_MEANINGFUL_MESSAGE_TEMPLATE.format(type)
-                val quickFix = SplitBinaryExpressionMethodCallQuickFix(description, replacementMethod, pickRightOperand, noExpectedExpression)
-                holder.registerProblem(expression, message, quickFix)
+                val quickfix = quickFixSupplier(description, replacementMethod)
+                holder.registerProblem(expression, message, quickfix)
             }
         }
     }

@@ -2,13 +2,8 @@ package de.platon42.intellij.plugins.cajon.quickfixes
 
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiMethodCallExpression
-import com.intellij.psi.PsiStatement
-import com.intellij.psi.util.PsiTreeUtil
-import de.platon42.intellij.plugins.cajon.firstArg
-import de.platon42.intellij.plugins.cajon.qualifierExpression
-import de.platon42.intellij.plugins.cajon.replaceQualifierFromMethodCall
+import de.platon42.intellij.plugins.cajon.*
 
 class SplitEqualsExpressionMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
 
@@ -19,14 +14,8 @@ class SplitEqualsExpressionMethodCallQuickFix(description: String, private val r
         val expectedArgument = equalsMethodCall.firstArg.copy()
         equalsMethodCall.replace(equalsMethodCall.qualifierExpression)
 
-        val statement = PsiTreeUtil.getParentOfType(element, PsiStatement::class.java) ?: return
-        val oldExpectedExpression = PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java) ?: return
-
-        val factory = JavaPsiFacade.getElementFactory(element.project)
-        val expectedExpression = factory.createExpressionFromText(
-            "a.$replacementMethod(e)", element
-        ) as PsiMethodCallExpression
-        expectedExpression.firstArg.replace(expectedArgument)
+        val oldExpectedExpression = element.findOutmostMethodCall() ?: return
+        val expectedExpression = createExpectedMethodCall(element, replacementMethod, expectedArgument)
         expectedExpression.replaceQualifierFromMethodCall(oldExpectedExpression)
         oldExpectedExpression.replace(expectedExpression)
     }

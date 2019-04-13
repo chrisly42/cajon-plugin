@@ -1,6 +1,7 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool
+import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
@@ -18,8 +19,6 @@ import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_OPTI
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.getArg
 import de.platon42.intellij.plugins.cajon.qualifierExpression
-import de.platon42.intellij.plugins.cajon.quickfixes.RemoveActualOutmostMethodCallQuickFix
-import de.platon42.intellij.plugins.cajon.quickfixes.RemoveExpectedOutmostMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSimpleMethodCallQuickFix
 
 open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
@@ -174,30 +173,17 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         holder.registerProblem(expression, message, quickFix)
     }
 
-    protected fun registerRemoveActualOutmostMethod(
+    protected fun registerReplaceMethod(
         holder: ProblemsHolder,
         expression: PsiMethodCallExpression,
-        expectedCallExpression: PsiMethodCallExpression,
+        oldExpectedCallExpression: PsiMethodCallExpression,
         replacementMethod: String,
-        noExpectedExpression: Boolean = false
+        quickFixSupplier: (String, String) -> LocalQuickFix
     ) {
-        val originalMethod = getOriginalMethodName(expectedCallExpression) ?: return
+        val originalMethod = getOriginalMethodName(oldExpectedCallExpression) ?: return
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = MORE_CONCISE_MESSAGE_TEMPLATE.format(replacementMethod, originalMethod)
-        val quickfix = RemoveActualOutmostMethodCallQuickFix(description, replacementMethod, noExpectedExpression)
-        holder.registerProblem(expression, message, quickfix)
-    }
-
-    protected fun registerRemoveExpectedOutmostMethod(
-        holder: ProblemsHolder,
-        expression: PsiMethodCallExpression,
-        expectedCallExpression: PsiMethodCallExpression,
-        replacementMethod: String
-    ) {
-        val originalMethod = getOriginalMethodName(expectedCallExpression) ?: return
-        val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
-        val message = MORE_CONCISE_MESSAGE_TEMPLATE.format(replacementMethod, originalMethod)
-        val quickfix = RemoveExpectedOutmostMethodCallQuickFix(description, replacementMethod)
+        val quickfix = quickFixSupplier(description, replacementMethod)
         holder.registerProblem(expression, message, quickfix)
     }
 
@@ -239,6 +225,6 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val findClass =
             JavaPsiFacade.getInstance(element.project).findClass(classname, GlobalSearchScope.allScope(element.project))
                 ?: return false
-        return findClass.findMethodsByName(methodname).isNotEmpty()
+        return findClass.allMethods.any { it.name == methodname }
     }
 }

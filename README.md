@@ -228,6 +228,10 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 
 ## Changelog
 
+#### V0.5 (13-Apr-19)
+- Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection).
+- Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.
+
 #### V0.4 (11-Apr-19)
 - Reduced minimal supported IDEA version from 2018.2 to 2017.2.
 - New inspection AssertThatJava8Optional that operates on Java 8 Optional objects and tries to use contains(), containsSame(), isPresent(), and isNotPresent() instead.
