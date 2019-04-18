@@ -17,7 +17,7 @@ For example:
 assertThat(collection.size()).isEqualTo(5);
 ```
 
-If the collection has more or less than 5 elements, the assertion will fail, but will not
+If the collection has more or less than five elements, the assertion will fail, but will not
 tell you about the contents, making it hard to guess what went wrong.
 
 Instead, if you wrote the same assertion the following way:
@@ -26,11 +26,23 @@ Instead, if you wrote the same assertion the following way:
 assertThat(collection).hasSize(5);
 ```
 
-Then AssertJ would tell you the contents of the collection on failure.
+Then AssertJ would tell you the _actual contents_ of the collection on failure.
 
 ## Conversion of JUnit assertions to AssertJ
 
 The plugin also supports the conversion of the most common JUnit 4 assertions to AssertJ.
+
+## Lookup and refactoring of string-based extracting()
+
+AssertJ allows [extracting POJO fields/properties on iterables/arrays](http://joel-costigliola.github.io/assertj/assertj-core-features-highlight.html#extracted-properties-assertion).
+
+Using strings is not safe for refactoring (and before Java 8 Lambdas were available,
+creating extractor functions just for testing purpose was a bit too tedious).
+
+This plugin adds support for referencing these fields (so you can ctrl(/cmd)-click on the 
+string to go to the definition) and also allows safe refactoring on the 
+fields (refactoring a getter method without a corresponding field will not work 
+correctly right now).
 
 ## Usage
 
@@ -103,7 +115,6 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(array.length).isGreaterThanOrEqualTo(expression);
     to: assertThat(array).hasSizeGreaterThanOrEqualTo(expression);
   ```
-
   and analogously for collections...
 
 - AssertThatBinaryExpressionIsTrueOrFalse
@@ -120,7 +131,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(null == objActual).isFalse();
     to: assertThat(objActual).isNotNull();
   ```
-  and many, many more combinations (more than 150).
+  ...and many, many more combinations (more than 150).
 
 - AssertThatJava8Optional
   ```
@@ -207,6 +218,23 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   AssertJ for Guava needs to be available in the classpath.
 
+### Implemented referencing
+
+  ```
+  .extracting("field")
+  .extracting("outerfield.fieldInsideObjectTypeOfOuterfield.andSoOn")
+  .extracting("property") // where the class has a getProperty() (or isProperty() for boolean) method
+  .extracting("bareMethod") // supported with AssertJ 13.12.0
+  .extracting(Extractors.byName("fieldOrPropertyOrBareMethod")
+  .extracting(Extractors.byName("fieldOrPropertyOrBareMethod.orAPathLikeAbove")
+  .extracting(Extractors.resultOf("bareMethod")
+  .extractingResultOf("bareMethod")
+  .flatExtracting("fieldOrPropertyOrBareMethod.orAPathLikeAbove")
+  .flatExtracting(Extractors.byName("fieldOrPropertyOrBareMethod.orAPathLikeAbove")
+  .flatExtracting(Extractors.resultOf("bareMethod")
+  ```
+  Works on both POJOs and ```Iterable```s/```Array```s.
+
 ## Development notice
 
 Cajon is written in Kotlin 1.3.
@@ -218,7 +246,20 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 ## TODO
 - AssertThatNegatedBooleanExpression
 - AssertThatInstanceOf
-- Referencing string properties inside extracting()
+- AssertThatStringOps
+  ```
+  from: assertThat(string.contains(foobar)).isTrue();
+    to: assertThat(string).contains(foobar);
+  from: assertThat(string.startsWith(foobar)).isTrue();
+    to: assertThat(string).startsWith(foobar);
+  from: assertThat(string.endsWith(foobar)).isTrue();
+    to: assertThat(string).endsWith(foobar);
+  from: assertThat(string.equalsIgnoreCase(foobar)).isTrue();
+    to: assertThat(string).isEqualToIgnoringCase(foobar);
+  ```
+  Analogously with ```isFalse()```.
+  
+- AssumeInsteadOfReturn
 - Extraction with property names to lambda with Java 8
   ```
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
@@ -229,19 +270,23 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 ## Changelog
 
 #### V0.5 (13-Apr-19)
-- Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection).
+- Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection). Minimal version is now 2017.3.
 - Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.
+- Added support for referencing and refactoring inside ```.extracting()``` methods with fields, properties and methods (though
+  getter renaming does not work that perfect, but I'm giving up for now as the IntelliJ SDK docs are seriously lacking).
+- Fixed an exception in batch mode if the description string was the same but for different fixes. 
+  Now descriptions are different for quick fixes triggered by AssertThatJava8OptionalInspection and AssertThatGuavaOptionalInspection.
 
 #### V0.4 (11-Apr-19)
 - Reduced minimal supported IDEA version from 2018.2 to 2017.2.
-- New inspection AssertThatJava8Optional that operates on Java 8 Optional objects and tries to use contains(), containsSame(), isPresent(), and isNotPresent() instead.
-- New inspection AssertThatGuavaOptional that operates on Guava Optional objects and tries to use contains(), isPresent(), and isAbsent() instead.
-- Added support in AssertThatBinaryExpressionIsTrueOrFalse for is(Not)EqualTo(Boolean.TRUE/FALSE).
+- New inspection AssertThatJava8Optional that operates on Java 8 ```Optional``` objects and tries to use ```contains()```, ```containsSame()```, ```isPresent()```, and ```isNotPresent()``` instead.
+- New inspection AssertThatGuavaOptional that operates on Guava ```Optional``` objects and tries to use ```contains()```, ```isPresent()```, and ```isAbsent()``` instead.
+- Added support in AssertThatBinaryExpressionIsTrueOrFalse for ```is(Not)EqualTo(Boolean.TRUE/FALSE)```.
 
 #### V0.3 (07-Apr-19)
-- New inspection AssertThatBinaryExpressionIsTrueOrFalse that will find and fix common binary expressions and equals() statements (more than 150 combinations) inside assertThat().
+- New inspection AssertThatBinaryExpressionIsTrueOrFalse that will find and fix common binary expressions and ```equals()``` statements (more than 150 combinations) inside ```assertThat()```.
 - Merged AssertThatObjectIsNull and AssertThatObjectIsNotNull to AssertThatObjectIsNullOrNotNull.
-- Support for hasSizeLessThan(), hasSizeLessThanOrEqualTo(), hasSizeGreaterThanOrEqualTo(), and hasSizeGreaterThan() for AssertThatSizeInspection (with AssertJ >=13.2.0).
+- Support for ```hasSizeLessThan()```, ```hasSizeLessThanOrEqualTo()```, ```hasSizeGreaterThanOrEqualTo()```, and ```hasSizeGreaterThan()``` for AssertThatSizeInspection (with AssertJ >=13.2.0).
 - Really fixed highlighting for JUnit conversion. Sorry.
 
 #### V0.2 (01-Apr-19)

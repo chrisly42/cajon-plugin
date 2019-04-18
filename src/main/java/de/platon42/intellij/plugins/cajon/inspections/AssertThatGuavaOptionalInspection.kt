@@ -6,6 +6,7 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.search.GlobalSearchScope
+import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.quickfixes.*
 
@@ -34,8 +35,8 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
                 if (assertThatGuava) {
                     if (isEqualTo) {
                         val innerExpectedCall = expectedCallExpression.firstArg as? PsiMethodCallExpression ?: return
-                        if (GUAVA_OPTIONAL_OF.test(innerExpectedCall) || GUAVA_OPTIONAL_FROM_NULLABLE.test(innerExpectedCall)) {
-                            registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS, ::RemoveExpectedOutmostMethodCallQuickFix)
+                        if (CallMatcher.anyOf(GUAVA_OPTIONAL_OF, GUAVA_OPTIONAL_FROM_NULLABLE).test(innerExpectedCall)) {
+                            registerRemoveExpectedOutmostMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS, ::RemoveExpectedOutmostMethodCallQuickFix)
                         } else if (GUAVA_OPTIONAL_ABSENT.test(innerExpectedCall)) {
                             registerSimplifyMethod(holder, expectedCallExpression, MethodNames.IS_ABSENT)
                         }
@@ -60,8 +61,8 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
                     }
                     if (isEqualTo) {
                         val innerExpectedCall = expectedCallExpression.firstArg as? PsiMethodCallExpression ?: return
-                        if (GUAVA_OPTIONAL_OF.test(innerExpectedCall) || GUAVA_OPTIONAL_FROM_NULLABLE.test(innerExpectedCall)) {
-                            registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS) { desc, method ->
+                        if (CallMatcher.anyOf(GUAVA_OPTIONAL_OF, GUAVA_OPTIONAL_FROM_NULLABLE).test(innerExpectedCall)) {
+                            registerRemoveExpectedOutmostMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS) { desc, method ->
                                 QuickFixWithPostfixDelegate(
                                     RemoveExpectedOutmostMethodCallQuickFix(desc, method),
                                     ForGuavaPostFix.REPLACE_BY_GUAVA_ASSERT_THAT_AND_STATIC_IMPORT
@@ -88,7 +89,7 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
         replacementMethod: String,
         noExpectedExpression: Boolean = false
     ) {
-        registerReplaceMethod(holder, expression, oldExpectedCallExpression, replacementMethod) { desc, method ->
+        registerRemoveActualOutmostMethod(holder, expression, oldExpectedCallExpression, replacementMethod) { desc, method ->
             QuickFixWithPostfixDelegate(
                 RemoveActualOutmostMethodCallQuickFix(desc, method, noExpectedExpression),
                 ForGuavaPostFix.REPLACE_BY_GUAVA_ASSERT_THAT_AND_STATIC_IMPORT
@@ -96,11 +97,7 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
         }
     }
 
-    private fun registerSimplifyForGuavaMethod(
-        holder: ProblemsHolder,
-        expression: PsiMethodCallExpression,
-        replacementMethod: String
-    ) {
+    private fun registerSimplifyForGuavaMethod(holder: ProblemsHolder, expression: PsiMethodCallExpression, replacementMethod: String) {
         val originalMethod = getOriginalMethodName(expression) ?: return
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = SIMPLIFY_MESSAGE_TEMPLATE.format(originalMethod, replacementMethod)

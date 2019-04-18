@@ -22,9 +22,8 @@ dependencies {
     testCompile "org.assertj:assertj-guava:3.2.1"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
-    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.4.0'
     testImplementation "org.jetbrains.kotlin:kotlin-test"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
+//    testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
 }
 
 compileKotlin {
@@ -41,10 +40,14 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V0.5 (13-Apr-19)</h4>
+  <h4>V0.5 (18-Apr-19)</h4>
     <ul>
-      <li>Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection).
+      <li>Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection). Minimal version is now 2017.3.
       <li>Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.
+      <li>Added support for referencing and refactoring inside .extracting() methods with fields, properties and methods (though
+      getter renaming does not work that perfect, but I'm giving up for now as the IntelliJ SDK docs are seriously lacking).
+      <li>Fixed an exception in batch mode if the description string was the same but for different fixes. 
+          Now descriptions are different for quick fixes triggered by AssertThatJava8OptionalInspection and AssertThatGuavaOptionalInspection.
     </ul>
   <h4>V0.4 (11-Apr-19)</h4>
     <ul>

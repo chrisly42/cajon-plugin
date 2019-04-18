@@ -2,8 +2,11 @@ package de.platon42.intellij.playground;
 
 import org.assertj.core.api.ListAssert;
 import org.assertj.core.data.Offset;
+import org.assertj.core.extractor.Extractors;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -122,10 +125,27 @@ public class Playground {
         assertThat(!false).isTrue();
     }
 
-    private void stringIsEmpty() {
+    private void stringStuff() {
         String foo = "bar";
         assertThat(foo).isEqualTo("");
         assertThat(foo).hasSize(0);
+        assertThat(foo.contains("foobar")).isTrue();
+        assertThat(foo).contains("foobar");
+        assertThat(foo.startsWith("foobar")).isTrue();
+        assertThat(foo).startsWith("foobar");
+        assertThat(foo.endsWith("foobar")).isTrue();
+        assertThat(foo).endsWith("foobar");
+        assertThat(foo.equalsIgnoreCase("foo")).isTrue();
+        assertThat(foo).isEqualToIgnoringCase("foo");
+
+        assertThat(foo.contains("foobar")).isFalse();
+        assertThat(foo).doesNotContain("foobar");
+        assertThat(foo.startsWith("foobar")).isFalse();
+        assertThat(foo).doesNotStartWith("foobar");
+        assertThat(foo.endsWith("foobar")).isFalse();
+        assertThat(foo).doesNotEndWith("foobar");
+        assertThat(foo.equalsIgnoreCase("foo")).isFalse();
+        assertThat(foo).isNotEqualToIgnoringCase("foo");
     }
 
     private void java8Optional() {
@@ -291,6 +311,60 @@ public class Playground {
         assertThat(new float[1]).containsExactly(new float[2], offset(1.0f));
         assertThat(new float[1]).as("array equals").containsExactly(new float[2], offset(1.0f));
 
+        assertThat(new Object()).extracting("toString");
         assertThat(new Object()).extracting(Object::toString, Object::hashCode);
+    }
+
+
+    private void findReferences() {
+        Contact contact = new Contact();
+        List<Contact> contactList = Collections.emptyList();
+
+        assertThat(contact).extracting("name").isEqualTo("foo");
+        assertThat(contact).extracting("age", "country", "address.street", "street", "address.noMailings", "address.REALLYnoMAILINGS").containsExactly(1, "Elmst. 42");
+        assertThat(contact).extracting(Extractors.byName("name")).isEqualTo("foo");
+        assertThat(contact).extracting(Extractors.resultOf("getStreet")).isEqualTo("foo");
+        assertThat(contact).extracting(Extractors.resultOf("getStreet"), Extractors.byName("narf")).isEqualTo("foo");
+
+        assertThat(contactList).extracting("name").isEqualTo("foo");
+        assertThat(contactList).extracting("name", "moar").isEqualTo("foo");
+        assertThat(contactList).extracting("name", String.class).isEqualTo("foo");
+        assertThat(contactList).extracting(Extractors.byName("name")).isEqualTo("foo");
+        assertThat(contactList).extracting(Extractors.resultOf("getStreet"), Extractors.byName("narf")).isEqualTo("foo");
+        assertThat(contactList).extractingResultOf("getStreet").isEqualTo("foo");
+        assertThat(contactList).extractingResultOf("getStreet", String.class).isEqualTo("foo");
+        assertThat(contactList).flatExtracting("age", "address.street", "street").containsExactly(1, "Elmst. 42");
+        assertThat(contactList).flatExtracting("age").containsExactly(1, "Elmst. 42");
+    }
+
+    public class Contact {
+        private String name;
+        private Integer age;
+        private Address address;
+
+        public String getStreet() {
+            return address.getStreet();
+        }
+    }
+
+    public class Address {
+        private String street;
+        private String country;
+
+        public String getStreet() {
+            return street;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public boolean isNoMailings() {
+            return true;
+        }
+
+        public Boolean getREALLYnoMAILINGS() {
+            return true;
+        }
     }
 }

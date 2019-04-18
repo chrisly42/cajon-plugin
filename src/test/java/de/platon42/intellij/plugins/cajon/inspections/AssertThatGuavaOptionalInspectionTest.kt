@@ -9,44 +9,45 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 @AddLocalJarToModule(com.google.common.base.Optional::class, org.assertj.guava.api.Assertions::class, Assertions::class)
+@TestDataSubPath("inspections/AssertThatGuavaOptional")
 internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
 
     @Test
-    @TestDataSubPath("inspections/AssertThatGuavaOptional")
     internal fun assertThat_get_or_isPresent_for_Guava_Optional_can_be_simplified(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         runTest {
             myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
             myFixture.configureByFile("AssertThatGuavaOptionalBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isPresent()"), 5)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isAbsent()"), 5)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isAbsent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isTrue() with isPresent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isFalse() with isAbsent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with contains()"), 7)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with isPresent()"), 2)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isNotEqualTo() with isPresent()"), 2)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isPresent()"), 3)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with isAbsent()"), 2)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isAbsent()"), 3)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isNotEqualTo() with isAbsent()"), 2)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isTrue() with isPresent()"), 1)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isFalse() with isAbsent()"), 1)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with contains()"), 1)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap expected expression and replace isEqualTo() with contains()"), 6)
             myFixture.checkResultByFile("AssertThatGuavaOptionalAfter.java")
         }
     }
 
     @Test
-    @TestDataSubPath("inspections/AssertThatGuavaOptional")
     internal fun adds_missing_Guava_import_any_order(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         runTest {
             myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
             myFixture.configureByFile("WithoutPriorGuavaImportBefore.java")
-            executeQuickFixes(myFixture, Regex("Replace .* with .*"), 7)
+            executeQuickFixes(myFixture, Regex(".*eplace .* with .*"), 7)
             myFixture.checkResultByFile("WithoutPriorGuavaImportAfter.java")
         }
     }
 
     @Test
-    @TestDataSubPath("inspections/AssertThatGuavaOptional")
     internal fun adds_missing_Guava_import_isAbsent_first(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         runTest {
             myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
             myFixture.configureByFile("WithoutPriorGuavaImportBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isAbsent()"), 1)
-            executeQuickFixes(myFixture, Regex("Replace .* with .*"), 6)
+            executeQuickFixes(myFixture, Regex(".*eplace .* with .*"), 6)
             myFixture.checkResultByFile("WithoutPriorGuavaImportAfter.java")
         }
     }

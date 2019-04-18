@@ -4,7 +4,9 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiExpression
 import com.intellij.psi.PsiMethodCallExpression
+import com.siyeh.ig.callMatcher.CallMatcher
 
+val CORE_ASSERT_THAT_MATCHER = CallMatcher.staticCall(AssertJClassNames.ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)!!
 
 fun createAssertThat(context: PsiElement, actualExpression: PsiExpression): PsiMethodCallExpression {
     return createAssertThat(context, AssertJClassNames.ASSERTIONS_CLASSNAME, actualExpression)

@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException
 @AddLocalJarToModule(Assertions::class)
 abstract class AbstractCajonTest {
 
-    // See https://github.com/junit-team/junit5/issues/157
+    // See https://github.com/junit-team/junit5/issues/157, should be resolved with junit5 5.5 M2
     protected fun runTest(body: () -> Unit) {
         val throwables = arrayOfNulls<Throwable>(1)
 

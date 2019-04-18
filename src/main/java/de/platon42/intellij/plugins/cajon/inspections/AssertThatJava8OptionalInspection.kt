@@ -4,6 +4,7 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.JavaElementVisitor
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
+import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
@@ -31,8 +32,8 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
                 if (ASSERT_THAT_JAVA8_OPTIONAL.test(expression)) {
                     if (IS_EQUAL_TO_OBJECT.test(expectedCallExpression)) {
                         val innerExpectedCall = expectedCallExpression.firstArg as? PsiMethodCallExpression ?: return
-                        if (OPTIONAL_OF.test(innerExpectedCall) || OPTIONAL_OF_NULLABLE.test(innerExpectedCall)) {
-                            registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS, ::RemoveExpectedOutmostMethodCallQuickFix)
+                        if (CallMatcher.anyOf(OPTIONAL_OF, OPTIONAL_OF_NULLABLE).test(innerExpectedCall)) {
+                            registerRemoveExpectedOutmostMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS, ::RemoveExpectedOutmostMethodCallQuickFix)
                         } else if (OPTIONAL_EMPTY.test(innerExpectedCall)) {
                             registerSimplifyMethod(holder, expectedCallExpression, MethodNames.IS_NOT_PRESENT)
                         }
@@ -47,18 +48,18 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
 
                     if (OPTIONAL_GET.test(actualExpression)) {
                         if (IS_EQUAL_TO_OBJECT.test(expectedCallExpression)) {
-                            registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS) { desc, method ->
+                            registerRemoveActualOutmostMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS) { desc, method ->
                                 RemoveActualOutmostMethodCallQuickFix(desc, method)
                             }
                         } else if (IS_SAME_AS_OBJECT.test(expectedCallExpression)) {
-                            registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS_SAME) { desc, method ->
+                            registerRemoveActualOutmostMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS_SAME) { desc, method ->
                                 RemoveActualOutmostMethodCallQuickFix(desc, method)
                             }
                         }
                     } else if (OPTIONAL_IS_PRESENT.test(actualExpression)) {
                         val expectedPresence = getExpectedBooleanResult(expectedCallExpression) ?: return
                         val replacementMethod = expectedPresence.map(MethodNames.IS_PRESENT, MethodNames.IS_NOT_PRESENT)
-                        registerReplaceMethod(holder, expression, expectedCallExpression, replacementMethod) { desc, method ->
+                        registerRemoveActualOutmostMethod(holder, expression, expectedCallExpression, replacementMethod) { desc, method ->
                             RemoveActualOutmostMethodCallQuickFix(desc, method, noExpectedExpression = true)
                         }
                     }

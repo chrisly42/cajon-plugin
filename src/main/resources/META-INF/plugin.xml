@@ -7,10 +7,11 @@
     Cajon is an IntelliJ IDEA Plugin for shortening and optimizing AssertJ assertions.
     It adds inspections and quick fixes to fully make use of the AssertJ methods
     to make the intention clear and concise. It can also convert JUnit 4 assertions to AssertJ.
+    It supports referencing inside extracting()-methods with strings, adding refactoring safety.
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="172.0"/>
+    <idea-version since-build="173.2290.1"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -19,6 +20,7 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <psi.referenceContributor implementation="de.platon42.intellij.plugins.cajon.references.ExtractorReferenceContributor"/>
         <localInspection groupPath="Java" shortName="AssertThatObjectIsNullOrNotNull" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatObjectIsNullOrNotNullInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatBooleanIsTrueOrFalse" enabledByDefault="true" level="WARNING"

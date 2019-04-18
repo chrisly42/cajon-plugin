@@ -28,6 +28,8 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s() would be more concise than %s()"
 
         const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s() with %s()"
+        const val REMOVE_EXPECTED_OUTMOST_DESCRIPTION_TEMPLATE = "Unwrap expected expression and replace %s() with %s()"
+        const val REMOVE_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE = "Unwrap actual expression and replace %s() with %s()"
 
         val TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP = mapOf<IElementType, String>(
             JavaTokenType.EQEQ to MethodNames.IS_EQUAL_TO,
@@ -180,11 +182,42 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         replacementMethod: String,
         quickFixSupplier: (String, String) -> LocalQuickFix
     ) {
+        registerConciseMethod(REPLACE_DESCRIPTION_TEMPLATE, oldExpectedCallExpression, replacementMethod, quickFixSupplier, holder, expression)
+    }
+
+    private fun registerConciseMethod(
+        descriptionTemplate: String,
+        oldExpectedCallExpression: PsiMethodCallExpression,
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix,
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression
+    ) {
         val originalMethod = getOriginalMethodName(oldExpectedCallExpression) ?: return
-        val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
+        val description = descriptionTemplate.format(originalMethod, replacementMethod)
         val message = MORE_CONCISE_MESSAGE_TEMPLATE.format(replacementMethod, originalMethod)
         val quickfix = quickFixSupplier(description, replacementMethod)
         holder.registerProblem(expression, message, quickfix)
+    }
+
+    protected fun registerRemoveExpectedOutmostMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        oldExpectedCallExpression: PsiMethodCallExpression,
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix
+    ) {
+        registerConciseMethod(REMOVE_EXPECTED_OUTMOST_DESCRIPTION_TEMPLATE, oldExpectedCallExpression, replacementMethod, quickFixSupplier, holder, expression)
+    }
+
+    protected fun registerRemoveActualOutmostMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        oldExpectedCallExpression: PsiMethodCallExpression,
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix
+    ) {
+        registerConciseMethod(REMOVE_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE, oldExpectedCallExpression, replacementMethod, quickFixSupplier, holder, expression)
     }
 
     protected fun calculateConstantParameterValue(expression: PsiMethodCallExpression, argIndex: Int): Any? {

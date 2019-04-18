@@ -25,6 +25,8 @@ class AssertJClassNames {
         const val ABSTRACT_ITERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIterableAssert"
         @NonNls
         const val ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.EnumerableAssert"
+        @NonNls
+        const val EXTRACTORS_CLASSNAME = "org.assertj.core.extractor.Extractors"
 
         @NonNls
         const val GUAVA_OPTIONAL_CLASSNAME = "com.google.common.base.Optional"
