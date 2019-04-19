@@ -63,26 +63,49 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(object).isNotEqualTo(null);  
     to: assertThat(object).isNotNull();
   ```
-  
+
 - AssertThatBooleanIsTrueOrFalse
   ```
   from: assertThat(booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);  
     to: assertThat(booleanValue).isTrue()/isFalse();
   ```
-  
+
 - AssertThatStringIsEmpty
   ```
   from: assertThat(charSequence/string).isEqualTo("");
   from: assertThat(charSequence/string).hasSize(0);
     to: assertThat(charSequence/string).isEmpty();
   ```
-  
+
+- AssertThatStringExpression
+  ```
+  from: assertThat(stringActual.isEmpty()).isTrue();
+    to: assertThat(stringActual).isEmpty();
+
+  from: assertThat(stringActual.equals(stringExpected)).isTrue();
+  from: assertThat(stringActual.contentEquals(charSeqExpected)).isTrue();
+    to: assertThat(stringActual).isEqualTo(stringExpected);
+
+  from: assertThat(stringActual.equalsIgnoreCase(stringExpected)).isTrue();
+    to: assertThat(stringActual).isEqualToIgnoringCase(stringExpected);
+
+  from: assertThat(stringActual.contains(stringExpected)).isTrue();
+    to: assertThat(stringActual).contains(stringExpected);
+
+  from: assertThat(stringActual.startsWith(stringExpected)).isTrue();
+    to: assertThat(stringActual).startsWith(stringExpected);
+
+  from: assertThat(stringActual.endsWith(stringExpected)).isTrue();
+    to: assertThat(stringActual).endsWith(stringExpected);
+  ```
+  Analogously with ```isFalse()```.
+
 - AssertThatEnumerableIsEmpty
   ```
   from: assertThat(enumerable).hasSize(0);
     to: assertThat(enumerable).isEmpty();
   ```
-  
+
 - AssertThatSize
   ```
   from: assertThat(array.length).isEqualTo(0);
@@ -135,30 +158,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(objActual).isEqualTo(objExpected);
   ```
   ...and many, many more combinations (more than 150).
-  
-- AssertThatStringExpression
-  ```
-  from: assertThat(stringActual.isEmpty()).isTrue();
-    to: assertThat(stringActual).isEmpty();
 
-  from: assertThat(stringActual.equals(stringExpected)).isTrue();
-  from: assertThat(stringActual.contentEquals(charSeqExpected)).isTrue();
-    to: assertThat(stringActual).isEqualTo(stringExpected);
-
-  from: assertThat(stringActual.equalsIgnoreCase(stringExpected)).isTrue();
-    to: assertThat(stringActual).isEqualToIgnoringCase(stringExpected);
-
-  from: assertThat(stringActual.contains(stringExpected)).isTrue();
-    to: assertThat(stringActual).contains(stringExpected);
-
-  from: assertThat(stringActual.startsWith(stringExpected)).isTrue();
-    to: assertThat(stringActual).startsWith(stringExpected);
-
-  from: assertThat(stringActual.endsWith(stringExpected)).isTrue();
-    to: assertThat(stringActual).endsWith(stringExpected);
-  ```
-  Analogously with ```isFalse()```.
-  
 - AssertThatJava8Optional
   ```
   from: assertThat(opt.isPresent()).isEqualTo(true);
@@ -248,7 +248,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   ```
   .extracting("field")
-  .extracting("outerfield.fieldInsideObjectTypeOfOuterfield.andSoOn")
+  .extracting("outerField.fieldInsideObjectTypeOfOuterField.andSoOn")
   .extracting("property") // where the class has a getProperty() (or isProperty() for boolean) method
   .extracting("bareMethod") // supported with AssertJ 13.12.0
   .extracting(Extractors.byName("fieldOrPropertyOrBareMethod")
@@ -259,7 +259,9 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   .flatExtracting(Extractors.byName("fieldOrPropertyOrBareMethod.orAPathLikeAbove")
   .flatExtracting(Extractors.resultOf("bareMethod")
   ```
-  Works on both POJOs and ```Iterable```s/```Array```s.
+  Works on both POJOs and ```Iterable```s/```Array```s. 
+  Implementation is very basic though and does not work with fancy cascaded .extracting() sequences.
+  If there's demand, I will add it.
 
 ## Development notice
 
