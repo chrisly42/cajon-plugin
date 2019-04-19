@@ -6,10 +6,7 @@ import com.intellij.psi.PsiMethodCallExpression
 import de.platon42.intellij.plugins.cajon.createExpectedMethodCall
 import de.platon42.intellij.plugins.cajon.replaceQualifierFromMethodCall
 
-class ReplaceSimpleMethodCallQuickFix(
-    description: String,
-    private val replacementMethod: String
-) : AbstractCommonQuickFix(description) {
+class ReplaceSimpleMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
 
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.startElement

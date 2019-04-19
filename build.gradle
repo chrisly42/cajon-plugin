@@ -1,11 +1,11 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.3'
+    id 'org.jetbrains.intellij' version '0.4.8'
     id 'org.jetbrains.kotlin.jvm' version '1.3.30'
 }
 
 group 'de.platon42'
-version '0.5'
+version '0.6'
 
 repositories {
     mavenCentral()
@@ -33,36 +33,28 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.1'
+    version '2019.1.1'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
 }
 
 patchPluginXml {
     changeNotes """
+  <h4>V0.6 (xx-Apr-19)</h4>
+    <ul>
+      <li>New AssertThatStringExpression that will move isEmpty(), equals(), equalsIgnoreCase(), contains(),
+          startsWith(), and endsWith() out of actual expression.
+    </ul>  
   <h4>V0.5 (18-Apr-19)</h4>
     <ul>
       <li>Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection). Minimal version is now 2017.3.
       <li>Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.
       <li>Added support for referencing and refactoring inside .extracting() methods with fields, properties and methods (though
-      getter renaming does not work that perfect, but I'm giving up for now as the IntelliJ SDK docs are seriously lacking).
+          getter renaming does not work that perfect, but I'm giving up for now as the IntelliJ SDK docs are seriously lacking).
       <li>Fixed an exception in batch mode if the description string was the same but for different fixes. 
           Now descriptions are different for quick fixes triggered by AssertThatJava8OptionalInspection and AssertThatGuavaOptionalInspection.
     </ul>
-  <h4>V0.4 (11-Apr-19)</h4>
-    <ul>
-      <li>Reduced minimal supported IDEA version from 2018.2 to 2017.2.
-      <li>New inspection AssertThatJava8Optional that operates on Java 8 Optional objects and tries to use contains(), containsSame(), isPresent(), and isNotPresent() instead.
-      <li>New inspection AssertThatGuavaOptional that operates on Guava Optional objects and tries to use contains(), isPresent(), and isAbsent() instead.
-      <li>Added support in AssertThatBinaryExpressionIsTrueOrFalse for is(Not)EqualTo(Boolean.TRUE/FALSE).
-    </ul>
-  <h4>V0.3 (07-Apr-19)</h4>
-    <ul>
-      <li>New inspection AssertThatBinaryExpressionIsTrueOrFalse that will find and fix common binary expressions and equals() statements (more than 150 combinations) inside assertThat().
-      <li>Merged AssertThatObjectIsNull and AssertThatObjectIsNotNull to AssertThatObjectIsNullOrNotNull.
-      <li>Support for hasSizeLessThan(), hasSizeLessThanOrEqualTo(), hasSizeGreaterThanOrEqualTo(), and hasSizeGreaterThan() for AssertThatSizeInspection (with AssertJ >=13.2.0).
-      <li>Really fixed highlighting for JUnit conversion. Sorry.
-    </ul>
+  <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """
 }
 

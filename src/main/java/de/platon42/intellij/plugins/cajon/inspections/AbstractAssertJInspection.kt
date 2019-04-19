@@ -28,7 +28,7 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s() would be more concise than %s()"
 
         const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s() with %s()"
-        const val REMOVE_EXPECTED_OUTMOST_DESCRIPTION_TEMPLATE = "Unwrap expected expression and replace %s() with %s()"
+        const val REMOVE_EXPECTED_OUTMOST_DESCRIPTION_TEMPLATE = "Remove unwrapping of expected expression and replace %s() with %s()"
         const val REMOVE_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE = "Unwrap actual expression and replace %s() with %s()"
 
         val TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP = mapOf<IElementType, String>(

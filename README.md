@@ -130,9 +130,35 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   from: assertThat(null == objActual).isFalse();
     to: assertThat(objActual).isNotNull();
+
+  from: assertThat(objActual.equals(objExpected).isTrue();
+    to: assertThat(objActual).isEqualTo(objExpected);
   ```
   ...and many, many more combinations (more than 150).
+  
+- AssertThatStringExpression
+  ```
+  from: assertThat(stringActual.isEmpty()).isTrue();
+    to: assertThat(stringActual).isEmpty();
 
+  from: assertThat(stringActual.equals(stringExpected)).isTrue();
+  from: assertThat(stringActual.contentEquals(charSeqExpected)).isTrue();
+    to: assertThat(stringActual).isEqualTo(stringExpected);
+
+  from: assertThat(stringActual.equalsIgnoreCase(stringExpected)).isTrue();
+    to: assertThat(stringActual).isEqualToIgnoringCase(stringExpected);
+
+  from: assertThat(stringActual.contains(stringExpected)).isTrue();
+    to: assertThat(stringActual).contains(stringExpected);
+
+  from: assertThat(stringActual.startsWith(stringExpected)).isTrue();
+    to: assertThat(stringActual).startsWith(stringExpected);
+
+  from: assertThat(stringActual.endsWith(stringExpected)).isTrue();
+    to: assertThat(stringActual).endsWith(stringExpected);
+  ```
+  Analogously with ```isFalse()```.
+  
 - AssertThatJava8Optional
   ```
   from: assertThat(opt.isPresent()).isEqualTo(true);
@@ -162,34 +188,6 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(opt).isPresent();
   ```
 
-- JUnitAssertToAssertJ
-  ```
-  assertTrue(condition);
-  assertTrue(message, condition);
-  assertFalse(condition);
-  assertFalse(message, condition);
-  assertNull(object);
-  assertNull(message, object);
-  assertNonNull(object);
-  assertNonNull(message, object);
-  assertEquals(expected, actual);
-  assertEquals(message, expected, actual);
-  assertEquals(expectedDoubleOrFloat, actualDoubleOrFloat, delta);
-  assertEquals(message, expectedDoubleOrFloat, actualDoubleOrFloat, delta);
-  assertNotEquals(unexpected, actual);
-  assertNotEquals(message, unexpected, actual);
-  assertNotEquals(unexpectedDoubleOrFloat, actualDoubleOrFloat, delta);
-  assertNotEquals(message, unexpectedDoubleOrFloat, actualDoubleOrFloat, delta);
-  assertSame(expected, actual);
-  assertSame(message, expected, actual);
-  assertNotSame(unexpected, actual);
-  assertNotSame(message, unexpected, actual);
-  assertArrayEquals(expected, actual);
-  assertArrayEquals(message, expectedArray, actualArray);
-  assertArrayEquals(expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
-  assertArrayEquals(message, expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
-  ```
-  
 - AssertThatGuavaOptional
   ```
   from: assertThat(opt.isPresent()).isEqualTo(true);
@@ -217,6 +215,34 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
 
   AssertJ for Guava needs to be available in the classpath.
+
+- JUnitAssertToAssertJ
+  ```
+  assertTrue(condition);
+  assertTrue(message, condition);
+  assertFalse(condition);
+  assertFalse(message, condition);
+  assertNull(object);
+  assertNull(message, object);
+  assertNonNull(object);
+  assertNonNull(message, object);
+  assertEquals(expected, actual);
+  assertEquals(message, expected, actual);
+  assertEquals(expectedDoubleOrFloat, actualDoubleOrFloat, delta);
+  assertEquals(message, expectedDoubleOrFloat, actualDoubleOrFloat, delta);
+  assertNotEquals(unexpected, actual);
+  assertNotEquals(message, unexpected, actual);
+  assertNotEquals(unexpectedDoubleOrFloat, actualDoubleOrFloat, delta);
+  assertNotEquals(message, unexpectedDoubleOrFloat, actualDoubleOrFloat, delta);
+  assertSame(expected, actual);
+  assertSame(message, expected, actual);
+  assertNotSame(unexpected, actual);
+  assertNotSame(message, unexpected, actual);
+  assertArrayEquals(expected, actual);
+  assertArrayEquals(message, expectedArray, actualArray);
+  assertArrayEquals(expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
+  assertArrayEquals(message, expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
+  ```
 
 ### Implemented referencing
 
@@ -246,29 +272,22 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 ## TODO
 - AssertThatNegatedBooleanExpression
 - AssertThatInstanceOf
-- AssertThatStringOps
-  ```
-  from: assertThat(string.contains(foobar)).isTrue();
-    to: assertThat(string).contains(foobar);
-  from: assertThat(string.startsWith(foobar)).isTrue();
-    to: assertThat(string).startsWith(foobar);
-  from: assertThat(string.endsWith(foobar)).isTrue();
-    to: assertThat(string).endsWith(foobar);
-  from: assertThat(string.equalsIgnoreCase(foobar)).isTrue();
-    to: assertThat(string).isEqualToIgnoringCase(foobar);
-  ```
-  Analogously with ```isFalse()```.
-  
-- AssumeInsteadOfReturn
+- AssumeThatInsteadOfReturn
+- Join consecutive assertThats
 - Extraction with property names to lambda with Java 8
   ```
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
     to: assertThat(object).extracting(type::getPropOne, it -> it.propNoGetter, it -> it.getPropTwo().getInnerProp())...
   ```
-- Kotlin support
+
+- Kotlin support (right now, however, with less than 100 downloads after a month, this is unlikely to happen)
 
 ## Changelog
 
+#### V0.6 (unreleased)
+- New AssertThatStringExpression that will move ```isEmpty()```, ```equals()```, ```equalsIgnoreCase()```, ```contains()```,
+  ```startsWith()```, and ```endsWith()``` out of actual expression.
+          
 #### V0.5 (13-Apr-19)
 - Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection). Minimal version is now 2017.3.
 - Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.

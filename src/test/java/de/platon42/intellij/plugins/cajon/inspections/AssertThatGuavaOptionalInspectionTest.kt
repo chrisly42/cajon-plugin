@@ -26,7 +26,7 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isTrue() with isPresent()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isFalse() with isAbsent()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with contains()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap expected expression and replace isEqualTo() with contains()"), 6)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove unwrapping of expected expression and replace isEqualTo() with contains()"), 6)
             myFixture.checkResultByFile("AssertThatGuavaOptionalAfter.java")
         }
     }

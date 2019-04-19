@@ -65,7 +65,21 @@ class MethodNames {
         @NonNls
         const val CONTAINS = "contains"
         @NonNls
+        const val DOES_NOT_CONTAIN = "doesNotContain"
+        @NonNls
         const val CONTAINS_EXACTLY = "containsExactly"
+        @NonNls
+        const val IS_EQUAL_TO_IC = "isEqualToIgnoringCase"
+        @NonNls
+        const val IS_NOT_EQUAL_TO_IC = "isNotEqualToIgnoringCase"
+        @NonNls
+        const val STARTS_WITH = "startsWith"
+        @NonNls
+        const val ENDS_WITH = "endsWith"
+        @NonNls
+        const val DOES_NOT_START_WITH = "doesNotStartWith"
+        @NonNls
+        const val DOES_NOT_END_WITH = "doesNotEndWith"
         @NonNls
         const val CONTAINS_SAME = "containsSame"
         @NonNls

@@ -10,8 +10,8 @@ import de.platon42.intellij.plugins.cajon.MethodNames.Companion.IS_NULL
 import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.map
+import de.platon42.intellij.plugins.cajon.quickfixes.MoveActualOuterExpressionMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.SplitBinaryExpressionMethodCallQuickFix
-import de.platon42.intellij.plugins.cajon.quickfixes.SplitEqualsExpressionMethodCallQuickFix
 
 class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspection() {
 
@@ -37,7 +37,7 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 val assertThatArgument = expression.firstArg
                 if (assertThatArgument is PsiMethodCallExpression && OBJECT_EQUALS.test(assertThatArgument)) {
                     val replacementMethod = if (expectedResult) MethodNames.IS_EQUAL_TO else MethodNames.IS_NOT_EQUAL_TO
-                    registerSplitMethod(holder, expression, "${MethodNames.EQUALS}()", replacementMethod, ::SplitEqualsExpressionMethodCallQuickFix)
+                    registerSplitMethod(holder, expression, "${MethodNames.EQUALS}()", replacementMethod, ::MoveActualOuterExpressionMethodCallQuickFix)
                     return
                 }
 

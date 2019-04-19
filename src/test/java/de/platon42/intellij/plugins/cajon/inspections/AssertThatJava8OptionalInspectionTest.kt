@@ -22,7 +22,7 @@ internal class AssertThatJava8OptionalInspectionTest : AbstractCajonTest() {
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isNotPresent()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isPresent()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isFalse() with isNotPresent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap expected expression and replace isEqualTo() with contains()"), 2)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove unwrapping of expected expression and replace isEqualTo() with contains()"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with contains()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isSameAs() with containsSame()"), 1)
             myFixture.checkResultByFile("AssertThatJava8OptionalAfter.java")
