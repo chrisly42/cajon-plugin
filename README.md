@@ -54,11 +54,13 @@ Applying a quick fix might result in further optimization possibilities, so you 
 
 For example:
 ```
-assertFalse(!(array.length() == collection.size()));
+assertFalse(!(array.length == collection.size()));
 
-assertThat(!(array.length() == collection.size())).isFalse();
+assertThat(!(array.length == collection.size())).isFalse();
 
-assertThat(array.length() == collection.size()).isTrue();
+assertThat(array.length == collection.size()).isTrue();
+
+assertThat(array.length).isEqualTo(collection.size());
 
 assertThat(array).hasSameSizeAs(collection);
 ```
@@ -76,10 +78,17 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(object).isNotNull();
   ```
 
-- AssertThatBooleanIsTrueOrFalse
+- AssertThatBooleanCondition
   ```
   from: assertThat(booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);  
     to: assertThat(booleanValue).isTrue()/isFalse();
+  ```
+
+- AssertThatInvertedBooleanCondition
+  ```
+  from: assertThat(!booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);  
+  from: assertThat(!booleanValue).isTrue()/isFalse();  
+    to: assertThat(!booleanValue).isFalse()/isTrue();
   ```
 
 - AssertThatStringIsEmpty
@@ -160,7 +169,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat("string").hasSameSizeAs(collection);
   ```
 
-- AssertThatBinaryExpressionIsTrueOrFalse
+- AssertThatBinaryExpression
   ```
   from: assertThat(primActual == primExpected).isTrue();
     to: assertThat(primActual).isEqualTo(primExpected);
@@ -292,7 +301,6 @@ The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and
 Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
 
 ## TODO
-- AssertThatNegatedBooleanExpression
 - AssertThatInstanceOf
 - AssumeThatInsteadOfReturn
 - Join consecutive assertThats
@@ -307,9 +315,11 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 ## Changelog
 
 #### V0.6 (unreleased)
-- New AssertThatStringExpression that will move ```isEmpty()```, ```equals()```, ```equalsIgnoreCase()```, ```contains()```,
+- New AssertThatStringExpression inspection that will move ```isEmpty()```, ```equals()```, ```equalsIgnoreCase()```, ```contains()```,
   ```startsWith()```, and ```endsWith()``` out of actual expression.
-- Extended AssertThatSize intention to take ```String```s and ```CharSequences``` into account, too.
+- Extended AssertThatSize inspection to take ```String```s and ```CharSequences``` into account, too.
+- New AssertThatInvertedBooleanCondition inspection that will remove inverted boolean expressions inside ```assertThat()```.
+- Renamed a few inspections to better/shorter names.
 
 #### V0.5 (13-Apr-19)
 - Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection). Minimal version is now 2017.3.

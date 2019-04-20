@@ -13,7 +13,7 @@ import de.platon42.intellij.plugins.cajon.map
 import de.platon42.intellij.plugins.cajon.quickfixes.MoveActualOuterExpressionMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.SplitBinaryExpressionMethodCallQuickFix
 
-class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspection() {
+class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting a binary expression"
@@ -63,13 +63,13 @@ class AssertThatBinaryExpressionIsTrueOrFalseInspection : AbstractAssertJInspect
                 val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
                 val swapExpectedAndActual = constantEvaluationHelper.computeConstantExpression(binaryExpression.lOperand) != null
 
-                val tokenType = binaryExpression.operationSign.tokenType
+                val tokenType = binaryExpression.operationTokenType
                     .let {
                         if (swapExpectedAndActual) SWAP_SIDE_OF_BINARY_OPERATOR.getOrDefault(it, it) else it
                     }
                     .let {
                         if (expectedResult) it else INVERT_BINARY_OPERATOR.getOrDefault(it, it)
-                    } ?: return
+                    }
                 val mappingToUse =
                     (isPrimitive || isNumericType).map(TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP, TOKEN_TO_ASSERTJ_FOR_OBJECT_MAPPINGS)
                 val replacementMethod = mappingToUse[tokenType] ?: return

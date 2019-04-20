@@ -2,9 +2,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AssertThatJava8Optional {
+public class Java8Optional {
 
-    private void assertThatJava8Optional() {
+    private void java8Optional() {
         Optional<String> opt = Optional.empty();
 
         assertThat(opt).isPresent();

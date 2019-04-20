@@ -11,7 +11,7 @@
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="173.2290.1"/>
+    <idea-version since-build="173.2696.26"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -24,7 +24,7 @@
         <localInspection groupPath="Java" shortName="AssertThatObjectIsNullOrNotNull" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatObjectIsNullOrNotNullInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatBooleanIsTrueOrFalse" enabledByDefault="true" level="WARNING"
-                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBooleanIsTrueOrFalseInspection"/>
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBooleanConditionInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatStringIsEmpty" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatStringIsEmptyInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatEnumerableIsEmpty" enabledByDefault="true" level="WARNING"
@@ -34,7 +34,9 @@
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatSizeInspection"/>
 
         <localInspection groupPath="Java" shortName="AssertThatBinaryExpressionIsTrueOrFalse" enabledByDefault="true" level="WARNING"
-                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBinaryExpressionIsTrueOrFalseInspection"/>
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBinaryExpressionInspection"/>
+        <localInspection groupPath="Java" shortName="AssertThatNotPrefixExpression" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatInvertedBooleanConditionInspection"/>
 
         <localInspection groupPath="Java" shortName="AssertThatJava8Optional" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatJava8OptionalInspection"/>

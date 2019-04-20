@@ -10,10 +10,10 @@ import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.map
 
-class AssertThatBooleanIsTrueOrFalseInspection : AbstractAssertJInspection() {
+class AssertThatBooleanConditionInspection : AbstractAssertJInspection() {
 
     companion object {
-        private const val DISPLAY_NAME = "Asserting true or false"
+        private const val DISPLAY_NAME = "Asserting a boolean condition"
     }
 
     override fun getDisplayName() = DISPLAY_NAME

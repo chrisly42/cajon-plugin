@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test
 internal class AssertThatJava8OptionalInspectionTest : AbstractCajonTest() {
 
     @Test
-    @TestDataSubPath("inspections/AssertThatJava8Optional")
+    @TestDataSubPath("inspections/Java8Optional")
     internal fun assertThat_get_or_isPresent_for_Java8_Optional_can_be_simplified(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         runTest {
             myFixture.enableInspections(AssertThatJava8OptionalInspection::class.java)
-            myFixture.configureByFile("AssertThatJava8OptionalBefore.java")
+            myFixture.configureByFile("Java8OptionalBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with isPresent()"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isNotEqualTo() with isPresent()"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with isNotPresent()"), 2)
@@ -25,7 +25,7 @@ internal class AssertThatJava8OptionalInspectionTest : AbstractCajonTest() {
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove unwrapping of expected expression and replace isEqualTo() with contains()"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with contains()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isSameAs() with containsSame()"), 1)
-            myFixture.checkResultByFile("AssertThatJava8OptionalAfter.java")
+            myFixture.checkResultByFile("Java8OptionalAfter.java")
         }
     }
 }

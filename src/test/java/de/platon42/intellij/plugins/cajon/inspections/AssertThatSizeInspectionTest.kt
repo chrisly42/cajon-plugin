@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test
 internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
 
     @Test
-    @TestDataSubPath("inspections/AssertThatSize")
+    @TestDataSubPath("inspections/Size")
     internal fun assertThat_size_of_array_or_collection_can_be_simplified(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         runTest {
             myFixture.enableInspections(AssertThatSizeInspection::class.java)
-            myFixture.configureByFile("AssertThatSizeBefore.java")
+            myFixture.configureByFile("SizeBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isEmpty()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isZero() with isEmpty()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotZero() with isNotEmpty()"), 4)
@@ -27,7 +27,7 @@ internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThanOrEqualTo() with hasSizeGreaterThanOrEqualTo()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThan() with hasSizeLessThan()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThanOrEqualTo() with hasSizeLessThanOrEqualTo()"), 4)
-            myFixture.checkResultByFile("AssertThatSizeAfter.java")
+            myFixture.checkResultByFile("SizeAfter.java")
         }
     }
 }

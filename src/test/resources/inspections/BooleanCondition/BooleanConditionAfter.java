@@ -1,8 +1,8 @@
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BooleanIsTrueOrFalse {
+public class BooleanCondition {
 
-    private void booleanIsTrueOrFalse() {
+    private void booleanCondition() {
         boolean primitive = false;
         Boolean object = Boolean.TRUE;
 

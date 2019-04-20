@@ -3,9 +3,9 @@ import com.google.common.base.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.guava.api.Assertions.assertThat;
 
-public class AssertThatGuavaOptional {
+public class GuavaOptional {
 
-    private void assertThatGuavaOptional() {
+    private void guavaOptional() {
         Optional<String> opt = Optional.absent();
 
         assertThat(opt).isPresent();

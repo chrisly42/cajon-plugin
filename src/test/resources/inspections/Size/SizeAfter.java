@@ -2,9 +2,9 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AssertThatSize {
+public class Size {
 
-    private void assertThatSize() {
+    private void size() {
         ArrayList<String> list = new ArrayList<>();
         ArrayList<String> otherList = new ArrayList<>();
         long[] array = new long[5];

@@ -9,14 +9,14 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
 @AddLocalJarToModule(com.google.common.base.Optional::class, org.assertj.guava.api.Assertions::class, Assertions::class)
-@TestDataSubPath("inspections/AssertThatGuavaOptional")
+@TestDataSubPath("inspections/GuavaOptional")
 internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
 
     @Test
     internal fun assertThat_get_or_isPresent_for_Guava_Optional_can_be_simplified(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         runTest {
             myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
-            myFixture.configureByFile("AssertThatGuavaOptionalBefore.java")
+            myFixture.configureByFile("GuavaOptionalBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with isPresent()"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isNotEqualTo() with isPresent()"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isPresent()"), 3)
@@ -27,7 +27,7 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isFalse() with isAbsent()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with contains()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove unwrapping of expected expression and replace isEqualTo() with contains()"), 6)
-            myFixture.checkResultByFile("AssertThatGuavaOptionalAfter.java")
+            myFixture.checkResultByFile("GuavaOptionalAfter.java")
         }
     }
 
