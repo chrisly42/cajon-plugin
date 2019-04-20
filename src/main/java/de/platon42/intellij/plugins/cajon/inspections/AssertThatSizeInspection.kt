@@ -12,7 +12,7 @@ import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSizeMethodCallQuickF
 class AssertThatSizeInspection : AbstractAssertJInspection() {
 
     companion object {
-        private const val DISPLAY_NAME = "Asserting the size of an collection or array"
+        private const val DISPLAY_NAME = "Asserting the size of an collection, array or string"
 
         private val BONUS_EXPRESSIONS_CALL_MATCHER_MAP = listOf(
             IS_LESS_THAN_INT to MethodNames.HAS_SIZE_LESS_THAN,
@@ -33,7 +33,9 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                 }
                 val actualExpression = expression.firstArg
 
-                if (isArrayLength(actualExpression) || isCollectionSize(actualExpression)) {
+                val isForArrayOrCollection = isArrayLength(actualExpression) || isCollectionSize(actualExpression)
+                val isForString = isCharSequenceLength(actualExpression)
+                if (isForArrayOrCollection || isForString) {
                     val expectedCallExpression = expression.findOutmostMethodCall() ?: return
                     val constValue = calculateConstantParameterValue(expectedCallExpression, 0)
                     if (IS_EQUAL_TO_INT.test(expectedCallExpression)) {
@@ -43,7 +45,9 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                             }
                         } else {
                             val equalToExpression = expectedCallExpression.firstArg
-                            if (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) {
+                            if (isForArrayOrCollection && (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) ||
+                                isForString && (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression) || isCharSequenceLength(equalToExpression))
+                            ) {
                                 registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.HAS_SAME_SIZE_AS) { desc, method ->
                                     ReplaceSizeMethodCallQuickFix(desc, method, expectedIsCollection = true)
                                 }
@@ -75,6 +79,8 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                     }
                 }
             }
+
+            private fun isCharSequenceLength(expression: PsiExpression) = (expression is PsiMethodCallExpression) && CHAR_SEQUENCE_LENGTH.test(expression)
 
             private fun isCollectionSize(expression: PsiExpression) = (expression is PsiMethodCallExpression) && COLLECTION_SIZE.test(expression)
 

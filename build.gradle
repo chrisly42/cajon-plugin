@@ -42,8 +42,9 @@ patchPluginXml {
     changeNotes """
   <h4>V0.6 (xx-Apr-19)</h4>
     <ul>
-      <li>New AssertThatStringExpression that will move isEmpty(), equals(), equalsIgnoreCase(), contains(),
+      <li>New AssertThatStringExpression intention that will move isEmpty(), equals(), equalsIgnoreCase(), contains(),
           startsWith(), and endsWith() out of actual expression.
+      <li>Extended AssertThatSize intention to take strings and CharSequences into account, too.
     </ul>  
   <h4>V0.5 (18-Apr-19)</h4>
     <ul>

@@ -35,6 +35,7 @@ public class Playground {
         assertThat(new ArrayList<String>()).hasSizeGreaterThan(1);
         assertThat(new ArrayList<String>()).hasSameSizeAs(new ArrayList<>());
         assertThat(new Long[1]).as("etc").hasSameSizeAs(new Long[2]);
+        assertThat(new Long[1]).as("etc").hasSameSizeAs(new Long[2]);
     }
 
     private void sizeOfArray() {
@@ -146,6 +147,41 @@ public class Playground {
         assertThat(foo).doesNotEndWith("foobar");
         assertThat(foo.equalsIgnoreCase("foo")).isFalse();
         assertThat(foo).isNotEqualToIgnoringCase("foo");
+
+        ArrayList<String> list = new ArrayList<>();
+        long[] otherArray = new long[4];
+
+        String string = "string";
+        assertThat(string.length()).isEqualTo(0);
+        assertThat(string.length()).isZero();
+        assertThat(string.length()).isNotZero();
+        assertThat(string.length()).as("hi").isGreaterThan(0);
+        assertThat(string.length()).isGreaterThanOrEqualTo(1);
+        assertThat(string.length()).isLessThan(1);
+        assertThat(string.length()).isLessThanOrEqualTo(0);
+        assertThat(string.length()).isEqualTo(list.size());
+        assertThat(string.length()).isEqualTo(otherArray.length);
+        assertThat(string.length()).isEqualTo(1);
+        assertThat(string.length()).isGreaterThan(otherArray.length - 1);
+        assertThat(string.length()).isGreaterThanOrEqualTo(otherArray.length + 1);
+        assertThat(string.length()).isLessThan(otherArray.length - 3);
+        assertThat(string.length()).isLessThanOrEqualTo(1 - otherArray.length);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        assertThat(stringBuilder.length()).isEqualTo(0);
+        assertThat(stringBuilder.length()).isZero();
+        assertThat(stringBuilder.length()).isNotZero();
+        assertThat(stringBuilder.length()).as("hi").isGreaterThan(0);
+        assertThat(stringBuilder.length()).isGreaterThanOrEqualTo(1);
+        assertThat(stringBuilder.length()).isLessThan(1);
+        assertThat(stringBuilder.length()).isLessThanOrEqualTo(0);
+        assertThat(stringBuilder.length()).isEqualTo(list.size());
+        assertThat(stringBuilder.length()).isEqualTo(otherArray.length);
+        assertThat(stringBuilder.length()).isEqualTo(1);
+        assertThat(stringBuilder.length()).isGreaterThan(otherArray.length - 1);
+        assertThat(stringBuilder.length()).isGreaterThanOrEqualTo(otherArray.length + 1);
+        assertThat(stringBuilder.length()).isLessThan(otherArray.length - 3);
+        assertThat(stringBuilder.length()).isLessThanOrEqualTo(1 - otherArray.length);
     }
 
     private void java8Optional() {

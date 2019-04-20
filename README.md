@@ -50,6 +50,18 @@ The plugin will report inspections in your opened editor file as warnings.
 You can then quick-fix these with your quick-fix hotkey (usually Alt-Return or Opt-Return).
 
 Or, you can use the "Run Inspection by Name..." action to run one inspection on a bigger scope (e.g. the whole project).
+Applying a quick fix might result in further optimization possibilities, so you might need to perform a couple of fixes before you get to the final result.
+
+For example:
+```
+assertFalse(!(array.length() == collection.size()));
+
+assertThat(!(array.length() == collection.size())).isFalse();
+
+assertThat(array.length() == collection.size()).isTrue();
+
+assertThat(array).hasSameSizeAs(collection);
+```
 
 You can toggle the various inspections in the Settings/Editor/Inspections in the AssertJ group.
 
@@ -123,7 +135,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(array).hasSameSizeAs(anotherArray);
   ```
 
-  with AssertJ 13.2.0 or higher
+  and additionally with AssertJ 13.2.0 or later
 
   ```
   from: assertThat(array.length).isLessThanOrEqualTo(expression);
@@ -138,7 +150,15 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(array.length).isGreaterThanOrEqualTo(expression);
     to: assertThat(array).hasSizeGreaterThanOrEqualTo(expression);
   ```
-  and analogously for collections...
+  and analogously for collections, strings and CharSequences, e.g:
+
+  ```
+  from: assertThat("string".length()).isLessThan(1);
+    to: assertThat("string").isEmpty();
+
+  from: assertThat("string".length()).isEqualTo(collection.size())
+    to: assertThat("string").hasSameSizeAs(collection);
+  ```
 
 - AssertThatBinaryExpressionIsTrueOrFalse
   ```
@@ -289,7 +309,8 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 #### V0.6 (unreleased)
 - New AssertThatStringExpression that will move ```isEmpty()```, ```equals()```, ```equalsIgnoreCase()```, ```contains()```,
   ```startsWith()```, and ```endsWith()``` out of actual expression.
-          
+- Extended AssertThatSize intention to take ```String```s and ```CharSequences``` into account, too.
+
 #### V0.5 (13-Apr-19)
 - Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection). Minimal version is now 2017.3.
 - Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.
