@@ -5,8 +5,6 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.util.TypeConversionUtil
 import de.platon42.intellij.plugins.cajon.MethodNames
-import de.platon42.intellij.plugins.cajon.MethodNames.Companion.IS_NOT_NULL
-import de.platon42.intellij.plugins.cajon.MethodNames.Companion.IS_NULL
 import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.map
@@ -36,7 +34,7 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
 
                 val assertThatArgument = expression.firstArg
                 if (assertThatArgument is PsiMethodCallExpression && OBJECT_EQUALS.test(assertThatArgument)) {
-                    val replacementMethod = if (expectedResult) MethodNames.IS_EQUAL_TO else MethodNames.IS_NOT_EQUAL_TO
+                    val replacementMethod = expectedResult.map(MethodNames.IS_EQUAL_TO, MethodNames.IS_NOT_EQUAL_TO)
                     registerSplitMethod(holder, expression, "${MethodNames.EQUALS}()", replacementMethod, ::MoveActualOuterExpressionMethodCallQuickFix)
                     return
                 }
@@ -51,7 +49,7 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
                 if (isLeftNull && isRightNull) {
                     return
                 } else if (isLeftNull || isRightNull) {
-                    val replacementMethod = if (expectedResult) IS_NULL else IS_NOT_NULL
+                    val replacementMethod = expectedResult.map(MethodNames.IS_NULL, MethodNames.IS_NOT_NULL)
                     registerSplitMethod(holder, expression, "binary", replacementMethod) { desc, method ->
                         SplitBinaryExpressionMethodCallQuickFix(desc, method, pickRightOperand = isLeftNull, noExpectedExpression = true)
                     }

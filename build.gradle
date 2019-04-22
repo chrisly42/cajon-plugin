@@ -40,13 +40,14 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V0.6 (xx-Apr-19)</h4>
+  <h4>V0.6 (22-Apr-19)</h4>
     <ul>
       <li>New AssertThatStringExpression inspection that will move isEmpty(), equals(), equalsIgnoreCase(), contains(),
           startsWith(), and endsWith() out of actual expression.
       <li>Extended AssertThatSize inspection to take strings and CharSequences into account, too.
       <li>New AssertThatInvertedBooleanCondition inspection that will remove inverted boolean expressions inside assertThat().
       <li>Renamed a few inspections to better/shorter names.
+      <li>New AssertThatInstanceOf inspection that moves instanceof expressions out of assertThat().
     </ul>  
   <h4>V0.5 (18-Apr-19)</h4>
     <ul>

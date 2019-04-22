@@ -1,15 +1,17 @@
 # Cajon - Concise AssertJ Optimizing Nitpicker
 
-Cajon is an IntelliJ IDEA Plugin for shortening and optimizing AssertJ assertions.
+Cajon is an IntelliJ IDEA Plugin for shortening and optimizing [AssertJ](https://assertj.github.io/doc/) assertions.
 
-## Why?
+## Purpose
 
 First, code is easier to read, when it is concise and reflects the intention clearly.
 AssertJ has plenty of different convenience methods that describing various intentions precisely.
 Why write longer, more complex code that can be expressed in brevity?
 
-Second, AssertJ is able to output more meaningful descriptions when an assertion fails.
+Second, when using the available special assertion methods of AssertJ, a failure of a condition
+can be expressed in better detail and with more meaningful descriptions.
 This makes finding bugs and fixing failed tests more efficient.
+Nobody likes to read failures of the kind "failed because true is not false".
 
 For example:
 
@@ -50,9 +52,10 @@ The plugin will report inspections in your opened editor file as warnings.
 You can then quick-fix these with your quick-fix hotkey (usually Alt-Return or Opt-Return).
 
 Or, you can use the "Run Inspection by Name..." action to run one inspection on a bigger scope (e.g. the whole project).
-Applying a quick fix might result in further optimization possibilities, so you might need to perform a couple of fixes before you get to the final result.
+Applying a quick fix might result in further optimization possibilities, so 
+you might need to perform a couple of fixes before you get to the final result.
 
-For example:
+Check out this example where every line represents the result after a Cajon quickfix:
 ```
 assertFalse(!(array.length == collection.size()));
 
@@ -88,7 +91,18 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
   from: assertThat(!booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);  
   from: assertThat(!booleanValue).isTrue()/isFalse();  
-    to: assertThat(!booleanValue).isFalse()/isTrue();
+    to: assertThat(booleanValue).isFalse()/isTrue();
+  ```
+
+- AssertThatInstanceOf
+  ```
+  from: assertThat(object instanceof classname).isEqualTo(true);
+  from: assertThat(object instanceof classname).isTrue();
+    to: assertThat(object).isInstanceOf(classname.class);
+
+  from: assertThat(object instanceof classname).isEqualTo(false);
+  from: assertThat(object instanceof classname).isFalse();
+    to: assertThat(object).isNotInstanceOf(classname.class);
   ```
 
 - AssertThatStringIsEmpty
@@ -297,11 +311,10 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 Cajon is written in Kotlin 1.3.
 
 Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one that I'm aware of ;) ).
-The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and I took me quite a while to make it work with JUnit 5.
+The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and it took me quite a while to make it work with JUnit 5.
 Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
 
 ## TODO
-- AssertThatInstanceOf
 - AssumeThatInsteadOfReturn
 - Join consecutive assertThats
 - Extraction with property names to lambda with Java 8
@@ -314,14 +327,15 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 
 ## Changelog
 
-#### V0.6 (unreleased)
+#### V0.6 (22-Apr-19)
 - New AssertThatStringExpression inspection that will move ```isEmpty()```, ```equals()```, ```equalsIgnoreCase()```, ```contains()```,
   ```startsWith()```, and ```endsWith()``` out of actual expression.
 - Extended AssertThatSize inspection to take ```String```s and ```CharSequences``` into account, too.
 - New AssertThatInvertedBooleanCondition inspection that will remove inverted boolean expressions inside ```assertThat()```.
 - Renamed a few inspections to better/shorter names.
+- New AssertThatInstanceOf inspection that moves instanceof expressions out of ```assertThat()```.
 
-#### V0.5 (13-Apr-19)
+#### V0.5 (18-Apr-19)
 - Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection). Minimal version is now 2017.3.
 - Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.
 - Added support for referencing and refactoring inside ```.extracting()``` methods with fields, properties and methods (though

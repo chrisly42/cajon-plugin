@@ -242,6 +242,13 @@ public class Playground {
         assertThat(opt).isAbsent();
     }
 
+    private void assertThatInstance() {
+        String foo = "foo";
+        assertThat(foo instanceof String).isTrue();
+        assertThat(foo).isInstanceOf(String.class);
+        assertThat(foo).isNotInstanceOf(String.class);
+    }
+
     private void junitAssertions() {
         assertFalse(!(new int[3].length == new ArrayList<Integer>().size()));
         assertThat(!(new int[3].length == new ArrayList<Integer>().size())).isFalse();

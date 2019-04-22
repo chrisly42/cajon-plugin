@@ -45,6 +45,10 @@ class MethodNames {
         const val IS_CLOSE_TO = "isCloseTo"
         @NonNls
         const val IS_NOT_CLOSE_TO = "isNotCloseTo"
+        @NonNls
+        const val IS_INSTANCE_OF = "isInstanceOf"
+        @NonNls
+        const val IS_NOT_INSTANCE_OF = "isNotInstanceOf"
 
         @NonNls
         const val IS_EMPTY = "isEmpty"
