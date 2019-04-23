@@ -29,7 +29,7 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
 
         const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s() with %s()"
         const val REMOVE_EXPECTED_OUTMOST_DESCRIPTION_TEMPLATE = "Remove unwrapping of expected expression and replace %s() with %s()"
-        const val REMOVE_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE = "Unwrap actual expression and replace %s() with %s()"
+        const val UNWRAP_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE = "Unwrap actual expression and replace %s() with %s()"
 
         val TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP = mapOf<IElementType, String>(
             JavaTokenType.EQEQ to MethodNames.IS_EQUAL_TO,
@@ -219,7 +219,7 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         replacementMethod: String,
         quickFixSupplier: (String, String) -> LocalQuickFix
     ) {
-        registerConciseMethod(REMOVE_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE, holder, expression, oldExpectedCallExpression, replacementMethod, quickFixSupplier)
+        registerConciseMethod(UNWRAP_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE, holder, expression, oldExpectedCallExpression, replacementMethod, quickFixSupplier)
     }
 
     protected fun calculateConstantParameterValue(expression: PsiMethodCallExpression, argIndex: Int): Any? {

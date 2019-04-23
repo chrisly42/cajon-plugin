@@ -8,7 +8,7 @@ import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.replaceQualifierFromMethodCall
 
-class RemoveExpectedOutmostMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
+class UnwrapExpectedStaticMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
 
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.startElement

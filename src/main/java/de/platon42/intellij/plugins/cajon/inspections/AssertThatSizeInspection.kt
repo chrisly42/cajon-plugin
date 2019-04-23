@@ -2,17 +2,17 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
+import com.intellij.psi.util.PsiTreeUtil
+import de.platon42.intellij.plugins.cajon.*
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ITERABLE_ASSERT_CLASSNAME
-import de.platon42.intellij.plugins.cajon.MethodNames
-import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
-import de.platon42.intellij.plugins.cajon.firstArg
-import de.platon42.intellij.plugins.cajon.map
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSizeMethodCallQuickFix
 
 class AssertThatSizeInspection : AbstractAssertJInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting the size of an collection, array or string"
+        private const val REMOVE_SIZE_DESCRIPTION_TEMPLATE = "Remove size determination of expected expression and replace %s() with %s()"
 
         private val BONUS_EXPRESSIONS_CALL_MATCHER_MAP = listOf(
             IS_LESS_THAN_INT to MethodNames.HAS_SIZE_LESS_THAN,
@@ -28,14 +28,29 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!ASSERT_THAT_INT.test(expression)) {
+                val isAssertThatWithInt = ASSERT_THAT_INT.test(expression)
+                val isHasSize = HAS_SIZE.test(expression)
+                if (!(isAssertThatWithInt || isHasSize)) {
                     return
                 }
                 val actualExpression = expression.firstArg
 
                 val isForArrayOrCollection = isArrayLength(actualExpression) || isCollectionSize(actualExpression)
                 val isForString = isCharSequenceLength(actualExpression)
-                if (isForArrayOrCollection || isForString) {
+                if (isHasSize && (isForArrayOrCollection
+                            || (isForString && checkAssertedType(expression, ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME)))
+                ) {
+                    val assertThatCall = PsiTreeUtil.findChildrenOfType(expression, PsiMethodCallExpression::class.java).find { CORE_ASSERT_THAT_MATCHER.test(it) } ?: return
+                    registerConciseMethod(
+                        REMOVE_SIZE_DESCRIPTION_TEMPLATE,
+                        holder,
+                        assertThatCall,
+                        expression,
+                        MethodNames.HAS_SAME_SIZE_AS
+                    ) { desc, method ->
+                        ReplaceSizeMethodCallQuickFix(desc, method, expectedIsCollection = true, keepActualAsIs = true)
+                    }
+                } else if (isForArrayOrCollection || isForString) {
                     val expectedCallExpression = expression.findOutmostMethodCall() ?: return
                     val constValue = calculateConstantParameterValue(expectedCallExpression, 0)
                     if (IS_EQUAL_TO_INT.test(expectedCallExpression)) {

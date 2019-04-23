@@ -24,10 +24,14 @@ public class Size {
         assertThat(list.size()).isEqualTo(string.length());
         assertThat(list.size()).isEqualTo(stringBuilder.length());
         assertThat(list.size()).isEqualTo(1);
-        assertThat(list.size()).isGreaterThan(list.size() * 2);
-        assertThat(list.size()).isGreaterThanOrEqualTo(list.size() * 2);
-        assertThat(list.size()).isLessThan(list.size() * 2);
-        assertThat(list.size()).isLessThanOrEqualTo(list.size() * 2);
+        assertThat(list.size()).isGreaterThan(otherList.size() * 2);
+        assertThat(list.size()).isGreaterThanOrEqualTo(otherList.size() * 2);
+        assertThat(list.size()).isLessThan(otherList.size() * 2);
+        assertThat(list.size()).isLessThanOrEqualTo(otherList.size() * 2);
+        assertThat(list).hasSize(otherList.size());
+        assertThat(list).hasSize(array.length);
+        assertThat(list).hasSize(string.length());
+        assertThat(list).hasSize(stringBuilder.length());
 
         assertThat(array.length).isEqualTo(0);
         assertThat(array.length).isZero();
@@ -45,6 +49,10 @@ public class Size {
         assertThat(array.length).isGreaterThanOrEqualTo(otherArray.length + 1);
         assertThat(array.length).isLessThan(otherArray.length - 3);
         assertThat(array.length).isLessThanOrEqualTo(1 - otherArray.length);
+        assertThat(array).hasSize(list.size());
+        assertThat(array).hasSize(otherArray.length);
+        assertThat(array).hasSize(string.length());
+        assertThat(array).hasSize(stringBuilder.length());
 
         assertThat(string.length()).isEqualTo(0);
         assertThat(string.length()).isZero();
@@ -62,6 +70,10 @@ public class Size {
         assertThat(string.length()).isGreaterThanOrEqualTo(otherArray.length + 1);
         assertThat(string.length()).isLessThan(otherArray.length - 3);
         assertThat(string.length()).isLessThanOrEqualTo(1 - otherArray.length);
+        assertThat(string).hasSize(otherList.size());
+        assertThat(string).hasSize(array.length);
+        assertThat(string).hasSize(string.length());
+        assertThat(string).hasSize(stringBuilder.length());
 
         assertThat(stringBuilder.length()).isEqualTo(0);
         assertThat(stringBuilder.length()).isZero();
@@ -79,5 +91,9 @@ public class Size {
         assertThat(stringBuilder.length()).isGreaterThanOrEqualTo(otherArray.length + 1);
         assertThat(stringBuilder.length()).isLessThan(otherArray.length - 3);
         assertThat(stringBuilder.length()).isLessThanOrEqualTo(1 - otherArray.length);
+        assertThat(stringBuilder).hasSize(otherList.size());
+        assertThat(stringBuilder).hasSize(array.length);
+        assertThat(stringBuilder).hasSize(string.length());
+        assertThat(stringBuilder).hasSize(stringBuilder.length());
     }
 }

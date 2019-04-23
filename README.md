@@ -156,6 +156,9 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   from: assertThat(array.length).isEqualTo(anotherArray.length);
     to: assertThat(array).hasSameSizeAs(anotherArray);
+    
+  from: assertThat(array).hasSize(anotherArray.length);
+    to: assertThat(array).hasSameSizeAs(anotherArray);
   ```
 
   and additionally with AssertJ 13.2.0 or later
@@ -181,6 +184,9 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   from: assertThat("string".length()).isEqualTo(collection.size())
     to: assertThat("string").hasSameSizeAs(collection);
+    
+  from: assertThat("string".length()).hasSize("strong".length())
+    to: assertThat("string").hasSameSizeAs("strong");
   ```
 
 - AssertThatBinaryExpression
@@ -330,6 +336,7 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 #### V0.7 (unreleased)
 - Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions
   (really, Jetbrains, this sucks for no reason).
+- Extended AssertThatSize inspection to transform ```hasSize()``` into ```hasSameSizeAs()```, if possible.
 
 #### V0.6 (22-Apr-19)
 - New AssertThatStringExpression inspection that will move ```isEmpty()```, ```equals()```, ```equalsIgnoreCase()```, ```contains()```,

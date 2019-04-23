@@ -10,7 +10,7 @@ import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.map
 import de.platon42.intellij.plugins.cajon.quickfixes.RemoveActualOutmostMethodCallQuickFix
-import de.platon42.intellij.plugins.cajon.quickfixes.RemoveExpectedOutmostMethodCallQuickFix
+import de.platon42.intellij.plugins.cajon.quickfixes.UnwrapExpectedStaticMethodCallQuickFix
 
 class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
 
@@ -33,7 +33,7 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
                     if (IS_EQUAL_TO_OBJECT.test(expectedCallExpression)) {
                         val innerExpectedCall = expectedCallExpression.firstArg as? PsiMethodCallExpression ?: return
                         if (CallMatcher.anyOf(OPTIONAL_OF, OPTIONAL_OF_NULLABLE).test(innerExpectedCall)) {
-                            registerRemoveExpectedOutmostMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS, ::RemoveExpectedOutmostMethodCallQuickFix)
+                            registerRemoveExpectedOutmostMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS, ::UnwrapExpectedStaticMethodCallQuickFix)
                         } else if (OPTIONAL_EMPTY.test(innerExpectedCall)) {
                             registerSimplifyMethod(holder, expectedCallExpression, MethodNames.IS_NOT_PRESENT)
                         }

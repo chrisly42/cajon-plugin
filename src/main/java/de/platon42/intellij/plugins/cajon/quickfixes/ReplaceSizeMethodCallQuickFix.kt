@@ -11,14 +11,17 @@ class ReplaceSizeMethodCallQuickFix(
     description: String,
     private val replacementMethod: String,
     private val noExpectedExpression: Boolean = false,
-    private val expectedIsCollection: Boolean = false
+    private val expectedIsCollection: Boolean = false,
+    private val keepActualAsIs: Boolean = false
 ) : AbstractCommonQuickFix(description) {
 
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.startElement
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
-        val assertExpression = methodCallExpression.firstArg
-        replaceCollectionSizeOrArrayLength(assertExpression)
+        if (!keepActualAsIs) {
+            val assertExpression = methodCallExpression.firstArg
+            replaceCollectionSizeOrArrayLength(assertExpression)
+        }
         val oldExpectedExpression = element.findOutmostMethodCall() ?: return
 
         if (expectedIsCollection) {

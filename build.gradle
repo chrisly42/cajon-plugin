@@ -44,6 +44,7 @@ patchPluginXml {
     <ul>
       <li>Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions
           (really, Jetbrains, this sucks for no reason).
+      <li>Extended AssertThatSize inspection to transform hasSize() into hasSameSizeAs(), if possible.
     </ul>  
   <h4>V0.6 (22-Apr-19)</h4>
     <ul>
@@ -54,15 +55,6 @@ patchPluginXml {
       <li>Renamed a few inspections to better/shorter names.
       <li>New AssertThatInstanceOf inspection that moves instanceof expressions out of assertThat().
     </ul>  
-  <h4>V0.5 (18-Apr-19)</h4>
-    <ul>
-      <li>Fixed incompatibility with IDEA versions < 2018.2 (affected AssertThatSizeInspection). Minimal version is now 2017.3.
-      <li>Fixed missing Guava imports (if not already present) for AssertThatGuavaInspection. This was a major PITA to get right.
-      <li>Added support for referencing and refactoring inside .extracting() methods with fields, properties and methods (though
-          getter renaming does not work that perfect, but I'm giving up for now as the IntelliJ SDK docs are seriously lacking).
-      <li>Fixed an exception in batch mode if the description string was the same but for different fixes. 
-          Now descriptions are different for quick fixes triggered by AssertThatJava8OptionalInspection and AssertThatGuavaOptionalInspection.
-    </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """
 }

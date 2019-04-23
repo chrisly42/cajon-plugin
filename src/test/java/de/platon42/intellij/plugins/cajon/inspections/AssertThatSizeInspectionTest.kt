@@ -27,6 +27,7 @@ internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThanOrEqualTo() with hasSizeGreaterThanOrEqualTo()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThan() with hasSizeLessThan()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThanOrEqualTo() with hasSizeLessThanOrEqualTo()"), 4)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove size determination of expected expression and replace hasSize() with hasSameSizeAs()"), 12)
             myFixture.checkResultByFile("SizeAfter.java")
         }
     }
