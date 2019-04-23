@@ -76,19 +76,19 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
                     SplitBinaryExpressionMethodCallQuickFix(desc, method, pickRightOperand = swapExpectedAndActual)
                 }
             }
-
-            private fun registerSplitMethod(
-                holder: ProblemsHolder,
-                expression: PsiMethodCallExpression,
-                type: String,
-                replacementMethod: String,
-                quickFixSupplier: (String, String) -> LocalQuickFix
-            ) {
-                val description = SPLIT_EXPRESSION_DESCRIPTION_TEMPLATE.format(type)
-                val message = MORE_MEANINGFUL_MESSAGE_TEMPLATE.format(type)
-                val quickfix = quickFixSupplier(description, replacementMethod)
-                holder.registerProblem(expression, message, quickfix)
-            }
         }
+    }
+
+    private fun registerSplitMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        type: String,
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix
+    ) {
+        val description = SPLIT_EXPRESSION_DESCRIPTION_TEMPLATE.format(type)
+        val message = MORE_MEANINGFUL_MESSAGE_TEMPLATE.format(type)
+        val quickfix = quickFixSupplier(description, replacementMethod)
+        holder.registerProblem(expression, message, quickfix)
     }
 }

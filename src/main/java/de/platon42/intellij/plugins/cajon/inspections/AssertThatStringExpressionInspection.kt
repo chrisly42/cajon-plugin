@@ -76,21 +76,21 @@ class AssertThatStringExpressionInspection : AbstractAssertJInspection() {
                     }
                 }
             }
-
-            private fun registerMoveOutMethod(
-                holder: ProblemsHolder,
-                expression: PsiMethodCallExpression,
-                oldActualExpression: PsiMethodCallExpression,
-                replacementMethod: String,
-                quickFixSupplier: (String, String) -> LocalQuickFix
-            ) {
-                val originalMethod = getOriginalMethodName(oldActualExpression) ?: return
-                val description = MOVE_EXPECTED_EXPRESSION_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
-                val message = MOVING_OUT_MESSAGE_TEMPLATE.format(originalMethod)
-                val quickfix = quickFixSupplier(description, replacementMethod)
-                holder.registerProblem(expression, message, quickfix)
-            }
         }
+    }
+
+    private fun registerMoveOutMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        oldActualExpression: PsiMethodCallExpression,
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix
+    ) {
+        val originalMethod = getOriginalMethodName(oldActualExpression) ?: return
+        val description = MOVE_EXPECTED_EXPRESSION_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
+        val message = MOVING_OUT_MESSAGE_TEMPLATE.format(originalMethod)
+        val quickfix = quickFixSupplier(description, replacementMethod)
+        holder.registerProblem(expression, message, quickfix)
     }
 
     private class Mapping(

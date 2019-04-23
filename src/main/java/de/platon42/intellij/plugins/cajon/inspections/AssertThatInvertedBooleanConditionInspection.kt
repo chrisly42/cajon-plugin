@@ -36,16 +36,16 @@ class AssertThatInvertedBooleanConditionInspection : AbstractAssertJInspection()
                     registerInvertMethod(holder, expression, replacementMethod, ::RemoveUnaryExpressionQuickFix)
                 }
             }
-
-            private fun registerInvertMethod(
-                holder: ProblemsHolder,
-                expression: PsiMethodCallExpression,
-                replacementMethod: String,
-                quickFixSupplier: (String, String) -> LocalQuickFix
-            ) {
-                val quickfix = quickFixSupplier(INVERT_CONDITION_DESCRIPTION, replacementMethod)
-                holder.registerProblem(expression, INVERT_CONDITION_MESSAGE, quickfix)
-            }
         }
+    }
+
+    private fun registerInvertMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix
+    ) {
+        val quickfix = quickFixSupplier(INVERT_CONDITION_DESCRIPTION, replacementMethod)
+        holder.registerProblem(expression, INVERT_CONDITION_MESSAGE, quickfix)
     }
 }

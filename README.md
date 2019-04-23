@@ -327,6 +327,10 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 
 ## Changelog
 
+#### V0.7 (unreleased)
+- Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions
+  (really, Jetbrains, this sucks for no reason).
+
 #### V0.6 (22-Apr-19)
 - New AssertThatStringExpression inspection that will move ```isEmpty()```, ```equals()```, ```equalsIgnoreCase()```, ```contains()```,
   ```startsWith()```, and ```endsWith()``` out of actual expression.

@@ -14,6 +14,9 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting an Optional (Guava)"
+        private const val REPLACE_GUAVA_DESCRIPTION_TEMPLATE = "Replace %s() with Guava assertThat().%s()"
+        private const val REMOVE_EXPECTED_OUTMOST_GUAVA_DESCRIPTION_TEMPLATE = "Remove unwrapping of expected expression and replace %s() with Guava assertThat().%s()"
+        private const val REMOVE_ACTUAL_OUTMOST_GUAVA_DESCRIPTION_TEMPLATE = "Unwrap actual expression and replace %s() with Guava assertThat().%s()"
     }
 
     override fun getDisplayName() = DISPLAY_NAME
@@ -62,12 +65,7 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
                     if (isEqualTo) {
                         val innerExpectedCall = expectedCallExpression.firstArg as? PsiMethodCallExpression ?: return
                         if (CallMatcher.anyOf(GUAVA_OPTIONAL_OF, GUAVA_OPTIONAL_FROM_NULLABLE).test(innerExpectedCall)) {
-                            registerRemoveExpectedOutmostMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS) { desc, method ->
-                                QuickFixWithPostfixDelegate(
-                                    RemoveExpectedOutmostMethodCallQuickFix(desc, method),
-                                    ForGuavaPostFix.REPLACE_BY_GUAVA_ASSERT_THAT_AND_STATIC_IMPORT
-                                )
-                            }
+                            registerRemoveExpectedOutmostGuavaMethod(holder, expression, expectedCallExpression, MethodNames.CONTAINS)
                         } else if (GUAVA_OPTIONAL_ABSENT.test(innerExpectedCall)) {
                             registerSimplifyForGuavaMethod(holder, expectedCallExpression, MethodNames.IS_ABSENT)
                         }
@@ -82,6 +80,20 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
         }
     }
 
+    private fun registerRemoveExpectedOutmostGuavaMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        oldExpectedCallExpression: PsiMethodCallExpression,
+        replacementMethod: String
+    ) {
+        registerConciseMethod(REMOVE_EXPECTED_OUTMOST_GUAVA_DESCRIPTION_TEMPLATE, holder, expression, oldExpectedCallExpression, replacementMethod) { desc, method ->
+            QuickFixWithPostfixDelegate(
+                RemoveExpectedOutmostMethodCallQuickFix(desc, method),
+                ForGuavaPostFix.REPLACE_BY_GUAVA_ASSERT_THAT_AND_STATIC_IMPORT
+            )
+        }
+    }
+
     private fun registerRemoveActualOutmostForGuavaMethod(
         holder: ProblemsHolder,
         expression: PsiMethodCallExpression,
@@ -89,7 +101,7 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
         replacementMethod: String,
         noExpectedExpression: Boolean = false
     ) {
-        registerRemoveActualOutmostMethod(holder, expression, oldExpectedCallExpression, replacementMethod) { desc, method ->
+        registerConciseMethod(REMOVE_ACTUAL_OUTMOST_GUAVA_DESCRIPTION_TEMPLATE, holder, expression, oldExpectedCallExpression, replacementMethod) { desc, method ->
             QuickFixWithPostfixDelegate(
                 RemoveActualOutmostMethodCallQuickFix(desc, method, noExpectedExpression),
                 ForGuavaPostFix.REPLACE_BY_GUAVA_ASSERT_THAT_AND_STATIC_IMPORT
@@ -99,7 +111,7 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
 
     private fun registerSimplifyForGuavaMethod(holder: ProblemsHolder, expression: PsiMethodCallExpression, replacementMethod: String) {
         val originalMethod = getOriginalMethodName(expression) ?: return
-        val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
+        val description = REPLACE_GUAVA_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = SIMPLIFY_MESSAGE_TEMPLATE.format(originalMethod, replacementMethod)
         val quickFix = QuickFixWithPostfixDelegate(
             ReplaceSimpleMethodCallQuickFix(description, replacementMethod),

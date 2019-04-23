@@ -38,17 +38,17 @@ class AssertThatInstanceOfInspection : AbstractAssertJInspection() {
                     registerRemoveInstanceOfMethod(holder, expression, replacementMethod, ::RemoveInstanceOfExpressionQuickFix)
                 }
             }
-
-            private fun registerRemoveInstanceOfMethod(
-                holder: ProblemsHolder,
-                expression: PsiMethodCallExpression,
-                replacementMethod: String,
-                quickFixSupplier: (String, String) -> LocalQuickFix
-            ) {
-                val description = REPLACE_INSTANCEOF_DESCRIPTION_TEMPLATE.format(replacementMethod)
-                val quickfix = quickFixSupplier(description, replacementMethod)
-                holder.registerProblem(expression, MOVE_OUT_INSTANCEOF_MESSAGE, quickfix)
-            }
         }
+    }
+
+    private fun registerRemoveInstanceOfMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix
+    ) {
+        val description = REPLACE_INSTANCEOF_DESCRIPTION_TEMPLATE.format(replacementMethod)
+        val quickfix = quickFixSupplier(description, replacementMethod)
+        holder.registerProblem(expression, MOVE_OUT_INSTANCEOF_MESSAGE, quickfix)
     }
 }
