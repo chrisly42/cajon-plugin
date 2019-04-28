@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.8'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.30'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.31'
 }
 
 group 'de.platon42'
@@ -40,12 +40,14 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V0.7 (unreleased)</h4>
+  <h4>V0.7 (28-Apr-19)</h4>
     <ul>
       <li>Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions
           (really, Jetbrains, this sucks for no reason).
       <li>Extended AssertThatSize inspection to transform hasSize() into hasSameSizeAs(), if possible.
-    </ul>  
+      <li>Implemented first version of JoinAssertThatStatements inspection that will try to merge assertThat() statements with the same
+          actual object together, preserving comments.
+    </ul>
   <h4>V0.6 (22-Apr-19)</h4>
     <ul>
       <li>New AssertThatStringExpression inspection that will move isEmpty(), equals(), equalsIgnoreCase(), contains(),
@@ -54,7 +56,7 @@ patchPluginXml {
       <li>New AssertThatInvertedBooleanCondition inspection that will remove inverted boolean expressions inside assertThat().
       <li>Renamed a few inspections to better/shorter names.
       <li>New AssertThatInstanceOf inspection that moves instanceof expressions out of assertThat().
-    </ul>  
+    </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """
 }

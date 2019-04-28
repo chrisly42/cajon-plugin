@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiInstanceOfExpression
 import com.intellij.psi.PsiMethodCallExpression
-import com.intellij.psi.PsiParenthesizedExpression
+import com.intellij.psi.util.PsiUtil
 import de.platon42.intellij.plugins.cajon.createExpectedMethodCall
 import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
@@ -21,11 +21,7 @@ class RemoveInstanceOfExpressionQuickFix(description: String, private val replac
         val factory = JavaPsiFacade.getElementFactory(project)
         val classObjectAccess = factory.createExpressionFromText("${expectedClass.type.canonicalText}.class", null)
 
-        var operand = assertExpression.operand
-        while (operand is PsiParenthesizedExpression) {
-            operand = operand.expression ?: return
-        }
-
+        val operand = PsiUtil.deparenthesizeExpression(assertExpression.operand) ?: return
         assertExpression.replace(operand)
 
         val oldExpectedExpression = element.findOutmostMethodCall() ?: return

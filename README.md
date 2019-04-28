@@ -70,8 +70,21 @@ assertThat(array).hasSameSizeAs(collection);
 
 You can toggle the various inspections in the Settings/Editor/Inspections in the AssertJ group.
 
-## Implemented inspections
+## Implemented inspections and quickfixes
 
+- JoinAssertThatStatements
+  ```
+  from: assertThat(expected).someCondition();
+        assertThat(expected).anotherCondition();
+    to: assertThat(expected).someCondition().anotherCondition();
+  ```
+  Joining will work on actual expressions inside assertThat() that are
+  - the same variable reference
+  - textually equal binary expressions
+  - the same method calls (except for known side-effect methods such as ```Iterator.next()``` -- please notify me about others)
+
+  The comments of the statements will be preserved. When using ```.extracting()``` or similar, the statements will not be merged.
+    
 - AssertThatObjectIsNullOrNotNull
   ```
   from: assertThat(object).isEqualTo(null);
@@ -320,9 +333,8 @@ Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so 
 The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and it took me quite a while to make it work with JUnit 5.
 Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
 
-## TODO
+## Planned features
 - AssumeThatInsteadOfReturn
-- Join consecutive assertThats
 - Extraction with property names to lambda with Java 8
   ```
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
@@ -333,10 +345,12 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 
 ## Changelog
 
-#### V0.7 (unreleased)
+#### V0.7 (28-Apr-19)
 - Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions
   (really, Jetbrains, this sucks for no reason).
 - Extended AssertThatSize inspection to transform ```hasSize()``` into ```hasSameSizeAs()```, if possible.
+- Implemented first version of JoinAssertThatStatements inspection that will try to merge ```assertThat()``` statements with the same
+  actual object together, preserving comments.
 
 #### V0.6 (22-Apr-19)
 - New AssertThatStringExpression inspection that will move ```isEmpty()```, ```equals()```, ```equalsIgnoreCase()```, ```contains()```,

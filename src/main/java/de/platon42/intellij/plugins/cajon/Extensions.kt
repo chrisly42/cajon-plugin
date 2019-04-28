@@ -4,6 +4,7 @@ import com.intellij.psi.*
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
 import com.intellij.psi.util.PsiTreeUtil
+import com.siyeh.ig.callMatcher.CallMatcher
 
 val PsiMethodCallExpression.qualifierExpression: PsiExpression get() = this.methodExpression.qualifierExpression!!
 val PsiMethodCallExpression.firstArg: PsiExpression get() = this.argumentList.expressions[0]!!
@@ -19,6 +20,17 @@ fun PsiMethodCallExpression.replaceQualifierFromMethodCall(oldMethodCall: PsiMet
 fun PsiElement.findOutmostMethodCall(): PsiMethodCallExpression? {
     val statement = PsiTreeUtil.getParentOfType(this, PsiStatement::class.java) ?: return null
     return PsiTreeUtil.findChildOfType(statement, PsiMethodCallExpression::class.java)
+}
+
+fun PsiMethodCallExpression.findFluentCallTo(matcher: CallMatcher): PsiMethodCallExpression? {
+    var currentMethodCall: PsiMethodCallExpression? = this
+    while (currentMethodCall != null) {
+        if (matcher.test(currentMethodCall)) {
+            return currentMethodCall
+        }
+        currentMethodCall = PsiTreeUtil.getParentOfType(currentMethodCall, PsiMethodCallExpression::class.java, true, PsiStatement::class.java)
+    }
+    return null
 }
 
 fun PsiMethodCallExpression.getArg(n: Int): PsiExpression = this.argumentList.expressions[n]

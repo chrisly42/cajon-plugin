@@ -4,10 +4,7 @@ import org.assertj.core.api.ListAssert;
 import org.assertj.core.data.Offset;
 import org.assertj.core.extractor.Extractors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
@@ -36,6 +33,39 @@ public class Playground {
         assertThat(new ArrayList<String>()).hasSameSizeAs(new ArrayList<>());
         assertThat(new Long[1]).as("etc").hasSameSizeAs(new Long[2]);
         assertThat(new Long[1]).as("etc").hasSameSizeAs(new Long[2]);
+    }
+
+    private void joinStatements() {
+        List<String> list = new ArrayList<>();
+        assertThat(list).as("foo").hasSize(2);
+        assertThat(list).as("bar").contains("barbar"); // comment to keep
+        assertThat(list).as("etc").contains("etcetc");
+
+        // moar!
+        assertThat(list).doesNotContain("foobar");
+
+        assertThat("narf").isNotEqualTo("puit");
+        assertThat(list).as("bar").contains("barbar");
+        assertThat(list).as("foo").hasSize(2);
+        assertThat(list).as("evil").extracting(String::length).contains(2);
+
+        assertThat(list).as("bar").contains("barbar");
+        assertThat("narf").isNotEqualTo("puit");
+        assertThat(list).as("foo").hasSize(2);
+        if (true) {
+            assertThat(list).doesNotContain("narf");
+            assertThat(list).as("bar").contains("barbar");
+        }
+        assertThat(list.get(0)).isNotEmpty();
+        assertThat(list.get(0)).hasSize(3);
+        assertThat(list.get(0)).isEqualTo("bar");
+
+        assertThat(list.get(0) + "foo").isEqualTo("bar");
+        assertThat(list.get(0) + "foo").doesNotStartWith("foo");
+
+        Iterator<String> iterator = list.iterator();
+        assertThat(iterator.next()).isEqualTo("foo");
+        assertThat(iterator.next()).isEqualTo("bar");
     }
 
     private void sizeOfArray() {

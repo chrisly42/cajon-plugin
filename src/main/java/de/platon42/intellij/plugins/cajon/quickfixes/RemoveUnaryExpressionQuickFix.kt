@@ -3,8 +3,8 @@ package de.platon42.intellij.plugins.cajon.quickfixes
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiMethodCallExpression
-import com.intellij.psi.PsiParenthesizedExpression
 import com.intellij.psi.PsiUnaryExpression
+import com.intellij.psi.util.PsiUtil
 import de.platon42.intellij.plugins.cajon.createExpectedMethodCall
 import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
 import de.platon42.intellij.plugins.cajon.firstArg
@@ -16,10 +16,7 @@ class RemoveUnaryExpressionQuickFix(description: String, private val replacement
         val element = descriptor.startElement
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
         val assertExpression = methodCallExpression.firstArg as? PsiUnaryExpression ?: return
-        var operand = assertExpression.operand ?: return
-        while (operand is PsiParenthesizedExpression) {
-            operand = operand.expression ?: return
-        }
+        val operand = PsiUtil.skipParenthesizedExprDown(assertExpression.operand) ?: return
         assertExpression.replace(operand)
 
         val oldExpectedExpression = element.findOutmostMethodCall() ?: return

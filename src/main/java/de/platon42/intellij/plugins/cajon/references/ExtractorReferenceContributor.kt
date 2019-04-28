@@ -10,19 +10,11 @@ import com.intellij.psi.util.PsiTypesUtil
 import com.intellij.util.ArrayUtil
 import com.intellij.util.ProcessingContext
 import com.siyeh.ig.callMatcher.CallMatcher
-import de.platon42.intellij.plugins.cajon.AssertJClassNames
-import de.platon42.intellij.plugins.cajon.CORE_ASSERT_THAT_MATCHER
-import de.platon42.intellij.plugins.cajon.firstArg
+import de.platon42.intellij.plugins.cajon.*
 
 class ExtractorReferenceContributor : PsiReferenceContributor() {
 
     companion object {
-
-        private val EXTRACTING_FROM_OBJECT = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_OBJECT_ASSERT_CLASSNAME, "extracting")
-        private val EXTRACTING_FROM_ITERABLE = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_ITERABLE_ASSERT_CLASSNAME, "extracting")
-        private val FLAT_EXTRACTING_FROM_ITERABLE = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_ITERABLE_ASSERT_CLASSNAME, "flatExtracting")
-        private val EXTRACTING_RESULT_OF_FROM_ITERABLE = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_ITERABLE_ASSERT_CLASSNAME, "extractingResultOf")
-
         private val BY_NAME = CallMatcher.staticCall(AssertJClassNames.EXTRACTORS_CLASSNAME, "byName")
         private val RESULT_OF = CallMatcher.staticCall(AssertJClassNames.EXTRACTORS_CLASSNAME, "resultOf")
             .parameterTypes(CommonClassNames.JAVA_LANG_STRING)!!
