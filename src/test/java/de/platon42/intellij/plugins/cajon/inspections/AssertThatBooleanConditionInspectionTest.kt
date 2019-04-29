@@ -14,7 +14,7 @@ internal class AssertThatBooleanConditionInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatBooleanConditionInspection::class.java)
             myFixture.configureByFile("BooleanConditionBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isTrue()"), 4)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isTrue()"), 6)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isFalse()"), 5)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isTrue()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isFalse()"), 4)

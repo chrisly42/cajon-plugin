@@ -6,7 +6,7 @@ public class BooleanCondition {
         boolean primitive = false;
         Boolean object = Boolean.TRUE;
 
-        assertThat(primitive).isTrue();
+        assertThat(primitive).as("foo").isTrue();
         assertThat(primitive).isFalse();
         assertThat(object).isTrue();
         assertThat(object).isFalse();
@@ -15,7 +15,7 @@ public class BooleanCondition {
         assertThat(object).isTrue();
         assertThat(object).isFalse();
 
-        assertThat(primitive).isFalse();
+        assertThat(primitive).as("foo").isFalse();
         assertThat(primitive).isTrue();
         assertThat(object).isFalse();
         assertThat(object).isTrue();
@@ -28,5 +28,7 @@ public class BooleanCondition {
         assertThat(object).isEqualTo(Boolean.TRUE && !Boolean.TRUE);
 
         assertThat("").isEqualTo(Boolean.TRUE);
+
+        assertThat(primitive).isTrue().as("foo").isTrue().as("bar").isTrue().isFalse();
     }
 }
