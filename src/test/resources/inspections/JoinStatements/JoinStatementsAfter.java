@@ -6,6 +6,8 @@ public class JoinStatements {
 
     private void joinStatements() {
         List<String> list = new ArrayList<>();
+        List<String> otherList = new ArrayList<>();
+
         // the future is always born in pain
         /* tricky */
         assertThat(list).as("foo").hasSize(2)
@@ -21,17 +23,25 @@ public class JoinStatements {
                 // moar!
                 .doesNotContain("foobar");
 
-        assertThat("narf").isNotEqualTo("puit").as("bar").contains("barbar").as("foo").hasSize(2);
+        assertThat("narf").isNotEqualTo("puit");
+        assertThat(list).as("bar").contains("barbar").as("foo").hasSize(2);
         assertThat(list).as("evil").extracting(String::length).contains(2);
 
         assertThat(list).as("bar").contains("barbar");
-        assertThat("narf").isNotEqualTo("puit").as("foo").hasSize(2);
+        assertThat(otherList).contains("puit");
+        assertThat(list).as("foo").hasSize(2);
         if (true) {
             assertThat(list).doesNotContain("narf").as("bar").contains("barbar");
         }
         assertThat(list.get(0)).isNotEmpty().hasSize(3).isEqualTo("bar");
 
+        assertThat(otherList.get(0)).isNotEmpty();
+        assertThat(list.get(0)).hasSize(3);
+
         assertThat(list.get(0) + "foo").isEqualTo("bar").doesNotStartWith("foo");
+
+        assertThat(otherList.get(0) + "foo").isEqualTo("bar");
+        assertThat(list.get(0) + "foo").doesNotStartWith("foo");
 
         Iterator<String> iterator = list.iterator();
         assertThat(iterator.next()).isEqualTo("foo");

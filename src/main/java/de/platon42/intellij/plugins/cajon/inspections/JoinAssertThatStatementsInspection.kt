@@ -4,6 +4,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
+import com.siyeh.ig.psiutils.TrackingEquivalenceChecker
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.quickfixes.JoinStatementsQuickFix
 
@@ -25,6 +26,7 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                 var sameCount = 0
                 var firstStatement: PsiStatement? = null
                 var lastStatement: PsiStatement? = null
+                val equivalenceChecker = TrackingEquivalenceChecker()
                 for (statement in statements) {
                     val assertThatCall = isLegitAssertThatCall(statement)
                     var reset = true
@@ -34,11 +36,9 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                         actualExpression = assertThatCall.firstArg
                         if (!reset) {
                             val isSame = when (actualExpression) {
-                                is PsiReferenceExpression -> (actualExpression.qualifierExpression == (lastActualExpression as? PsiReferenceExpression)?.qualifierExpression)
-                                is PsiMethodCallExpression -> (actualExpression.text == (lastActualExpression as? PsiMethodCallExpression)?.text)
+                                is PsiMethodCallExpression -> equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)
                                         && !KNOWN_METHODS_WITH_SIDE_EFFECTS.test(actualExpression)
-                                is PsiPolyadicExpression -> (actualExpression.text == (lastActualExpression as? PsiPolyadicExpression)?.text)
-                                else -> false
+                                else -> equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)
                             }
                             if (isSame) {
                                 sameCount++

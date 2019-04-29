@@ -78,10 +78,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
         assertThat(expected).anotherCondition();
     to: assertThat(expected).someCondition().anotherCondition();
   ```
-  Joining will work on actual expressions inside assertThat() that are
-  - the same variable reference
-  - textually equal binary expressions
-  - the same method calls (except for known side-effect methods such as ```Iterator.next()``` -- please notify me about others)
+  Joining will work on actual expressions inside assertThat() that are equivalent expressions,
+  except for method calls with known side-effect methods such as ```Iterator.next()``` -- please notify me about others.
 
   The comments of the statements will be preserved. When using ```.extracting()``` or similar, the statements will not be merged.
     
@@ -344,6 +342,9 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 - Kotlin support (right now, however, with less than 100 downloads after a month, this is unlikely to happen)
 
 ## Changelog
+
+#### V0.8 (unreleased)
+- Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).
 
 #### V0.7 (28-Apr-19)
 - Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions
