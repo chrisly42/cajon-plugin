@@ -345,6 +345,7 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 
 #### V0.8 (unreleased)
 - Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).
+- Fixed ```isEmpty()``` for enumerables and strings and ```isNull()``` for object conversions to be applied only if it is the terminal method call as ```isEmpty()``` and ```isNull()``` return void.
 
 #### V0.7 (28-Apr-19)
 - Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions

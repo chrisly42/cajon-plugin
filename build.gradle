@@ -43,6 +43,7 @@ patchPluginXml {
   <h4>V0.8 (unreleased)</h4>
     <ul>
       <li>Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).
+      <li>Fixed isEmpty() for enumerables and strings and isNull() for object conversions to be applied only if it is the terminal method call as isEmpty() and isNull() return void.
     </ul>
   <h4>V0.7 (28-Apr-19)</h4>
     <ul>

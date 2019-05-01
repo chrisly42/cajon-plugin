@@ -12,5 +12,6 @@ public class ObjectIsNull {
         assertThat(new Object()).isNotNull();
 
         assertThat(new Object()).as("foo").isNotNull().as("bar").isEqualTo(new Object()).as("etc").isNull();
+        assertThat(new Object()).as("foo").isEqualTo(null).as("bar").isEqualTo(new Object()).as("etc").isNotNull();
     }
 }

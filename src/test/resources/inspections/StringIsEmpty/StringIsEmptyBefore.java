@@ -15,5 +15,8 @@ public class StringIsEmpty {
         assertThat(stringBuilder).as("bar").hasSize(0);
 
         assertThat(new Object()).isEqualTo("");
+
+        assertThat(string).as("foo").isEqualTo("").as("bar").hasSize(0).hasSameSizeAs("foo").isEqualTo("");
+        assertThat(string).as("foo").isEqualTo("").as("bar").hasSize(0).hasSameSizeAs("foo").hasSize(0);
     }
 }

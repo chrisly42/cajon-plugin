@@ -4,6 +4,7 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.JavaElementVisitor
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.PsiStatement
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.MethodNames
 
@@ -21,7 +22,8 @@ class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
                 super.visitMethodCallExpression(expression)
                 val isEqual = IS_EQUAL_TO_OBJECT.test(expression)
                 val hasSize = HAS_SIZE.test(expression)
-                if (!(isEqual || hasSize)) {
+                val isLastExpression = expression.parent is PsiStatement
+                if (!((isEqual || hasSize) && isLastExpression)) {
                     return
                 }
 

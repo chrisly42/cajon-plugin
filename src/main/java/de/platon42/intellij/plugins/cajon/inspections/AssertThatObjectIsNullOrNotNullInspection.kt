@@ -1,10 +1,7 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.JavaElementVisitor
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiMethodCallExpression
-import com.intellij.psi.PsiType
+import com.intellij.psi.*
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.map
@@ -23,7 +20,8 @@ class AssertThatObjectIsNullOrNotNullInspection : AbstractAssertJInspection() {
                 super.visitMethodCallExpression(expression)
                 val isNotEqualTo = IS_NOT_EQUAL_TO_OBJECT.test(expression)
                 val isEqualTo = IS_EQUAL_TO_OBJECT.test(expression)
-                if (!(isEqualTo || isNotEqualTo)) {
+                val isLastExpression = expression.parent is PsiStatement
+                if (!((isEqualTo && isLastExpression) || isNotEqualTo)) {
                     return
                 }
 
