@@ -1,0 +1,11 @@
+language: java
+jdk:
+  - oraclejdk8
+  - openjdk8
+
+before_script:
+  - chmod +x gradlew
+  - chmod +x gradle/wrapper/gradle-wrapper.jar
+
+script:
+  - ./gradlew clean test

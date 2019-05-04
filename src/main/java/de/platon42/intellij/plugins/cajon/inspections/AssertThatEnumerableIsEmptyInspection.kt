@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.PsiStatement
 import de.platon42.intellij.plugins.cajon.MethodNames
+import de.platon42.intellij.plugins.cajon.calculateConstantParameterValue
 
 class AssertThatEnumerableIsEmptyInspection : AbstractAssertJInspection() {
 
@@ -24,7 +25,7 @@ class AssertThatEnumerableIsEmptyInspection : AbstractAssertJInspection() {
                     return
                 }
 
-                val value = calculateConstantParameterValue(expression, 0) ?: return
+                val value = expression.calculateConstantParameterValue(0) ?: return
                 if (value == 0) {
                     registerSimplifyMethod(holder, expression, MethodNames.IS_EMPTY)
                 }

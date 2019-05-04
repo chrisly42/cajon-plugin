@@ -8,6 +8,14 @@ import de.platon42.intellij.plugins.cajon.replaceQualifierFromMethodCall
 
 class ReplaceSimpleMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
 
+    companion object {
+        private const val REPLACE_DESCRIPTION = "Replace methods by better ones"
+    }
+
+    override fun getFamilyName(): String {
+        return REPLACE_DESCRIPTION
+    }
+
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.startElement
         val methodCallExpression = element as? PsiMethodCallExpression ?: return

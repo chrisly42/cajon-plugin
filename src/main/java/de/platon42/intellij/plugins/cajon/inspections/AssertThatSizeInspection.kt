@@ -2,10 +2,10 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
-import com.intellij.psi.util.PsiTreeUtil
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ITERABLE_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceHasSizeMethodCallQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSizeMethodCallQuickFix
 
 class AssertThatSizeInspection : AbstractAssertJInspection() {
@@ -13,6 +13,7 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
     companion object {
         private const val DISPLAY_NAME = "Asserting the size of an collection, array or string"
         private const val REMOVE_SIZE_DESCRIPTION_TEMPLATE = "Remove size determination of expected expression and replace %s() with %s()"
+        private const val REMOVE_ALL_MESSAGE = "Try to operate on the iterable itself rather than its size"
 
         private val BONUS_EXPRESSIONS_CALL_MATCHER_MAP = listOf(
             IS_LESS_THAN_INT to MethodNames.HAS_SIZE_LESS_THAN,
@@ -20,90 +21,123 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
             IS_GREATER_THAN_INT to MethodNames.HAS_SIZE_GREATER_THAN,
             IS_GREATER_THAN_OR_EQUAL_TO_INT to MethodNames.HAS_SIZE_GREATER_THAN_OR_EQUAL_TO
         )
+
+        private fun isCharSequenceLength(expression: PsiExpression) = (expression is PsiMethodCallExpression) && CHAR_SEQUENCE_LENGTH.test(expression)
+
+        private fun isCollectionSize(expression: PsiExpression) = (expression is PsiMethodCallExpression) && COLLECTION_SIZE.test(expression)
+
+        private fun isArrayLength(expression: PsiExpression): Boolean {
+            val psiReferenceExpression = expression as? PsiReferenceExpression ?: return false
+            return ((psiReferenceExpression.qualifierExpression?.type is PsiArrayType)
+                    && ((psiReferenceExpression.resolve() as? PsiField)?.name == "length"))
+        }
+
+        fun getMatch(expression: PsiMethodCallExpression, isForArrayOrCollection: Boolean, isForString: Boolean): Match? {
+            val isLastExpression = expression.parent is PsiStatement
+            val constValue = expression.calculateConstantParameterValue(0)
+            if (IS_EQUAL_TO_INT.test(expression)) {
+                return if ((constValue == 0) && isLastExpression) {
+                    Match(expression, MethodNames.IS_EMPTY, noExpectedExpression = true)
+                } else {
+                    val equalToExpression = expression.firstArg
+                    if (isForArrayOrCollection && (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) ||
+                        isForString && (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression) || isCharSequenceLength(equalToExpression))
+                    ) {
+                        Match(expression, MethodNames.HAS_SAME_SIZE_AS, expectedIsCollection = true)
+                    } else {
+                        Match(expression, MethodNames.HAS_SIZE)
+                    }
+                }
+            } else {
+                val isTestForEmpty = ((IS_LESS_THAN_OR_EQUAL_TO_INT.test(expression) && (constValue == 0))
+                        || (IS_LESS_THAN_INT.test(expression) && (constValue == 1))
+                        || IS_ZERO.test(expression))
+                val isTestForNotEmpty = ((IS_GREATER_THAN_INT.test(expression) && (constValue == 0))
+                        || (IS_GREATER_THAN_OR_EQUAL_TO_INT.test(expression) && (constValue == 1))
+                        || IS_NOT_ZERO.test(expression))
+                if ((isTestForEmpty && isLastExpression) || isTestForNotEmpty) {
+                    val replacementMethod = isTestForEmpty.map(MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY)
+                    return Match(expression, replacementMethod, noExpectedExpression = true)
+                } else if (hasAssertJMethod(expression, ABSTRACT_ITERABLE_ASSERT_CLASSNAME, MethodNames.HAS_SIZE_LESS_THAN)) {
+                    // new stuff in AssertJ 13.2.0
+                    val replacementMethod = BONUS_EXPRESSIONS_CALL_MATCHER_MAP.find { it.first.test(expression) }?.second ?: return null
+                    return Match(expression, replacementMethod)
+                }
+                return null
+            }
+        }
     }
 
     override fun getDisplayName() = DISPLAY_NAME
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
+            override fun visitExpressionStatement(statement: PsiExpressionStatement?) {
+                super.visitExpressionStatement(statement)
+                val staticMethodCall = statement?.findStaticMethodCall() ?: return
+                if (!ASSERT_THAT_INT.test(staticMethodCall)) {
+                    return
+                }
+                val actualExpression = staticMethodCall.firstArg
+                val isForArrayOrCollection = isArrayLength(actualExpression) || isCollectionSize(actualExpression)
+                val isForString = isCharSequenceLength(actualExpression)
+                if (!(isForArrayOrCollection || isForString)) {
+                    return
+                }
+                val matches = staticMethodCall.collectMethodCallsUpToStatement()
+                    .mapNotNull { getMatch(it, isForArrayOrCollection, isForString) }
+                    .toList()
+                if (matches.isNotEmpty()) {
+                    if (matches.size == 1) {
+                        val match = matches.single()
+                        val expression = match.methodCall
+                        registerReplaceMethod(
+                            holder,
+                            expression,
+                            expression,
+                            match.replacementMethod
+                        )
+                        { desc, method ->
+                            ReplaceSizeMethodCallQuickFix(desc, method, noExpectedExpression = match.noExpectedExpression, expectedIsCollection = match.expectedIsCollection)
+                        }
+                    } else {
+                        // I could try to create a quickfix for this, too, but it's probably not worth the effort
+                        holder.registerProblem(statement, REMOVE_ALL_MESSAGE)
+                    }
+                }
+            }
+
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                val isAssertThatWithInt = ASSERT_THAT_INT.test(expression)
                 val isHasSize = HAS_SIZE.test(expression)
-                if (!(isAssertThatWithInt || isHasSize)) {
+                if (!(isHasSize)) {
                     return
                 }
                 val actualExpression = expression.firstArg
 
                 val isForArrayOrCollection = isArrayLength(actualExpression) || isCollectionSize(actualExpression)
                 val isForString = isCharSequenceLength(actualExpression)
-                if (isHasSize && (isForArrayOrCollection
+                if (!(isForArrayOrCollection
                             || (isForString && checkAssertedType(expression, ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME)))
                 ) {
-                    val assertThatCall = PsiTreeUtil.findChildrenOfType(expression, PsiMethodCallExpression::class.java).find { CORE_ASSERT_THAT_MATCHER.test(it) } ?: return
-                    registerConciseMethod(
-                        REMOVE_SIZE_DESCRIPTION_TEMPLATE,
-                        holder,
-                        assertThatCall,
-                        expression,
-                        MethodNames.HAS_SAME_SIZE_AS
-                    ) { desc, method ->
-                        ReplaceSizeMethodCallQuickFix(desc, method, expectedIsCollection = true, keepActualAsIs = true)
-                    }
-                } else if (isForArrayOrCollection || isForString) {
-                    val expectedCallExpression = expression.findOutmostMethodCall() ?: return
-                    val constValue = calculateConstantParameterValue(expectedCallExpression, 0)
-                    if (IS_EQUAL_TO_INT.test(expectedCallExpression)) {
-                        if (constValue == 0) {
-                            registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.IS_EMPTY) { desc, method ->
-                                ReplaceSizeMethodCallQuickFix(desc, method, noExpectedExpression = true)
-                            }
-                        } else {
-                            val equalToExpression = expectedCallExpression.firstArg
-                            if (isForArrayOrCollection && (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) ||
-                                isForString && (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression) || isCharSequenceLength(equalToExpression))
-                            ) {
-                                registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.HAS_SAME_SIZE_AS) { desc, method ->
-                                    ReplaceSizeMethodCallQuickFix(desc, method, expectedIsCollection = true)
-                                }
-                            } else {
-                                registerReplaceMethod(holder, expression, expectedCallExpression, MethodNames.HAS_SIZE) { desc, method ->
-                                    ReplaceSizeMethodCallQuickFix(desc, method)
-                                }
-                            }
-                        }
-                    } else {
-                        val isTestForEmpty = ((IS_LESS_THAN_OR_EQUAL_TO_INT.test(expectedCallExpression) && (constValue == 0))
-                                || (IS_LESS_THAN_INT.test(expectedCallExpression) && (constValue == 1))
-                                || IS_ZERO.test(expectedCallExpression))
-                        val isTestForNotEmpty = ((IS_GREATER_THAN_INT.test(expectedCallExpression) && (constValue == 0))
-                                || (IS_GREATER_THAN_OR_EQUAL_TO_INT.test(expectedCallExpression) && (constValue == 1))
-                                || IS_NOT_ZERO.test(expectedCallExpression))
-                        if (isTestForEmpty || isTestForNotEmpty) {
-                            val replacementMethod = isTestForEmpty.map(MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY)
-                            registerReplaceMethod(holder, expression, expectedCallExpression, replacementMethod) { desc, method ->
-                                ReplaceSizeMethodCallQuickFix(desc, method, noExpectedExpression = true)
-                            }
-                        } else if (hasAssertJMethod(expression, ABSTRACT_ITERABLE_ASSERT_CLASSNAME, MethodNames.HAS_SIZE_LESS_THAN)) {
-                            // new stuff in AssertJ 13.2.0
-                            val matchedMethod = BONUS_EXPRESSIONS_CALL_MATCHER_MAP.find { it.first.test(expectedCallExpression) }?.second ?: return
-                            registerReplaceMethod(holder, expression, expectedCallExpression, matchedMethod) { desc, method ->
-                                ReplaceSizeMethodCallQuickFix(desc, method)
-                            }
-                        }
-                    }
+                    return
                 }
-            }
-
-            private fun isCharSequenceLength(expression: PsiExpression) = (expression is PsiMethodCallExpression) && CHAR_SEQUENCE_LENGTH.test(expression)
-
-            private fun isCollectionSize(expression: PsiExpression) = (expression is PsiMethodCallExpression) && COLLECTION_SIZE.test(expression)
-
-            private fun isArrayLength(expression: PsiExpression): Boolean {
-                val psiReferenceExpression = expression as? PsiReferenceExpression ?: return false
-                return ((psiReferenceExpression.qualifierExpression?.type is PsiArrayType)
-                        && ((psiReferenceExpression.resolve() as? PsiField)?.name == "length"))
+                registerConciseMethod(
+                    REMOVE_SIZE_DESCRIPTION_TEMPLATE,
+                    holder,
+                    expression,
+                    expression,
+                    MethodNames.HAS_SAME_SIZE_AS,
+                    ::ReplaceHasSizeMethodCallQuickFix
+                )
             }
         }
     }
+
+    class Match(
+        val methodCall: PsiMethodCallExpression,
+        val replacementMethod: String,
+        val noExpectedExpression: Boolean = false,
+        val expectedIsCollection: Boolean = false
+    )
 }

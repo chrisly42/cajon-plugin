@@ -4,6 +4,8 @@ import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import de.platon42.intellij.jupiter.MyFixture
 import de.platon42.intellij.jupiter.TestDataSubPath
 import de.platon42.intellij.plugins.cajon.AbstractCajonTest
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.extrakting
 import org.junit.jupiter.api.Test
 
 internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
@@ -14,6 +16,8 @@ internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatSizeInspection::class.java)
             myFixture.configureByFile("SizeBefore.java")
+            assertThat(myFixture.doHighlighting()).extrakting { it.description }.containsOnlyOnce("Try to operate on the iterable itself rather than its size")
+
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isEmpty()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isZero() with isEmpty()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotZero() with isNotEmpty()"), 4)
@@ -27,7 +31,7 @@ internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThanOrEqualTo() with hasSizeGreaterThanOrEqualTo()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThan() with hasSizeLessThan()"), 4)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThanOrEqualTo() with hasSizeLessThanOrEqualTo()"), 4)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Remove size determination of expected expression and replace hasSize() with hasSameSizeAs()"), 12)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove size determination of expected expression and replace hasSize() with hasSameSizeAs()"), 14)
             myFixture.checkResultByFile("SizeAfter.java")
         }
     }

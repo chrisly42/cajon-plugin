@@ -6,7 +6,7 @@ public class StringExpression {
         String string = "string";
         StringBuilder stringBuilder = new StringBuilder();
 
-        assertThat(string).isEmpty();
+        assertThat(string).as("foo").isEmpty();
         assertThat(string).isEmpty();
         assertThat(string).isEqualTo("foo");
         assertThat(string).isEqualTo("foo");
@@ -25,7 +25,7 @@ public class StringExpression {
         assertThat(string).endsWith("foo");
         assertThat(string).endsWith("foo");
 
-        assertThat(string).isNotEmpty();
+        assertThat(string).as("foo").isNotEmpty();
         assertThat(string).isNotEmpty();
         assertThat(string).isNotEqualTo("foo");
         assertThat(string).isNotEqualTo("foo");
@@ -43,5 +43,9 @@ public class StringExpression {
         assertThat(string).doesNotStartWith("foo");
         assertThat(string).doesNotEndWith("foo");
         assertThat(string).doesNotEndWith("foo");
+
+        assertThat(string).as("foo").doesNotEndWith("foo").as("bar").doesNotEndWith("foo");
+        assertThat(string.endsWith("foo")).as("foo").isEqualTo(false).as("bar").isTrue();
+        assertThat(string.endsWith("foo")).as("foo").satisfies(it -> it.booleanValue()).as("bar").isFalse();
     }
 }

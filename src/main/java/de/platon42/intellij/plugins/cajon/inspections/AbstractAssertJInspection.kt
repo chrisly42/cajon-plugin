@@ -3,6 +3,7 @@ package de.platon42.intellij.plugins.cajon.inspections
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool
 import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.tree.IElementType
@@ -14,10 +15,10 @@ import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_C
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_INTEGER_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERTIONS_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERT_INTERFACE
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_ASSERTIONS_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_OPTIONAL_CLASSNAME
 import de.platon42.intellij.plugins.cajon.MethodNames
-import de.platon42.intellij.plugins.cajon.getArg
 import de.platon42.intellij.plugins.cajon.qualifierExpression
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSimpleMethodCallQuickFix
 
@@ -28,8 +29,9 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         const val MORE_CONCISE_MESSAGE_TEMPLATE = "%s() would be more concise than %s()"
 
         const val REPLACE_DESCRIPTION_TEMPLATE = "Replace %s() with %s()"
-        const val REMOVE_EXPECTED_OUTMOST_DESCRIPTION_TEMPLATE = "Remove unwrapping of expected expression and replace %s() with %s()"
-        const val UNWRAP_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE = "Unwrap actual expression and replace %s() with %s()"
+        const val REMOVE_EXPECTED_OUTMOST_DESCRIPTION_TEMPLATE = "Unwrap expected expression and replace %s() with %s()"
+        const val MOVE_ACTUAL_EXPRESSION_DESCRIPTION_TEMPLATE = "Remove %s() of actual expression and use assertThat().%s() instead"
+        const val MOVING_OUT_MESSAGE_TEMPLATE = "Moving %s() expression out of assertThat() would be more concise"
 
         val TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP = mapOf<IElementType, String>(
             JavaTokenType.EQEQ to MethodNames.IS_EQUAL_TO,
@@ -74,21 +76,21 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val ASSERT_THAT_JAVA8_OPTIONAL = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
             .parameterTypes(CommonClassNames.JAVA_UTIL_OPTIONAL)!!
 
-        val ASSERT_THAT_GUAVA_OPTIONAL = CallMatcher.staticCall(GUAVA_ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
-            .parameterTypes(GUAVA_OPTIONAL_CLASSNAME)!!
+        val GUAVA_ASSERT_THAT_ANY = CallMatcher.staticCall(GUAVA_ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
+            .parameterCount(1)!!
 
-        val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
+        val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
-        val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
+        val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
         val IS_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes("boolean")!!
         val IS_NOT_EQUAL_TO_BOOLEAN =
             CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
                 .parameterTypes("boolean")!!
-        val IS_SAME_AS_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_SAME_AS)
+        val IS_SAME_AS_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_SAME_AS)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
-        val IS_NOT_SAME_AS_OBJECT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_NOT_SAME_AS)
+        val IS_NOT_SAME_AS_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_SAME_AS)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
 
         val HAS_SIZE = CallMatcher.instanceCall(ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME, MethodNames.HAS_SIZE)
@@ -174,7 +176,22 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = SIMPLIFY_MESSAGE_TEMPLATE.format(originalMethod, replacementMethod)
         val quickFix = ReplaceSimpleMethodCallQuickFix(description, replacementMethod)
-        holder.registerProblem(expression, message, quickFix)
+        val textRange = TextRange(expression.qualifierExpression.textLength, expression.textLength)
+        holder.registerProblem(expression, textRange, message, quickFix)
+    }
+
+    protected fun registerMoveOutMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        oldActualExpression: PsiMethodCallExpression,
+        replacementMethod: String,
+        quickFixSupplier: (String, String) -> LocalQuickFix
+    ) {
+        val originalMethod = getOriginalMethodName(oldActualExpression) ?: return
+        val description = MOVE_ACTUAL_EXPRESSION_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
+        val message = MOVING_OUT_MESSAGE_TEMPLATE.format(originalMethod)
+        val quickfix = quickFixSupplier(description, replacementMethod)
+        holder.registerProblem(expression, message, quickfix)
     }
 
     protected fun registerReplaceMethod(
@@ -199,7 +216,8 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val description = descriptionTemplate.format(originalMethod, replacementMethod)
         val message = MORE_CONCISE_MESSAGE_TEMPLATE.format(replacementMethod, originalMethod)
         val quickfix = quickFixSupplier(description, replacementMethod)
-        holder.registerProblem(expression, message, quickfix)
+        val textRange = TextRange(expression.qualifierExpression.textLength, expression.textLength)
+        holder.registerProblem(expression, textRange, message, quickfix)
     }
 
     protected fun registerRemoveExpectedOutmostMethod(
@@ -210,56 +228,5 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         quickFixSupplier: (String, String) -> LocalQuickFix
     ) {
         registerConciseMethod(REMOVE_EXPECTED_OUTMOST_DESCRIPTION_TEMPLATE, holder, expression, oldExpectedCallExpression, replacementMethod, quickFixSupplier)
-    }
-
-    protected fun registerRemoveActualOutmostMethod(
-        holder: ProblemsHolder,
-        expression: PsiMethodCallExpression,
-        oldExpectedCallExpression: PsiMethodCallExpression,
-        replacementMethod: String,
-        quickFixSupplier: (String, String) -> LocalQuickFix
-    ) {
-        registerConciseMethod(UNWRAP_ACTUAL_OUTMOST_DESCRIPTION_TEMPLATE, holder, expression, oldExpectedCallExpression, replacementMethod, quickFixSupplier)
-    }
-
-    protected fun calculateConstantParameterValue(expression: PsiMethodCallExpression, argIndex: Int): Any? {
-        if (argIndex >= expression.argumentList.expressions.size) return null
-        val valueExpression = expression.getArg(argIndex)
-        val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
-        val value = constantEvaluationHelper.computeConstantExpression(valueExpression)
-        if (value == null) {
-            val field = (valueExpression as? PsiReferenceExpression)?.resolve() as? PsiField
-            if (field?.containingClass?.qualifiedName == CommonClassNames.JAVA_LANG_BOOLEAN) {
-                return when (field.name) {
-                    "TRUE" -> true
-                    "FALSE" -> false
-                    else -> null
-                }
-            }
-        }
-        return value
-    }
-
-    protected fun getExpectedBooleanResult(expectedCallExpression: PsiMethodCallExpression): Boolean? {
-        val isTrue = IS_TRUE.test(expectedCallExpression)
-        val isFalse = IS_FALSE.test(expectedCallExpression)
-        if (isTrue || isFalse) {
-            return isTrue
-        } else {
-            val isEqualTo = IS_EQUAL_TO_BOOLEAN.test(expectedCallExpression) || IS_EQUAL_TO_OBJECT.test(expectedCallExpression)
-            val isNotEqualTo = IS_NOT_EQUAL_TO_BOOLEAN.test(expectedCallExpression) || IS_NOT_EQUAL_TO_OBJECT.test(expectedCallExpression)
-            if (isEqualTo || isNotEqualTo) {
-                val constValue = calculateConstantParameterValue(expectedCallExpression, 0) as? Boolean ?: return null
-                return isNotEqualTo xor constValue
-            }
-        }
-        return null
-    }
-
-    protected fun hasAssertJMethod(element: PsiElement, classname: String, methodname: String): Boolean {
-        val findClass =
-            JavaPsiFacade.getInstance(element.project).findClass(classname, GlobalSearchScope.allScope(element.project))
-                ?: return false
-        return findClass.allMethods.any { it.name == methodname }
     }
 }

@@ -14,8 +14,8 @@ internal class AssertThatInstanceOfInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatInstanceOfInspection::class.java)
             myFixture.configureByFile("InstanceOfBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace instanceof expression by assertThat().isInstanceOf()"), 5)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace instanceof expression by assertThat().isNotInstanceOf()"), 6)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove instanceof in actual expression and use assertThat().isInstanceOf() instead"), 6)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove instanceof in actual expression and use assertThat().isNotInstanceOf() instead"), 6)
             myFixture.checkResultByFile("InstanceOfAfter.java")
         }
     }

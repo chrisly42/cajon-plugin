@@ -17,19 +17,12 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
             myFixture.configureByFile("GuavaOptionalBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with Guava assertThat().isPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isNotEqualTo() with Guava assertThat().isPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with Guava assertThat().isPresent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with Guava assertThat().isAbsent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isAbsent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with Guava assertThat().isAbsent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isNotEqualTo() with Guava assertThat().isAbsent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isTrue() with Guava assertThat().isPresent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isFalse() with Guava assertThat().isAbsent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with Guava assertThat().contains()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Remove unwrapping of expected expression and replace isEqualTo() with contains()"), 4)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Remove unwrapping of expected expression and replace isEqualTo() with Guava assertThat().contains()"), 2)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove isPresent() of actual expression and use assertThat().isPresent() instead"), 6)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove isPresent() of actual expression and use assertThat().isAbsent() instead"), 5)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().contains() instead"), 1)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap expected expression and replace isEqualTo() with contains()"), 6)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with Guava assertThat().isAbsent()"), 3)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with Guava assertThat().isPresent()"), 3)
             myFixture.checkResultByFile("GuavaOptionalAfter.java")
         }
     }
@@ -39,7 +32,8 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
             myFixture.configureByFile("WithoutPriorGuavaImportBefore.java")
-            executeQuickFixes(myFixture, Regex(".*eplace .* with .*"), 7)
+            executeQuickFixes(myFixture, Regex(".*eplace .* with .*"), 4)
+            executeQuickFixes(myFixture, Regex("Remove .*"), 3)
             myFixture.checkResultByFile("WithoutPriorGuavaImportAfter.java")
         }
     }
@@ -50,7 +44,8 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
             myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
             myFixture.configureByFile("WithoutPriorGuavaImportBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with Guava assertThat().isAbsent()"), 1)
-            executeQuickFixes(myFixture, Regex(".*eplace .* with .*"), 6)
+            executeQuickFixes(myFixture, Regex(".*eplace .* with .*"), 3)
+            executeQuickFixes(myFixture, Regex("Remove .*"), 3)
             myFixture.checkResultByFile("WithoutPriorGuavaImportAfter.java")
         }
     }

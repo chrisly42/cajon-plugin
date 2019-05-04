@@ -7,6 +7,7 @@ import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.util.TypeConversionUtil
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_BOOLEAN_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.MethodNames
+import de.platon42.intellij.plugins.cajon.calculateConstantParameterValue
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.map
 
@@ -37,7 +38,7 @@ class AssertThatBooleanConditionInspection : AbstractAssertJInspection() {
                 if (!TypeConversionUtil.isBooleanType(expectedExpression.type)) {
                     return
                 }
-                val expectedResult = calculateConstantParameterValue(expression, 0) as? Boolean ?: return
+                val expectedResult = expression.calculateConstantParameterValue(0) as? Boolean ?: return
                 val flippedBooleanTest = matchingCalls.drop(2).any { it }
 
                 val replacementMethod = (expectedResult xor flippedBooleanTest).map(MethodNames.IS_TRUE, MethodNames.IS_FALSE)

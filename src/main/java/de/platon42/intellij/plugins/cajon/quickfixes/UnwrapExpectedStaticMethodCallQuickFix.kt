@@ -10,6 +10,14 @@ import de.platon42.intellij.plugins.cajon.replaceQualifierFromMethodCall
 
 class UnwrapExpectedStaticMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
 
+    companion object {
+        private const val REMOVE_EXPECTED_OUTMOST_DESCRIPTION = "Unwrap expected expressions and use better assertion"
+    }
+
+    override fun getFamilyName(): String {
+        return REMOVE_EXPECTED_OUTMOST_DESCRIPTION
+    }
+
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.startElement
         val oldExpectedExpression = element.findOutmostMethodCall() ?: return

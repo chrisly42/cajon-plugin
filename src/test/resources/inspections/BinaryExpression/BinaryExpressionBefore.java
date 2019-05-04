@@ -10,7 +10,7 @@ public class BinaryExpression {
         String stringExp = "foo";
         String stringAct = "bar";
 
-        assertThat(primAct == primExp).isTrue();
+        assertThat(primAct == primExp).as("doh!").isTrue();
         assertThat(primAct == primExp).isEqualTo(true);
         assertThat(primAct == primExp).isEqualTo(Boolean.TRUE);
         assertThat(primAct == primExp).isNotEqualTo(false);
@@ -25,7 +25,7 @@ public class BinaryExpression {
         assertThat(primAct == 1).isFalse();
         assertThat(1 == primAct).isFalse();
 
-        assertThat(primAct != primExp).isTrue();
+        assertThat(primAct != primExp).as("doh!").isTrue();
         assertThat(primAct != primExp).isEqualTo(true);
         assertThat(primAct != primExp).isNotEqualTo(false);
         assertThat(primAct != 1).isTrue();
@@ -36,7 +36,7 @@ public class BinaryExpression {
         assertThat(primAct != 1).isFalse();
         assertThat(1 != primAct).isFalse();
 
-        assertThat(primAct > primExp).isTrue();
+        assertThat(primAct > primExp).as("doh!").isTrue();
         assertThat(primAct > primExp).isEqualTo(true);
         assertThat(primAct > primExp).isNotEqualTo(false);
         assertThat(primAct > 1).isTrue();
@@ -47,7 +47,7 @@ public class BinaryExpression {
         assertThat(primAct > 1).isFalse();
         assertThat(1 < primAct).isFalse();
 
-        assertThat(primAct >= primExp).isTrue();
+        assertThat(primAct >= primExp).as("doh!").isTrue();
         assertThat(primAct >= primExp).isEqualTo(true);
         assertThat(primAct >= primExp).isNotEqualTo(false);
         assertThat(primAct >= 1).isTrue();
@@ -58,7 +58,7 @@ public class BinaryExpression {
         assertThat(primAct >= 1).isFalse();
         assertThat(1 <= primAct).isFalse();
 
-        assertThat(primAct < primExp).isTrue();
+        assertThat(primAct < primExp).as("doh!").isTrue();
         assertThat(primAct < primExp).isEqualTo(true);
         assertThat(primAct < primExp).isNotEqualTo(false);
         assertThat(primAct < 1).isTrue();
@@ -69,7 +69,7 @@ public class BinaryExpression {
         assertThat(primAct < 1).isFalse();
         assertThat(1 > primAct).isFalse();
 
-        assertThat(primAct <= primExp).isTrue();
+        assertThat(primAct <= primExp).as("doh!").isTrue();
         assertThat(primAct <= primExp).isEqualTo(true);
         assertThat(primAct <= primExp).isNotEqualTo(false);
         assertThat(primAct <= 1).isTrue();
@@ -80,7 +80,7 @@ public class BinaryExpression {
         assertThat(primAct <= 1).isFalse();
         assertThat(1 >= primAct).isFalse();
 
-        assertThat(numberObjAct == numberObjExp).isTrue();
+        assertThat(numberObjAct == numberObjExp).as("doh!").isTrue();
         assertThat(numberObjAct == numberObjExp).isEqualTo(true);
         assertThat(numberObjAct == numberObjExp).isNotEqualTo(false);
         assertThat(numberObjAct == 1).isTrue();
@@ -91,7 +91,7 @@ public class BinaryExpression {
         assertThat(numberObjAct == 1).isFalse();
         assertThat(1 == numberObjAct).isFalse();
 
-        assertThat(numberObjAct != numberObjExp).isTrue();
+        assertThat(numberObjAct != numberObjExp).as("doh!").isTrue();
         assertThat(numberObjAct != numberObjExp).isEqualTo(true);
         assertThat(numberObjAct != numberObjExp).isNotEqualTo(false);
         assertThat(numberObjAct != 1).isTrue();
@@ -102,7 +102,7 @@ public class BinaryExpression {
         assertThat(numberObjAct != 1).isFalse();
         assertThat(1 != numberObjAct).isFalse();
 
-        assertThat(numberObjAct > numberObjExp).isTrue();
+        assertThat(numberObjAct > numberObjExp).as("doh!").isTrue();
         assertThat(numberObjAct > numberObjExp).isEqualTo(true);
         assertThat(numberObjAct > numberObjExp).isNotEqualTo(false);
         assertThat(numberObjAct > 1).isTrue();
@@ -113,7 +113,7 @@ public class BinaryExpression {
         assertThat(numberObjAct > 1).isFalse();
         assertThat(1 < numberObjAct).isFalse();
 
-        assertThat(numberObjAct >= numberObjExp).isTrue();
+        assertThat(numberObjAct >= numberObjExp).as("doh!").isTrue();
         assertThat(numberObjAct >= numberObjExp).isEqualTo(true);
         assertThat(numberObjAct >= numberObjExp).isNotEqualTo(false);
         assertThat(numberObjAct >= 1).isTrue();
@@ -124,7 +124,7 @@ public class BinaryExpression {
         assertThat(numberObjAct >= 1).isFalse();
         assertThat(1 <= numberObjAct).isFalse();
 
-        assertThat(numberObjAct < numberObjExp).isTrue();
+        assertThat(numberObjAct < numberObjExp).as("doh!").isTrue();
         assertThat(numberObjAct < numberObjExp).isEqualTo(true);
         assertThat(numberObjAct < numberObjExp).isNotEqualTo(false);
         assertThat(numberObjAct < 1).isTrue();
@@ -135,7 +135,7 @@ public class BinaryExpression {
         assertThat(numberObjAct < 1).isFalse();
         assertThat(1 > numberObjAct).isFalse();
 
-        assertThat(numberObjAct <= numberObjExp).isTrue();
+        assertThat(numberObjAct <= numberObjExp).as("doh!").isTrue();
         assertThat(numberObjAct <= numberObjExp).isEqualTo(true);
         assertThat(numberObjAct <= numberObjExp).isNotEqualTo(false);
         assertThat(numberObjAct <= 1).isTrue();
@@ -146,42 +146,42 @@ public class BinaryExpression {
         assertThat(numberObjAct <= 1).isFalse();
         assertThat(1 >= numberObjAct).isFalse();
 
-        assertThat(numberObjAct.equals(numberObjExp)).isTrue();
+        assertThat(numberObjAct.equals(numberObjExp)).as("doh!").isTrue();
         assertThat(numberObjAct.equals(numberObjExp)).isEqualTo(true);
         assertThat(numberObjAct.equals(numberObjExp)).isNotEqualTo(false);
         assertThat(numberObjAct.equals(numberObjExp)).isFalse();
         assertThat(numberObjAct.equals(numberObjExp)).isEqualTo(false);
         assertThat(numberObjAct.equals(numberObjExp)).isNotEqualTo(true);
 
-        assertThat(stringAct == stringExp).isTrue();
+        assertThat(stringAct == stringExp).as("doh!").isTrue();
         assertThat(stringAct == stringExp).isEqualTo(true);
         assertThat(stringAct == stringExp).isNotEqualTo(false);
         assertThat(stringAct == stringExp).isFalse();
         assertThat(stringAct == stringExp).isEqualTo(false);
         assertThat(stringAct == stringExp).isNotEqualTo(true);
 
-        assertThat(stringAct.equals(stringExp)).isTrue();
+        assertThat(stringAct.equals(stringExp)).as("doh!").isTrue();
         assertThat(stringAct.equals(stringExp)).isEqualTo(true);
         assertThat(stringAct.equals(stringExp)).isNotEqualTo(false);
         assertThat(stringAct.equals(stringExp)).isFalse();
         assertThat(stringAct.equals(stringExp)).isEqualTo(false);
         assertThat(stringAct.equals(stringExp)).isNotEqualTo(true);
 
-        assertThat(stringAct != stringExp).isTrue();
+        assertThat(stringAct != stringExp).as("doh!").isTrue();
         assertThat(stringAct != stringExp).isEqualTo(true);
         assertThat(stringAct != stringExp).isNotEqualTo(false);
         assertThat(stringAct != stringExp).isFalse();
         assertThat(stringAct != stringExp).isEqualTo(false);
         assertThat(stringAct != stringExp).isNotEqualTo(true);
 
-        assertThat(stringAct == null).isTrue();
+        assertThat(stringAct == null).as("doh!").isTrue();
         assertThat(stringAct == null).isEqualTo(true);
         assertThat(stringAct == null).isNotEqualTo(false);
         assertThat(stringAct == null).isFalse();
         assertThat(stringAct == null).isEqualTo(false);
         assertThat(stringAct == null).isNotEqualTo(true);
 
-        assertThat(null == stringAct).isTrue();
+        assertThat(null == stringAct).as("doh!").isTrue();
         assertThat(null == stringAct).isEqualTo(true);
         assertThat(null == stringAct).isNotEqualTo(false);
         assertThat(null == stringAct).isFalse();
@@ -190,5 +190,10 @@ public class BinaryExpression {
 
         assertThat(null == null).isTrue();
         assertThat(!false).isTrue();
+
+        assertThat(primAct == primExp).as("doh!").isTrue().isEqualTo(true);
+        assertThat(primAct == primExp).isFalse().as("doh!").isEqualTo(true);
+
+        assertThat(numberObjAct.equals(numberObjExp)).as("doh!").isTrue().isEqualTo(true);
     }
 }

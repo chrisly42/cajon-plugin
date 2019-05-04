@@ -95,5 +95,9 @@ public class Size {
         assertThat(stringBuilder).hasSameSizeAs(array);
         assertThat(stringBuilder).hasSameSizeAs(string);
         assertThat(stringBuilder).hasSameSizeAs(stringBuilder);
+
+        assertThat(stringBuilder.length()).as("foo").isEqualTo(0).isZero().as("bar").isNotZero().isEqualTo(10);
+
+        assertThat(stringBuilder).as("foo").isNotEmpty().hasSize(2).as("bar").hasSameSizeAs(otherList).hasSameSizeAs(array);
     }
 }

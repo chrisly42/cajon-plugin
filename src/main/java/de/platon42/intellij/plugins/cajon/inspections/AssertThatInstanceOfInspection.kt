@@ -2,21 +2,15 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.JavaElementVisitor
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiInstanceOfExpression
-import com.intellij.psi.PsiMethodCallExpression
-import de.platon42.intellij.plugins.cajon.MethodNames
-import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
-import de.platon42.intellij.plugins.cajon.firstArg
-import de.platon42.intellij.plugins.cajon.map
-import de.platon42.intellij.plugins.cajon.quickfixes.RemoveInstanceOfExpressionQuickFix
+import com.intellij.psi.*
+import de.platon42.intellij.plugins.cajon.*
+import de.platon42.intellij.plugins.cajon.quickfixes.MoveOutInstanceOfExpressionQuickFix
 
 class AssertThatInstanceOfInspection : AbstractAssertJInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting a class instance"
-        private const val REPLACE_INSTANCEOF_DESCRIPTION_TEMPLATE = "Replace instanceof expression by assertThat().%s()"
+        private const val REMOVE_INSTANCEOF_DESCRIPTION_TEMPLATE = "Remove instanceof in actual expression and use assertThat().%s() instead"
         private const val MOVE_OUT_INSTANCEOF_MESSAGE = "instanceof expression could be moved out of assertThat()"
     }
 
@@ -24,30 +18,31 @@ class AssertThatInstanceOfInspection : AbstractAssertJInspection() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
-            override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
-                super.visitMethodCallExpression(expression)
-                if (!ASSERT_THAT_BOOLEAN.test(expression)) {
+            override fun visitExpressionStatement(statement: PsiExpressionStatement?) {
+                super.visitExpressionStatement(statement)
+                val staticMethodCall = statement?.findStaticMethodCall() ?: return
+                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
                     return
                 }
 
-                val expectedCallExpression = expression.findOutmostMethodCall() ?: return
-                val expectedResult = getExpectedBooleanResult(expectedCallExpression) ?: return
+                val expectedCallExpression = statement.findOutmostMethodCall() ?: return
+                val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return
 
-                if (expression.firstArg is PsiInstanceOfExpression) {
+                if (staticMethodCall.firstArg is PsiInstanceOfExpression) {
                     val replacementMethod = expectedResult.map(MethodNames.IS_INSTANCE_OF, MethodNames.IS_NOT_INSTANCE_OF)
-                    registerRemoveInstanceOfMethod(holder, expression, replacementMethod, ::RemoveInstanceOfExpressionQuickFix)
+                    registerMoveOutInstanceOfMethod(holder, expectedCallExpression, replacementMethod, ::MoveOutInstanceOfExpressionQuickFix)
                 }
             }
         }
     }
 
-    private fun registerRemoveInstanceOfMethod(
+    private fun registerMoveOutInstanceOfMethod(
         holder: ProblemsHolder,
         expression: PsiMethodCallExpression,
         replacementMethod: String,
         quickFixSupplier: (String, String) -> LocalQuickFix
     ) {
-        val description = REPLACE_INSTANCEOF_DESCRIPTION_TEMPLATE.format(replacementMethod)
+        val description = REMOVE_INSTANCEOF_DESCRIPTION_TEMPLATE.format(replacementMethod)
         val quickfix = quickFixSupplier(description, replacementMethod)
         holder.registerProblem(expression, MOVE_OUT_INSTANCEOF_MESSAGE, quickfix)
     }

@@ -4,11 +4,8 @@ import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.util.TypeConversionUtil
-import de.platon42.intellij.plugins.cajon.MethodNames
-import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
-import de.platon42.intellij.plugins.cajon.firstArg
-import de.platon42.intellij.plugins.cajon.map
-import de.platon42.intellij.plugins.cajon.quickfixes.MoveActualOuterExpressionMethodCallQuickFix
+import de.platon42.intellij.plugins.cajon.*
+import de.platon42.intellij.plugins.cajon.quickfixes.MoveOutMethodCallExpressionQuickFix
 import de.platon42.intellij.plugins.cajon.quickfixes.SplitBinaryExpressionMethodCallQuickFix
 
 class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
@@ -23,19 +20,20 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
-            override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
-                super.visitMethodCallExpression(expression)
-                if (!ASSERT_THAT_BOOLEAN.test(expression)) {
+            override fun visitExpressionStatement(statement: PsiExpressionStatement?) {
+                super.visitExpressionStatement(statement)
+                val staticMethodCall = statement?.findStaticMethodCall() ?: return
+                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
                     return
                 }
 
-                val expectedCallExpression = expression.findOutmostMethodCall() ?: return
-                val expectedResult = getExpectedBooleanResult(expectedCallExpression) ?: return
+                val expectedCallExpression = statement.findOutmostMethodCall() ?: return
+                val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return
 
-                val assertThatArgument = expression.firstArg
+                val assertThatArgument = staticMethodCall.firstArg
                 if (assertThatArgument is PsiMethodCallExpression && OBJECT_EQUALS.test(assertThatArgument)) {
                     val replacementMethod = expectedResult.map(MethodNames.IS_EQUAL_TO, MethodNames.IS_NOT_EQUAL_TO)
-                    registerSplitMethod(holder, expression, "${MethodNames.EQUALS}()", replacementMethod, ::MoveActualOuterExpressionMethodCallQuickFix)
+                    registerSplitMethod(holder, expectedCallExpression, "${MethodNames.EQUALS}()", replacementMethod, ::MoveOutMethodCallExpressionQuickFix)
                     return
                 }
 
@@ -50,7 +48,7 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
                     return
                 } else if (isLeftNull || isRightNull) {
                     val replacementMethod = expectedResult.map(MethodNames.IS_NULL, MethodNames.IS_NOT_NULL)
-                    registerSplitMethod(holder, expression, "binary", replacementMethod) { desc, method ->
+                    registerSplitMethod(holder, expectedCallExpression, "binary", replacementMethod) { desc, method ->
                         SplitBinaryExpressionMethodCallQuickFix(desc, method, pickRightOperand = isLeftNull, noExpectedExpression = true)
                     }
                     return
@@ -58,7 +56,7 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
 
                 val isPrimitive = bothTypes.all(TypeConversionUtil::isPrimitiveAndNotNull)
                 val isNumericType = bothTypes.all(TypeConversionUtil::isNumericType)
-                val constantEvaluationHelper = JavaPsiFacade.getInstance(expression.project).constantEvaluationHelper
+                val constantEvaluationHelper = JavaPsiFacade.getInstance(statement.project).constantEvaluationHelper
                 val swapExpectedAndActual = constantEvaluationHelper.computeConstantExpression(binaryExpression.lOperand) != null
 
                 val tokenType = binaryExpression.operationTokenType
@@ -72,7 +70,7 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
                     (isPrimitive || isNumericType).map(TOKEN_TO_ASSERTJ_FOR_PRIMITIVE_MAP, TOKEN_TO_ASSERTJ_FOR_OBJECT_MAPPINGS)
                 val replacementMethod = mappingToUse[tokenType] ?: return
 
-                registerSplitMethod(holder, expression, "binary", replacementMethod) { desc, method ->
+                registerSplitMethod(holder, expectedCallExpression, "binary", replacementMethod) { desc, method ->
                     SplitBinaryExpressionMethodCallQuickFix(desc, method, pickRightOperand = swapExpectedAndActual)
                 }
             }

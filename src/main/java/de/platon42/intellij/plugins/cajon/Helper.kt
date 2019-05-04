@@ -4,6 +4,7 @@ import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiExpression
 import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.search.GlobalSearchScope
 
 fun createAssertThat(context: PsiElement, actualExpression: PsiExpression): PsiMethodCallExpression {
     return createAssertThat(context, AssertJClassNames.ASSERTIONS_CLASSNAME, actualExpression)
@@ -29,4 +30,11 @@ fun createMethodCall(context: PsiElement, fullQualifiedMethodName: String, varar
     ) as PsiMethodCallExpression
     arguments.forEachIndexed { index, newArg -> expectedExpression.getArg(index).replace(newArg) }
     return expectedExpression
+}
+
+fun hasAssertJMethod(element: PsiElement, classname: String, methodname: String): Boolean {
+    val findClass =
+        JavaPsiFacade.getInstance(element.project).findClass(classname, GlobalSearchScope.allScope(element.project))
+            ?: return false
+    return findClass.allMethods.any { it.name == methodname }
 }

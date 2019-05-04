@@ -8,6 +8,13 @@ class AssertJClassNames {
         const val ASSERTIONS_CLASSNAME = "org.assertj.core.api.Assertions"
 
         @NonNls
+        const val DESCRIPTABLE_INTERFACE = "org.assertj.core.api.Descriptable"
+        @NonNls
+        const val EXTENSION_POINTS_INTERFACE = "org.assertj.core.api.ExtensionPoints"
+
+        @NonNls
+        const val ASSERT_INTERFACE = "org.assertj.core.api.Assert"
+        @NonNls
         const val ABSTRACT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractAssert"
         @NonNls
         const val ABSTRACT_OBJECT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractObjectAssert"
@@ -32,7 +39,5 @@ class AssertJClassNames {
         const val GUAVA_OPTIONAL_CLASSNAME = "com.google.common.base.Optional"
         @NonNls
         const val GUAVA_ASSERTIONS_CLASSNAME = "org.assertj.guava.api.Assertions"
-        @NonNls
-        const val GUAVA_OPTIONAL_ASSERT_CLASSNAME = "org.assertj.guava.api.OptionalAssert"
     }
 }

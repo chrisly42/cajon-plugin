@@ -11,28 +11,32 @@ class ReplaceSizeMethodCallQuickFix(
     description: String,
     private val replacementMethod: String,
     private val noExpectedExpression: Boolean = false,
-    private val expectedIsCollection: Boolean = false,
-    private val keepActualAsIs: Boolean = false
+    private val expectedIsCollection: Boolean = false
 ) : AbstractCommonQuickFix(description) {
 
+    companion object {
+        private const val REPLACE_DESCRIPTION = "Replace methods by better ones"
+    }
+
+    override fun getFamilyName(): String {
+        return REPLACE_DESCRIPTION
+    }
+
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
-        val element = descriptor.startElement
-        val methodCallExpression = element as? PsiMethodCallExpression ?: return
-        if (!keepActualAsIs) {
-            val assertExpression = methodCallExpression.firstArg
-            replaceCollectionSizeOrArrayLength(assertExpression)
-        }
-        val oldExpectedExpression = element.findOutmostMethodCall() ?: return
+        val outmostCallExpression = descriptor.startElement as? PsiMethodCallExpression ?: return
+        val assertThatMethodCall = outmostCallExpression.findStaticMethodCall() ?: return
+        val assertExpression = assertThatMethodCall.firstArg
+        replaceCollectionSizeOrArrayLength(assertExpression)
 
         if (expectedIsCollection) {
-            replaceCollectionSizeOrArrayLength(oldExpectedExpression.firstArg)
+            replaceCollectionSizeOrArrayLength(outmostCallExpression.firstArg)
         }
 
-        val args = if (noExpectedExpression) emptyArray() else arrayOf(oldExpectedExpression.firstArg)
-        val expectedExpression = createExpectedMethodCall(element, replacementMethod, *args)
+        val args = if (noExpectedExpression) emptyArray() else arrayOf(outmostCallExpression.firstArg)
+        val expectedExpression = createExpectedMethodCall(outmostCallExpression, replacementMethod, *args)
 
-        expectedExpression.replaceQualifierFromMethodCall(oldExpectedExpression)
-        oldExpectedExpression.replace(expectedExpression)
+        expectedExpression.replaceQualifierFromMethodCall(outmostCallExpression)
+        outmostCallExpression.replace(expectedExpression)
     }
 
     private fun replaceCollectionSizeOrArrayLength(assertExpression: PsiExpression) {

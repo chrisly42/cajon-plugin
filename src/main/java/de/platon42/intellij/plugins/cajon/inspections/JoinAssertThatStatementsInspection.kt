@@ -37,7 +37,11 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                         if (!reset) {
                             val isSame = when (actualExpression) {
                                 is PsiMethodCallExpression -> equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)
-                                        && !KNOWN_METHODS_WITH_SIDE_EFFECTS.test(actualExpression)
+                                        && PsiTreeUtil.findChildrenOfAnyType(
+                                    actualExpression,
+                                    false,
+                                    PsiMethodCallExpression::class.java
+                                ).none { KNOWN_METHODS_WITH_SIDE_EFFECTS.test(it) }
                                 else -> equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)
                             }
                             if (isSame) {

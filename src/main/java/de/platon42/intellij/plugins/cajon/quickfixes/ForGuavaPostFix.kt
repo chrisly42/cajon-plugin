@@ -8,12 +8,13 @@ import com.intellij.psi.util.PsiTreeUtil
 import de.platon42.intellij.plugins.cajon.*
 
 class ForGuavaPostFix {
+
     companion object {
         val REPLACE_BY_GUAVA_ASSERT_THAT_AND_STATIC_IMPORT: (Project, ProblemDescriptor) -> Unit = exit@
         { _, descriptor ->
             val element = descriptor.startElement
             val statement = PsiTreeUtil.getParentOfType(element, PsiStatement::class.java) ?: return@exit
-            val assertThatCall = PsiTreeUtil.findChildrenOfType(statement, PsiMethodCallExpression::class.java).find { CORE_ASSERT_THAT_MATCHER.test(it) } ?: return@exit
+            val assertThatCall = statement.findStaticMethodCall() ?: return@exit
 
             val newMethodCall = createGuavaAssertThat(element, assertThatCall.firstArg)
             newMethodCall.resolveMethod()?.addAsStaticImport(element, AssertJClassNames.ASSERTIONS_CLASSNAME)

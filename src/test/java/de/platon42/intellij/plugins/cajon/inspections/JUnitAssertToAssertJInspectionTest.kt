@@ -18,7 +18,7 @@ internal class JUnitAssertToAssertJInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(JUnitAssertToAssertJInspection::class.java)
             myFixture.configureByFile("JUnitAssertToAssertJInspectionBefore.java")
-            executeQuickFixes(myFixture, Regex("Replace .*"), 38)
+            executeQuickFixes(myFixture, Regex("Convert assert.*\\(\\) to assertThat\\(\\).*"), 38)
             myFixture.checkResultByFile("JUnitAssertToAssertJInspectionAfter.java")
         }
     }

@@ -11,8 +11,16 @@ class MethodNames {
 
         @NonNls
         const val ASSERT_THAT = "assertThat"
+
         @NonNls
         const val AS = "as"
+        @NonNls
+        const val DESCRIBED_AS = "describedAs"
+        @NonNls
+        const val IN_HEXADECIMAL = "inHexadecimal"
+        @NonNls
+        const val IN_BINARY = "inBinary"
+
         @NonNls
         const val IS_EQUAL_TO = "isEqualTo"
         @NonNls
@@ -38,7 +46,7 @@ class MethodNames {
         @NonNls
         const val IS_FALSE = "isFalse"
         @NonNls
-        const val IS_NULL = "isNull"
+        const val IS_NULL = "isNull" // terminal, returns void
         @NonNls
         const val IS_NOT_NULL = "isNotNull"
         @NonNls
@@ -51,7 +59,7 @@ class MethodNames {
         const val IS_NOT_INSTANCE_OF = "isNotInstanceOf"
 
         @NonNls
-        const val IS_EMPTY = "isEmpty"
+        const val IS_EMPTY = "isEmpty" // terminal, returns void
         @NonNls
         const val IS_NOT_EMPTY = "isNotEmpty"
         @NonNls

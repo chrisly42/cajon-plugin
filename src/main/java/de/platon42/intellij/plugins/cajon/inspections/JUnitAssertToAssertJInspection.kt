@@ -16,6 +16,8 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Convert JUnit assertions to AssertJ"
+        private const val CONVERT_MESSAGE_TEMPLATE = "%s can be converted to AssertJ style"
+        private const val CONVERT_DESCRIPTION_TEMPLATE = "Convert %s() to assertThat().%s()"
 
         private val MAPPINGS = listOf(
             Mapping(
@@ -142,7 +144,7 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
         quickFixSupplier: (String, String) -> LocalQuickFix
     ) {
         val originalMethod = getOriginalMethodName(expression) ?: return
-        val description = REPLACE_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
+        val description = CONVERT_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
         val message = CONVERT_MESSAGE_TEMPLATE.format(originalMethod)
         val quickfix = quickFixSupplier(description, replacementMethod)
         holder.registerProblem(expression, message, quickfix)

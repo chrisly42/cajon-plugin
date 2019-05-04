@@ -7,6 +7,7 @@ import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.PsiStatement
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.MethodNames
+import de.platon42.intellij.plugins.cajon.calculateConstantParameterValue
 
 class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
 
@@ -31,7 +32,7 @@ class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
                     return
                 }
 
-                val value = calculateConstantParameterValue(expression, 0) ?: return
+                val value = expression.calculateConstantParameterValue(0) ?: return
                 if ((isEqual && (value == "")) || (hasSize && (value == 0))) {
                     registerSimplifyMethod(holder, expression, MethodNames.IS_EMPTY)
                 }

@@ -46,5 +46,7 @@ public class JoinStatements {
         Iterator<String> iterator = list.iterator();
         assertThat(iterator.next()).isEqualTo("foo");
         assertThat(iterator.next()).isEqualTo("bar");
+        assertThat(iterator.next().toLowerCase()).isEqualTo("foo");
+        assertThat(iterator.next().toLowerCase()).isEqualTo("bar");
     }
 }

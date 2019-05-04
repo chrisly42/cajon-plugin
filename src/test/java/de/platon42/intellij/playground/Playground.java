@@ -283,6 +283,7 @@ public class Playground {
         assertFalse(!(new int[3].length == new ArrayList<Integer>().size()));
         assertThat(!(new int[3].length == new ArrayList<Integer>().size())).isFalse();
         assertThat((new int[3].length == new ArrayList<Integer>().size())).isTrue();
+        assertThat(new int[3].length == new ArrayList<Integer>().size()).isTrue();
         assertThat(new int[3].length).isEqualTo(new ArrayList<Integer>().size());
         assertThat(new int[3]).hasSameSizeAs(new ArrayList<Integer>());
 

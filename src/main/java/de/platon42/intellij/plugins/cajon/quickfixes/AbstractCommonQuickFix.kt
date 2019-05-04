@@ -4,6 +4,7 @@ import com.intellij.codeInspection.LocalQuickFix
 
 abstract class AbstractCommonQuickFix(private val description: String) : LocalQuickFix {
 
-    override fun getFamilyName() = description
+    override fun getName() = description
 
+    override fun getFamilyName() = description
 }

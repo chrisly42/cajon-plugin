@@ -8,6 +8,14 @@ import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_ASSE
 
 class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
 
+    companion object {
+        private const val CONVERT_DESCRIPTION = "Convert JUnit assertions to assertJ"
+    }
+
+    override fun getFamilyName(): String {
+        return CONVERT_DESCRIPTION
+    }
+
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.startElement
         val methodCallExpression = element as? PsiMethodCallExpression ?: return

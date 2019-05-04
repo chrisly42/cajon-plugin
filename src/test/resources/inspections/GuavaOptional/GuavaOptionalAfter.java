@@ -8,24 +8,24 @@ public class GuavaOptional {
     private void guavaOptional() {
         Optional<String> opt = Optional.absent();
 
-        assertThat(opt).isPresent();
+        assertThat(opt).as("foo").isPresent();
         assertThat(opt).isPresent();
         assertThat(opt).isPresent();
         assertThat(opt).isPresent();
         assertThat(opt).isPresent();
 
-        assertThat(opt).isAbsent();
+        assertThat(opt).as("foo").isAbsent();
         assertThat(opt).isAbsent();
         assertThat(opt).isAbsent();
         assertThat(opt).isAbsent();
         assertThat(opt).isAbsent();
 
-        assertThat(opt).contains("foo");
+        assertThat(opt).as("foo").contains("foo");
         assertThat(opt.get()).isSameAs("foo");
         assertThat(opt.get()).isNotEqualTo("foo");
         assertThat(opt.get()).isNotSameAs("foo");
 
-        assertThat(opt).contains("foo");
+        assertThat(opt).as("foo").contains("foo");
         assertThat(opt).contains("foo");
         assertThat(opt).isNotEqualTo(Optional.of("foo"));
         assertThat(opt).isNotEqualTo(Optional.fromNullable("foo"));
@@ -33,20 +33,23 @@ public class GuavaOptional {
         assertThat(opt).isAbsent();
         assertThat(opt).isPresent();
 
-        org.assertj.guava.api.Assertions.assertThat(opt).contains("foo");
-        org.assertj.guava.api.Assertions.assertThat(opt).contains("foo");
+        assertThat(opt).as("foo").contains("foo");
+        assertThat(opt).contains("foo");
         org.assertj.guava.api.Assertions.assertThat(opt).isNotEqualTo(Optional.of("foo"));
         org.assertj.guava.api.Assertions.assertThat(opt).isNotEqualTo(Optional.fromNullable("foo"));
 
-        org.assertj.guava.api.Assertions.assertThat(opt).isAbsent();
-        org.assertj.guava.api.Assertions.assertThat(opt).isPresent();
+        assertThat(opt).as("foo").isAbsent();
+        assertThat(opt).isPresent();
 
-        assertThat(opt).contains("foo");
+        assertThat(opt).as("foo").contains("foo");
         assertThat(opt).contains("foo");
         org.assertj.core.api.Assertions.assertThat(opt).isNotEqualTo(Optional.of("foo"));
         org.assertj.core.api.Assertions.assertThat(opt).isNotEqualTo(Optional.fromNullable("foo"));
 
-        assertThat(opt).isAbsent();
+        assertThat(opt).as("foo").isAbsent();
         assertThat(opt).isPresent();
+
+        assertThat(opt).as("foo").isPresent().as("bar").isPresent();
+        assertThat(opt.isPresent()).as("foo").isEqualTo(true).as("bar").isEqualTo(Boolean.FALSE);
     }
 }

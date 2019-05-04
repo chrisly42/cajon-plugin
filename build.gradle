@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.8'
     id 'org.jetbrains.kotlin.jvm' version '1.3.31'
+    id 'jacoco'
 }
 
 group 'de.platon42'
@@ -44,6 +45,11 @@ patchPluginXml {
     <ul>
       <li>Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).
       <li>Fixed isEmpty() for enumerables and strings and isNull() for object conversions to be applied only if it is the terminal method call as isEmpty() and isNull() return void.
+      <li>Heavily reworked inspections for edge cases, such as multiple isEqualTo() calls inside a single statement.
+      <li>Some inspections could generate bogus code for weird situations, this has been made more fool-proof.
+      <li>Corrected highlighting for many inspections.
+      <li>Fixed family names for inspections in batch mode.
+      <li>Reworded many inspection messages for better understanding.
     </ul>
   <h4>V0.7 (28-Apr-19)</h4>
     <ul>
@@ -59,9 +65,21 @@ patchPluginXml {
 
 test {
     useJUnitPlatform()
-//    testLogging {
-//        events "passed", "skipped", "failed"
-//    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+jacoco {
+    toolVersion = '0.8.3'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
 }
 
 publishPlugin {

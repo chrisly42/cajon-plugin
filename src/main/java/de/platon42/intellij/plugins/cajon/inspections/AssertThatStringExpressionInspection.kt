@@ -1,29 +1,20 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
-import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.CommonClassNames
-import com.intellij.psi.JavaElementVisitor
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.*
 import com.siyeh.ig.callMatcher.CallMatcher
-import de.platon42.intellij.plugins.cajon.MethodNames
-import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
-import de.platon42.intellij.plugins.cajon.firstArg
-import de.platon42.intellij.plugins.cajon.quickfixes.MoveActualOuterExpressionMethodCallQuickFix
-import de.platon42.intellij.plugins.cajon.quickfixes.RemoveActualOutmostMethodCallQuickFix
+import de.platon42.intellij.plugins.cajon.*
+import de.platon42.intellij.plugins.cajon.quickfixes.MoveOutMethodCallExpressionQuickFix
 
 class AssertThatStringExpressionInspection : AbstractAssertJInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting a string specific expression"
-        private const val MOVE_EXPECTED_EXPRESSION_DESCRIPTION_TEMPLATE = "Remove %s() of expected expression and use assertThat().%s() instead"
-        private const val MOVING_OUT_MESSAGE_TEMPLATE = "Moving %s() expression out of assertThat() would be more concise"
 
         private val MAPPINGS = listOf(
             Mapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "isEmpty").parameterCount(0)!!,
-                MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY, hasExpected = false
+                MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY
             ),
             Mapping(
                 CallMatcher.anyOf(
@@ -55,48 +46,27 @@ class AssertThatStringExpressionInspection : AbstractAssertJInspection() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
-            override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
-                super.visitMethodCallExpression(expression)
-                if (!ASSERT_THAT_BOOLEAN.test(expression)) {
+            override fun visitExpressionStatement(statement: PsiExpressionStatement?) {
+                super.visitExpressionStatement(statement)
+                val staticMethodCall = statement?.findStaticMethodCall() ?: return
+                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
                     return
                 }
-                val assertThatArgument = expression.firstArg as? PsiMethodCallExpression ?: return
-
+                val assertThatArgument = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
                 val mapping = MAPPINGS.firstOrNull { it.callMatcher.test(assertThatArgument) } ?: return
 
-                val expectedCallExpression = expression.findOutmostMethodCall() ?: return
-                val expectedResult = getExpectedBooleanResult(expectedCallExpression) ?: return
+                val expectedCallExpression = statement.findOutmostMethodCall() ?: return
+                val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return
 
                 val replacementMethod = if (expectedResult) mapping.replacementForTrue else mapping.replacementForFalse
-                if (mapping.hasExpected) {
-                    registerMoveOutMethod(holder, expression, assertThatArgument, replacementMethod, ::MoveActualOuterExpressionMethodCallQuickFix)
-                } else {
-                    registerMoveOutMethod(holder, expression, assertThatArgument, replacementMethod) { desc, method ->
-                        RemoveActualOutmostMethodCallQuickFix(desc, method, noExpectedExpression = true)
-                    }
-                }
+                registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, replacementMethod, ::MoveOutMethodCallExpressionQuickFix)
             }
         }
-    }
-
-    private fun registerMoveOutMethod(
-        holder: ProblemsHolder,
-        expression: PsiMethodCallExpression,
-        oldActualExpression: PsiMethodCallExpression,
-        replacementMethod: String,
-        quickFixSupplier: (String, String) -> LocalQuickFix
-    ) {
-        val originalMethod = getOriginalMethodName(oldActualExpression) ?: return
-        val description = MOVE_EXPECTED_EXPRESSION_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
-        val message = MOVING_OUT_MESSAGE_TEMPLATE.format(originalMethod)
-        val quickfix = quickFixSupplier(description, replacementMethod)
-        holder.registerProblem(expression, message, quickfix)
     }
 
     private class Mapping(
         val callMatcher: CallMatcher,
         val replacementForTrue: String,
-        val replacementForFalse: String,
-        val hasExpected: Boolean = true
+        val replacementForFalse: String
     )
 }

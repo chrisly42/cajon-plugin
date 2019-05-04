@@ -14,17 +14,13 @@ internal class AssertThatJava8OptionalInspectionTest : AbstractCajonTest() {
         runTest {
             myFixture.enableInspections(AssertThatJava8OptionalInspection::class.java)
             myFixture.configureByFile("Java8OptionalBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with isPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isNotEqualTo() with isPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with isNotPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isNotEqualTo() with isNotPresent()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isTrue() with isPresent()"), 1)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove isPresent() of actual expression and use assertThat().isPresent() instead"), 6)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove isPresent() of actual expression and use assertThat().isNotPresent() instead"), 5)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().contains() instead"), 1)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().containsSame() instead"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isNotPresent()"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isPresent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isFalse() with isNotPresent()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Remove unwrapping of expected expression and replace isEqualTo() with contains()"), 2)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isEqualTo() with contains()"), 1)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap actual expression and replace isSameAs() with containsSame()"), 1)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap expected expression and replace isEqualTo() with contains()"), 2)
             myFixture.checkResultByFile("Java8OptionalAfter.java")
         }
     }

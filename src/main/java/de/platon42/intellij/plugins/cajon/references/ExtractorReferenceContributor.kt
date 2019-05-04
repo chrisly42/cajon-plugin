@@ -50,9 +50,8 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
         }
 
         private fun findActualType(element: PsiElement): PsiClassType? {
-            val assertThatCall = PsiTreeUtil.findChildrenOfType(element, PsiMethodCallExpression::class.java)
-                .find { CORE_ASSERT_THAT_MATCHER.test(it) } ?: return null
-            return assertThatCall.firstArg.type as? PsiClassType
+            val assertThatCall = element.findStaticMethodCall()
+            return assertThatCall?.firstArg?.type as? PsiClassType
         }
 
         private fun findAndCreateReferences(element: PsiElement, finder: (PsiLiteralExpression) -> List<Pair<TextRange, List<PsiElement>>>?): Array<PsiReference> {

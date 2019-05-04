@@ -5,9 +5,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.util.PsiTreeUtil
-import de.platon42.intellij.plugins.cajon.ALL_ASSERT_THAT_MATCHERS
+import de.platon42.intellij.plugins.cajon.findStaticMethodCall
 
 class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
+
     companion object {
         private const val JOIN_STATEMENTS_MESSAGE = "Join assertThat() statements"
     }
@@ -31,9 +32,7 @@ class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
             val statementComments = PsiTreeUtil.getChildrenOfAnyType(previousStatement, PsiComment::class.java)
             commentsToKeep.addAll(statementComments)
 
-            val assertThatCallOfCursorStatement =
-                PsiTreeUtil.findChildrenOfType(lastStatement, PsiMethodCallExpression::class.java).find { ALL_ASSERT_THAT_MATCHERS.test(it) }
-                    ?: throw IllegalStateException("Internal error")
+            val assertThatCallOfCursorStatement = lastStatement.findStaticMethodCall() ?: throw IllegalStateException("Internal error")
 
             val lastElementBeforeConcat = assertThatCallOfCursorStatement.parent
             commentsToKeep.forEach {
