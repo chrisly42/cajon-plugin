@@ -19,15 +19,14 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
-            override fun visitCodeBlock(block: PsiCodeBlock?) {
+            override fun visitCodeBlock(block: PsiCodeBlock) {
                 super.visitCodeBlock(block)
-                val statements = block?.statements ?: return
                 var lastActualExpression: PsiExpression? = null
                 var sameCount = 0
                 var firstStatement: PsiStatement? = null
                 var lastStatement: PsiStatement? = null
                 val equivalenceChecker = TrackingEquivalenceChecker()
-                for (statement in statements) {
+                for (statement in block.statements) {
                     val assertThatCall = isLegitAssertThatCall(statement)
                     var reset = true
                     var actualExpression: PsiExpression? = null
@@ -81,6 +80,9 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
 
             private fun isLegitAssertThatCall(statement: PsiStatement?): PsiMethodCallExpression? {
                 if ((statement is PsiExpressionStatement) && (statement.expression is PsiMethodCallExpression)) {
+                    if (!statement.hasAssertThat()) {
+                        return null
+                    }
                     val assertThatCall = PsiTreeUtil.findChildrenOfType(statement, PsiMethodCallExpression::class.java).find { ALL_ASSERT_THAT_MATCHERS.test(it) }
                     return assertThatCall?.takeIf { it.findFluentCallTo(EXTRACTING_CALL_MATCHERS) == null }
                 }

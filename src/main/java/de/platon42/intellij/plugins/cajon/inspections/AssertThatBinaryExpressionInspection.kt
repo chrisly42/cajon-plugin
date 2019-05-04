@@ -20,9 +20,12 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
-            override fun visitExpressionStatement(statement: PsiExpressionStatement?) {
+            override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                val staticMethodCall = statement?.findStaticMethodCall() ?: return
+                if (!statement.hasAssertThat()) {
+                    return
+                }
+                val staticMethodCall = statement.findStaticMethodCall() ?: return
                 if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
                     return
                 }

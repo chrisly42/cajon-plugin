@@ -21,9 +21,12 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
 
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
-            override fun visitExpressionStatement(statement: PsiExpressionStatement?) {
+            override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                val staticMethodCall = statement?.findStaticMethodCall() ?: return
+                if (!statement.hasAssertThat()) {
+                    return
+                }
+                val staticMethodCall = statement.findStaticMethodCall() ?: return
                 if (!ASSERT_THAT_ANY.test(staticMethodCall)) {
                     return
                 }
@@ -52,6 +55,9 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
 
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
+                if (!expression.hasAssertThat()) {
+                    return
+                }
                 val staticMethodCall = expression.findStaticMethodCall() ?: return
                 if (!ASSERT_THAT_JAVA8_OPTIONAL.test(staticMethodCall)) {
                     return

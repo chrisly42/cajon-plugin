@@ -7,6 +7,7 @@ import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.PsiStatement
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.calculateConstantParameterValue
+import de.platon42.intellij.plugins.cajon.hasAssertThat
 
 class AssertThatEnumerableIsEmptyInspection : AbstractAssertJInspection() {
 
@@ -20,6 +21,9 @@ class AssertThatEnumerableIsEmptyInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
+                if (!expression.hasAssertThat()) {
+                    return
+                }
                 val isLastExpression = expression.parent is PsiStatement
                 if (!(HAS_SIZE.test(expression) && isLastExpression)) {
                     return

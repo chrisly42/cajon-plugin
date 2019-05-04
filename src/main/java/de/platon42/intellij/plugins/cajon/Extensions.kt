@@ -12,6 +12,8 @@ import de.platon42.intellij.plugins.cajon.inspections.AbstractAssertJInspection
 val PsiMethodCallExpression.qualifierExpression: PsiExpression get() = methodExpression.qualifierExpression!!
 val PsiMethodCallExpression.firstArg: PsiExpression get() = getArg(0)
 
+fun PsiElement.hasAssertThat() = text.contains("assertThat")
+
 fun PsiMethodCallExpression.replaceQualifier(qualifier: PsiElement) {
     qualifierExpression.replace(qualifier)
 }

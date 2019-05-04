@@ -8,6 +8,7 @@ import com.intellij.psi.PsiStatement
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.calculateConstantParameterValue
+import de.platon42.intellij.plugins.cajon.hasAssertThat
 
 class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
 
@@ -21,6 +22,9 @@ class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
+                if (!expression.hasAssertThat()) {
+                    return
+                }
                 val isEqual = IS_EQUAL_TO_OBJECT.test(expression)
                 val hasSize = HAS_SIZE.test(expression)
                 val isLastExpression = expression.parent is PsiStatement

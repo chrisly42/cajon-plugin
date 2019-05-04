@@ -2,10 +2,7 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
-import de.platon42.intellij.plugins.cajon.findOutmostMethodCall
-import de.platon42.intellij.plugins.cajon.findStaticMethodCall
-import de.platon42.intellij.plugins.cajon.firstArg
-import de.platon42.intellij.plugins.cajon.getExpectedBooleanResult
+import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.quickfixes.InvertUnaryStatementQuickFix
 
 class AssertThatInvertedBooleanConditionInspection : AbstractAssertJInspection() {
@@ -21,6 +18,9 @@ class AssertThatInvertedBooleanConditionInspection : AbstractAssertJInspection()
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
+                if (!expression.hasAssertThat()) {
+                    return
+                }
                 val staticMethodCall = expression.findStaticMethodCall() ?: return
                 if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
                     return

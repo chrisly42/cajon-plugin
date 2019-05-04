@@ -5,11 +5,8 @@ import com.intellij.psi.JavaElementVisitor
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.util.TypeConversionUtil
+import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_BOOLEAN_ASSERT_CLASSNAME
-import de.platon42.intellij.plugins.cajon.MethodNames
-import de.platon42.intellij.plugins.cajon.calculateConstantParameterValue
-import de.platon42.intellij.plugins.cajon.firstArg
-import de.platon42.intellij.plugins.cajon.map
 
 class AssertThatBooleanConditionInspection : AbstractAssertJInspection() {
 
@@ -23,6 +20,9 @@ class AssertThatBooleanConditionInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
+                if (!expression.hasAssertThat()) {
+                    return
+                }
                 val matchingCalls = listOf(
                     IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_BOOLEAN,
                     IS_NOT_EQUAL_TO_OBJECT, IS_NOT_EQUAL_TO_BOOLEAN
