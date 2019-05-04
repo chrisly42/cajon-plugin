@@ -1,4 +1,4 @@
-# Cajon - Concise AssertJ Optimizing Nitpicker
+# Cajon - Concise AssertJ Optimizing Nitpicker [![Build Status](https://travis-ci.org/chrisly42/cajon-plugin.svg?branch=master)](https://travis-ci.org/chrisly42/cajon-plugin)
 
 Cajon is an IntelliJ IDEA Plugin for shortening and optimizing [AssertJ](https://assertj.github.io/doc/) assertions.
 
