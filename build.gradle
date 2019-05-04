@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.8'
     id 'org.jetbrains.kotlin.jvm' version '1.3.31'
     id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.8.2'
 }
 
 group 'de.platon42'
@@ -76,9 +77,8 @@ jacoco {
 
 jacocoTestReport {
     reports {
-        xml.enabled false
+        xml.enabled true
         csv.enabled false
-        html.destination file("${buildDir}/jacocoHtml")
     }
 }
 

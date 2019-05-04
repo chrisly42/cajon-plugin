@@ -8,4 +8,4 @@ before_script:
   - chmod +x gradle/wrapper/gradle-wrapper.jar
 
 script:
-  - ./gradlew clean test
+  - ./gradlew clean test jacocoTestReport coveralls
