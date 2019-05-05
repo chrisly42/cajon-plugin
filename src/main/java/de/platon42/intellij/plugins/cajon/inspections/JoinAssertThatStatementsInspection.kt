@@ -4,7 +4,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
-import com.siyeh.ig.psiutils.TrackingEquivalenceChecker
+import com.siyeh.ig.psiutils.EquivalenceChecker
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.quickfixes.JoinStatementsQuickFix
 
@@ -25,7 +25,8 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                 var sameCount = 0
                 var firstStatement: PsiStatement? = null
                 var lastStatement: PsiStatement? = null
-                val equivalenceChecker = TrackingEquivalenceChecker()
+                // Note: replace with TrackingEquivalenceChecker() for IDEA >= 2019.1
+                val equivalenceChecker = EquivalenceChecker.getCanonicalPsiEquivalence()!!
                 for (statement in block.statements) {
                     val assertThatCall = isLegitAssertThatCall(statement)
                     var reset = true
@@ -36,9 +37,10 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                         if (!reset) {
                             val isSame = when (actualExpression) {
                                 is PsiMethodCallExpression -> equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)
+                                        // Note: replace with PsiTreeUtil.findChildrenOfAnyType(strict = false) for IDEA >= 2018.1
+                                        && !KNOWN_METHODS_WITH_SIDE_EFFECTS.test(actualExpression)
                                         && PsiTreeUtil.findChildrenOfAnyType(
                                     actualExpression,
-                                    false,
                                     PsiMethodCallExpression::class.java
                                 ).none { KNOWN_METHODS_WITH_SIDE_EFFECTS.test(it) }
                                 else -> equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)

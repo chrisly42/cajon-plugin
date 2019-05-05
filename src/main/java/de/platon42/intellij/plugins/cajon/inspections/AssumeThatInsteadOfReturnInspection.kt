@@ -15,7 +15,7 @@ class AssumeThatInsteadOfReturnInspection : AbstractAssertJInspection() {
         private const val MAX_RECURSION_DEPTH = 5
         private const val MAX_STATEMENTS_COUNT = 50
 
-        private val TEST_ANNOTATIONS = listOf(
+        private val TEST_ANNOTATIONS = setOf(
             "org.junit.Test",
             "org.junit.jupiter.api.Test",
             "org.junit.jupiter.api.TestTemplate",
@@ -52,7 +52,9 @@ class AssumeThatInsteadOfReturnInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethod(method: PsiMethod) {
                 super.visitMethod(method)
-                if (TEST_ANNOTATIONS.none(method::hasAnnotation)) {
+                // Note: replace with if(TEST_ANNOTATIONS.none(method::hasAnnotation)) for IDEA >= 2018.2
+                val annotations = method.annotations.mapNotNull { it.qualifiedName }
+                if (annotations.none(TEST_ANNOTATIONS::contains)) {
                     return
                 }
                 val containingClass = method.containingClass ?: return
