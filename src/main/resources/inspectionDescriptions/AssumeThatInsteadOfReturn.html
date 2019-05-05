@@ -1,0 +1,18 @@
+<html>
+<body>
+Tries to detect bogus uses of return statements in test methods and replaces them by assumeThat() calls.
+<!-- tooltip end -->
+<br>
+Novices will use these to skip test execution by bailing out early on some preconditions not met.
+However, this suggests that the test has actually been run and passed instead of showing the test
+as being skipped.
+<p>Return statements in if statements in main test methods
+    (must be annotated with JUnit 4 or Jupiter @Test annotations)
+    will be verified to have at least one assertThat() statement in the code flow.
+    Method calls within the same class will be examined for assertThat() statements, too.
+    However, at most 50 statements and down to five recursions will be tolerated before giving up.
+</p>
+<p>Currently, the quickfix may lose some comments during operation. The other branch of the if statement
+    will be inlined (blocks with declarations will remain a code block due to variable scope).</p>
+</body>
+</html>

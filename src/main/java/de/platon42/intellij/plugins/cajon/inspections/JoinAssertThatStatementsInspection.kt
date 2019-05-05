@@ -11,7 +11,7 @@ import de.platon42.intellij.plugins.cajon.quickfixes.JoinStatementsQuickFix
 class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
 
     companion object {
-        private const val DISPLAY_NAME = "Joining multiple assertThat() statements with same actual expression"
+        private const val DISPLAY_NAME = "Join multiple assertThat() statements with same actual expression"
         private const val CAN_BE_JOINED_DESCRIPTION = "Multiple assertThat() statements can be joined together"
     }
 
@@ -53,7 +53,7 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                     }
                     if (reset) {
                         if (sameCount > 1) {
-                            registerProblem(firstStatement, lastStatement)
+                            registerProblem(holder, isOnTheFly, firstStatement!!, lastStatement!!)
                         }
                         firstStatement = statement
                         lastStatement = null
@@ -62,20 +62,8 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                     }
                 }
                 if (sameCount > 1) {
-                    registerProblem(firstStatement, lastStatement)
+                    registerProblem(holder, isOnTheFly, firstStatement!!, lastStatement!!)
                 }
-            }
-
-            private fun registerProblem(firstStatement: PsiStatement?, lastStatement: PsiStatement?) {
-                val problemDescriptor = holder.manager.createProblemDescriptor(
-                    firstStatement!!,
-                    lastStatement!!,
-                    CAN_BE_JOINED_DESCRIPTION,
-                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                    isOnTheFly,
-                    JoinStatementsQuickFix()
-                )
-                holder.registerProblem(problemDescriptor)
             }
 
             private fun isLegitAssertThatCall(statement: PsiStatement?): PsiMethodCallExpression? {
@@ -89,5 +77,17 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                 return null
             }
         }
+    }
+
+    private fun registerProblem(holder: ProblemsHolder, isOnTheFly: Boolean, firstStatement: PsiStatement, lastStatement: PsiStatement) {
+        val problemDescriptor = holder.manager.createProblemDescriptor(
+            firstStatement,
+            lastStatement,
+            CAN_BE_JOINED_DESCRIPTION,
+            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+            isOnTheFly,
+            JoinStatementsQuickFix()
+        )
+        holder.registerProblem(problemDescriptor)
     }
 }

@@ -13,6 +13,9 @@ class MethodNames {
         const val ASSERT_THAT = "assertThat"
 
         @NonNls
+        const val ASSUME_THAT = "assumeThat"
+
+        @NonNls
         const val AS = "as"
         @NonNls
         const val DESCRIBED_AS = "describedAs"

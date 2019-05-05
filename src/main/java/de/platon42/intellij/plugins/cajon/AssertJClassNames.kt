@@ -8,6 +8,9 @@ class AssertJClassNames {
         const val ASSERTIONS_CLASSNAME = "org.assertj.core.api.Assertions"
 
         @NonNls
+        const val ASSUMPTIONS_CLASSNAME = "org.assertj.core.api.Assumptions"
+
+        @NonNls
         const val DESCRIPTABLE_INTERFACE = "org.assertj.core.api.Descriptable"
         @NonNls
         const val EXTENSION_POINTS_INTERFACE = "org.assertj.core.api.ExtensionPoints"

@@ -3,9 +3,9 @@ package de.platon42.intellij.plugins.cajon.quickfixes
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
-import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.util.PsiTreeUtil
 import de.platon42.intellij.plugins.cajon.findStaticMethodCall
+import de.platon42.intellij.plugins.cajon.shortenAndReformat
 
 class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
 
@@ -48,6 +48,6 @@ class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
             previousStatement.delete()
         } while (previousStatement !== firstStatement)
         val codeBlock = PsiTreeUtil.getParentOfType(lastStatement, PsiCodeBlock::class.java) ?: return
-        CodeStyleManager.getInstance(project).reformat(codeBlock)
+        codeBlock.shortenAndReformat()
     }
 }

@@ -73,6 +73,9 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 ## Implemented inspections and quickfixes
 
 - JoinAssertThatStatements
+  
+  Joins multiple ```assertThat()``` statements with same actual expression together.
+
   ```
   from: assertThat(expected).someCondition();
         assertThat(expected).anotherCondition();
@@ -82,8 +85,11 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   except for method calls with known side-effect methods such as ```Iterator.next()``` -- please notify me about others.
 
   The comments of the statements will be preserved. When using ```.extracting()``` or similar, the statements will not be merged.
-    
+
 - AssertThatObjectIsNullOrNotNull
+
+  Uses ```isNull()``` and ```isNotNull()``` instead.
+
   ```
   from: assertThat(object).isEqualTo(null);
     to: assertThat(object).isNull();
@@ -93,12 +99,18 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
 
 - AssertThatBooleanCondition
+
+  Uses ```isTrue()``` and ```isFalse()``` instead.
+
   ```
   from: assertThat(booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);  
     to: assertThat(booleanValue).isTrue()/isFalse();
   ```
 
 - AssertThatInvertedBooleanCondition
+
+  Inverts the boolean condition to make it more readable.
+  
   ```
   from: assertThat(!booleanValue).isEqualTo(true/false/Boolean.TRUE/Boolean.FALSE);  
   from: assertThat(!booleanValue).isTrue()/isFalse();  
@@ -106,6 +118,9 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
 
 - AssertThatInstanceOf
+
+  Moves ```instanceof``` expressions out of ```assertThat()```.
+  
   ```
   from: assertThat(object instanceof classname).isEqualTo(true);
   from: assertThat(object instanceof classname).isTrue();
@@ -117,13 +132,21 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
 
 - AssertThatStringIsEmpty
+
+  Uses ```isEmpty()``` for empty string assertions.
+
   ```
   from: assertThat(charSequence/string).isEqualTo("");
   from: assertThat(charSequence/string).hasSize(0);
     to: assertThat(charSequence/string).isEmpty();
   ```
 
+  The ```assertThat(string.length()).isEqualTo(0);``` case is handled in the AssertThatSize inspection.
+
 - AssertThatStringExpression
+  
+  Moves string operations inside assertThat() out.
+  
   ```
   from: assertThat(stringActual.isEmpty()).isTrue();
     to: assertThat(stringActual).isEmpty();
@@ -147,12 +170,19 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   Analogously with ```isFalse()```.
 
 - AssertThatEnumerableIsEmpty
+
+  Uses ```isEmpty()``` for ```hasSize(0)``` iterable assertions instead.
+  
   ```
   from: assertThat(enumerable).hasSize(0);
     to: assertThat(enumerable).isEmpty();
   ```
 
 - AssertThatSize
+
+  Makes assertions on sizes of arrays, collections, strings, 
+  or ```CharSequence```s more concise.
+
   ```
   from: assertThat(array.length).isEqualTo(0);
   from: assertThat(array.length).isLessThanOrEqualTo(0);
@@ -201,6 +231,9 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
 
 - AssertThatBinaryExpression
+
+  Splits a boolean condition represented by binary expression out of ```assertThat()```.
+
   ```
   from: assertThat(primActual == primExpected).isTrue();
     to: assertThat(primActual).isEqualTo(primExpected);
@@ -220,6 +253,11 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ...and many, many more combinations (more than 150).
 
 - AssertThatJava8Optional
+
+  Examines the statement for Java 8 Optional type and whether the statement
+  effectively tries to assert the presence, absence or content and then 
+  replaces the statement by better assertions.
+  
   ```
   from: assertThat(opt.isPresent()).isEqualTo(true);
   from: assertThat(opt.isPresent()).isNotEqualTo(false);
@@ -249,6 +287,11 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
 
 - AssertThatGuavaOptional
+
+  Examines the statement for Google Guava Optional type and whether the statement
+  effectively tries to assert the presence, absence or content and then 
+  replaces the statement by better assertions.
+
   ```
   from: assertThat(opt.isPresent()).isEqualTo(true);
   from: assertThat(opt.isPresent()).isNotEqualTo(false);
@@ -276,7 +319,54 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   AssertJ for Guava needs to be available in the classpath.
 
+- AssumeThatInsteadOfReturn
+
+  Tries to detect bogus uses of return statements in test methods and replaces them by ```assumeThat()``` calls.
+  
+  Novices will use these to skip test execution by bailing out early on some preconditions not met.
+  However, this suggests that the test has actually been run and passed instead of showing the test
+  as being skipped.
+
+  Return statements in ```if``` statements in main test methods (must be annotated with JUnit 4 or 
+  Jupiter @Test annotations) will be verified to have at least one ```assertThat()``` statement in the code flow.
+  Method calls within the same class will be examined for ```assertThat()``` statements, too.
+  However, at most 50 statements and down to five recursions will be tolerated before giving up.
+  
+  Currently, the quickfix may lose some comments during operation. The other branch of the ```if``` statement
+  will be inlined (blocks with declarations will remain a code block due to variable scope).
+  
+  The generated ```assumeThat()``` statement could be optimized further (similar to ```assertThat()```).
+
+  Example:
+  
+  ```
+      @Test
+      public void check_fuel_emission() {
+          if (System.getProperty("manufacturer").equals("Volkswagen")) {
+              return;
+          }
+          double nitroxppm = doWltpDrivingCycle();
+          assertThat(nitroxppm).isLessThan(500.0);
+      }
+  ```
+  will be transformed to
+  ```
+      @Test
+      public void check_fuel_emission() {
+          assumeThat(System.getProperty("manufacturer").equals("Volkswagen")).isFalse();
+          double nitroxppm = doWltpDrivingCycle();
+          assertThat(nitroxppm).isLessThan(500.0);
+      }
+  ```
+
 - JUnitAssertToAssertJ
+
+  Tries to convert most of the JUnit 4 assertions to AssertJ format.
+
+  Does not support Hamcrest-Matchers.
+  If you need that kind of conversion, you might want to check out the
+  [Assertions2AssertJ plugin](https://plugins.jetbrains.com/plugin/10345-assertions2assertj) by Ric Emery.
+  
   ```
   assertTrue(condition);
   assertTrue(message, condition);
@@ -332,7 +422,6 @@ The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and
 Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
 
 ## Planned features
-- AssumeThatInsteadOfReturn
 - Extraction with property names to lambda with Java 8
   ```
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
@@ -343,7 +432,7 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 
 ## Changelog
 
-#### V0.8 (unreleased)
+#### V0.8 (05-May-19)
 - Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).
 - Fixed ```isEmpty()``` for enumerables and strings and ```isNull()``` for object conversions to be applied only if it is the terminal method call as ```isEmpty()``` and ```isNull()``` return void.
 - Heavily reworked inspections for edge cases, such as multiple ```isEqualTo()``` calls inside a single statement.
@@ -351,6 +440,7 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 - Corrected highlighting for many inspections.
 - Fixed family names for inspections in batch mode.
 - Reworded many inspection messages for better understanding.
+- Added a first version of a new inspection that tries to detect bogus uses of return statements in test methods and replaces them by ```assumeThat()``` calls.
 
 #### V0.7 (28-Apr-19)
 - Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions

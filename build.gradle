@@ -42,7 +42,7 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V0.8 (unreleased)</h4>
+  <h4>V0.8 (05-May-19)</h4>
     <ul>
       <li>Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).
       <li>Fixed isEmpty() for enumerables and strings and isNull() for object conversions to be applied only if it is the terminal method call as isEmpty() and isNull() return void.
@@ -51,6 +51,7 @@ patchPluginXml {
       <li>Corrected highlighting for many inspections.
       <li>Fixed family names for inspections in batch mode.
       <li>Reworded many inspection messages for better understanding.
+      <li>Added a first version of a new inspection that tries to detect bogus uses of return statements in test methods and replaces them by assumeThat() calls.
     </ul>
   <h4>V0.7 (28-Apr-19)</h4>
     <ul>
