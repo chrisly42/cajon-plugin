@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '0.8'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -42,6 +42,13 @@ intellij {
 
 patchPluginXml {
     changeNotes """
+  <h4>V1.0 (06-May-19)</h4>
+    <ul>
+      <li>First release to be considered stable enough for production use.
+      <li>Fixed a NPE in AssumeThatInsteadOfReturn inspection quickfix for empty else branches.
+      <li>Fixed missing description for AssumeThatInsteadOfReturn inspection.
+      <li>Added new AssertThatCollectionOrMapExpression inspection that tries to pull out methods such as isEmpty() or contains() out of an actual assertThat() expression.
+    </ul>
   <h4>V0.8 (05-May-19)</h4>
     <ul>
       <li>Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).
@@ -52,14 +59,6 @@ patchPluginXml {
       <li>Fixed family names for inspections in batch mode.
       <li>Reworded many inspection messages for better understanding.
       <li>Added a first version of a new inspection that tries to detect bogus uses of return statements in test methods and replaces them by assumeThat() calls.
-    </ul>
-  <h4>V0.7 (28-Apr-19)</h4>
-    <ul>
-      <li>Another fix for AssertThatGuavaOptional inspection regarding using the same family name for slightly different quick fix executions
-          (really, Jetbrains, this sucks for no reason).
-      <li>Extended AssertThatSize inspection to transform hasSize() into hasSameSizeAs(), if possible.
-      <li>Implemented first version of JoinAssertThatStatements inspection that will try to merge assertThat() statements with the same
-          actual object together, preserving comments.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

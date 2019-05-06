@@ -84,6 +84,16 @@ class MethodNames {
         @NonNls
         const val CONTAINS_EXACTLY = "containsExactly"
         @NonNls
+        const val CONTAINS_ALL = "containsAll"
+        @NonNls
+        const val CONTAINS_KEY = "containsKey"
+        @NonNls
+        const val DOES_NOT_CONTAIN_KEY = "doesNotContainKey"
+        @NonNls
+        const val CONTAINS_VALUE = "containsValue"
+        @NonNls
+        const val DOES_NOT_CONTAIN_VALUE = "doesNotContainValue"
+        @NonNls
         const val IS_EQUAL_TO_IC = "isEqualToIgnoringCase"
         @NonNls
         const val IS_NOT_EQUAL_TO_IC = "isNotEqualToIgnoringCase"

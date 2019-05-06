@@ -169,6 +169,31 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
   Analogously with ```isFalse()```.
 
+- AssertThatCollectionOrMapExpression
+
+  Moves collection and map operations inside assertThat() out.
+
+  ```
+  from: assertThat(collection.isEmpty()).isTrue();
+    to: assertThat(collection).isEmpty();
+
+  from: assertThat(collection.contains("foobar")).isTrue();
+    to: assertThat(collection).contains("foobar");
+    
+  from: assertThat(collection.containsAll(otherCollection)).isTrue();
+    to: assertThat(collection).containsAll(otherCollection);
+
+  from: assertThat(map.isEmpty()).isTrue();
+    to: assertThat(map).isEmpty();
+
+  from: assertThat(map.containsKey(key)).isTrue();
+    to: assertThat(map).containsKey(key);
+    
+  from: assertThat(map.containsValue(value)).isTrue();
+    to: assertThat(map).containsValue(value);
+  ```
+  Analogously with ```isFalse()``` (except for containsAll()).
+
 - AssertThatEnumerableIsEmpty
 
   Uses ```isEmpty()``` for ```hasSize(0)``` iterable assertions instead.
@@ -428,9 +453,13 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
     to: assertThat(object).extracting(type::getPropOne, it -> it.propNoGetter, it -> it.getPropTwo().getInnerProp())...
   ```
 
-- Kotlin support (right now, however, with less than 100 downloads after a month, this is unlikely to happen)
-
 ## Changelog
+
+#### V1.0 (06-May-19)
+- First release to be considered stable enough for production use.
+- Fixed a NPE in AssumeThatInsteadOfReturn inspection quickfix for empty else branches.
+- Fixed missing description for AssumeThatInsteadOfReturn inspection.
+- Added new AssertThatCollectionOrMapExpression inspection that tries to pull out methods such as ```isEmpty()``` or ```contains()``` out of an actual assertThat() expression.
 
 #### V0.8 (05-May-19)
 - Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).

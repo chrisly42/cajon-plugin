@@ -23,7 +23,18 @@ val DESCRIBED_AS = CallMatcher.instanceCall(AssertJClassNames.DESCRIPTABLE_INTER
 val WITH_REPRESENTATION_AND_SUCH = CallMatcher.instanceCall(AssertJClassNames.ASSERT_INTERFACE, "withRepresentation", "withThreadDumpOnError")!!
 val USING_COMPARATOR = CallMatcher.instanceCall(AssertJClassNames.ASSERT_INTERFACE, "usingComparator", "usingDefaultComparator")!!
 val IN_HEXADECIMAL_OR_BINARY = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_ASSERT_CLASSNAME, MethodNames.IN_HEXADECIMAL, MethodNames.IN_BINARY)!!
-val EXTENSION_POINTS = CallMatcher.instanceCall(AssertJClassNames.EXTENSION_POINTS_INTERFACE, "is", "isNot", "has", "doesNotHave", "satisfies")!!
+val EXTENSION_POINTS = CallMatcher.instanceCall(
+    AssertJClassNames.EXTENSION_POINTS_INTERFACE,
+    "is", "isNot", "has", "doesNotHave",
+    "satisfies"
+)!!
+val MORE_EXTENSION_POINTS = CallMatcher.instanceCall(
+    AssertJClassNames.OBJECT_ENUMERABLE_ASSERT_INTERFACE,
+    "are", "areNot", "have", "doNotHave",
+    "areAtLeast", "areAtLeastOne", "areAtMost", "areExactly",
+    "haveAtLeastOne", "haveAtLeast", "haveAtMost", "haveExactly",
+    "hasOnlyOneElementSatisfying", "anyMatch", "noneMatch", "anySatisfy", "noneSatisfy"
+)!!
 
 val NOT_ACTUAL_ASSERTIONS = CallMatcher.anyOf(
     ALL_ASSERT_THAT_MATCHERS,

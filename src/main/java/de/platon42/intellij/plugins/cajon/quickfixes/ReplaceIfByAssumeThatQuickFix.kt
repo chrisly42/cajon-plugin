@@ -34,11 +34,13 @@ class ReplaceIfByAssumeThatQuickFix(private val removeElse: Boolean) : AbstractC
             val anchorElement = ifStatement.nextSibling
             if (branchToKeep is PsiBlockStatement) {
                 val codeBlock = branchToKeep.codeBlock
-                val hasDeclarations = codeBlock.statements.any { it is PsiDeclarationStatement }
-                if (hasDeclarations) {
-                    parentBlock.addAfter(branchToKeep, anchorElement)
-                } else {
-                    parentBlock.addRangeAfter(codeBlock.firstBodyElement, codeBlock.lastBodyElement, anchorElement)
+                if (codeBlock.statements.isNotEmpty()) {
+                    val hasDeclarations = codeBlock.statements.any { it is PsiDeclarationStatement }
+                    if (hasDeclarations) {
+                        parentBlock.addAfter(branchToKeep, anchorElement)
+                    } else {
+                        parentBlock.addRangeAfter(codeBlock.firstBodyElement, codeBlock.lastBodyElement, anchorElement)
+                    }
                 }
             } else {
                 parentBlock.addAfter(branchToKeep, anchorElement)

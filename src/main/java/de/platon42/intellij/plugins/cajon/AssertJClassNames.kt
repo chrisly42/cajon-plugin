@@ -14,6 +14,8 @@ class AssertJClassNames {
         const val DESCRIPTABLE_INTERFACE = "org.assertj.core.api.Descriptable"
         @NonNls
         const val EXTENSION_POINTS_INTERFACE = "org.assertj.core.api.ExtensionPoints"
+        @NonNls
+        const val OBJECT_ENUMERABLE_ASSERT_INTERFACE = "org.assertj.core.api.ObjectEnumerableAssert"
 
         @NonNls
         const val ASSERT_INTERFACE = "org.assertj.core.api.Assert"

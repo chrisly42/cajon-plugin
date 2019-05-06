@@ -133,6 +133,7 @@ fun PsiExpression.getAllTheSameExpectedBooleanConstants(): Boolean? {
         } else {
             val isNotConstant = CallMatcher.anyOf(
                 EXTENSION_POINTS,
+                MORE_EXTENSION_POINTS,
                 AbstractAssertJInspection.IS_EQUAL_TO_BOOLEAN,
                 AbstractAssertJInspection.IS_EQUAL_TO_OBJECT,
                 AbstractAssertJInspection.IS_NOT_EQUAL_TO_BOOLEAN,

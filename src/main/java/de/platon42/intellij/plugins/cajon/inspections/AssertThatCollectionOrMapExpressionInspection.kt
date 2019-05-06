@@ -6,38 +6,34 @@ import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.quickfixes.MoveOutMethodCallExpressionQuickFix
 
-class AssertThatStringExpressionInspection : AbstractAssertJInspection() {
+class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection() {
 
     companion object {
-        private const val DISPLAY_NAME = "Asserting a string specific expression"
+        private const val DISPLAY_NAME = "Asserting a collection or map specific expression"
 
         private val MAPPINGS = listOf(
             Mapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "isEmpty").parameterCount(0),
+                CallMatcher.anyOf(
+                    CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, "isEmpty").parameterCount(0),
+                    CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, "isEmpty").parameterCount(0)
+                ),
                 MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY
             ),
             Mapping(
-                CallMatcher.anyOf(
-                    CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "equals").parameterCount(1),
-                    CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "contentEquals").parameterCount(1)
-                ),
-                MethodNames.IS_EQUAL_TO, MethodNames.IS_NOT_EQUAL_TO
-            ),
-            Mapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "equalsIgnoreCase").parameterTypes(CommonClassNames.JAVA_LANG_STRING),
-                MethodNames.IS_EQUAL_TO_IC, MethodNames.IS_NOT_EQUAL_TO_IC
-            ),
-            Mapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "contains").parameterCount(1),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, "contains").parameterCount(1),
                 MethodNames.CONTAINS, MethodNames.DOES_NOT_CONTAIN
             ),
             Mapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "startsWith").parameterTypes(CommonClassNames.JAVA_LANG_STRING),
-                MethodNames.STARTS_WITH, MethodNames.DOES_NOT_START_WITH
+                CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, "containsAll").parameterCount(1),
+                MethodNames.CONTAINS_ALL, null
             ),
             Mapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "endsWith").parameterTypes(CommonClassNames.JAVA_LANG_STRING),
-                MethodNames.ENDS_WITH, MethodNames.DOES_NOT_END_WITH
+                CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, "containsKey").parameterCount(1),
+                MethodNames.CONTAINS_KEY, MethodNames.DOES_NOT_CONTAIN_KEY
+            ),
+            Mapping(
+                CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, "containsValue").parameterCount(1),
+                MethodNames.CONTAINS_VALUE, MethodNames.DOES_NOT_CONTAIN_VALUE
             )
         )
     }
@@ -61,7 +57,7 @@ class AssertThatStringExpressionInspection : AbstractAssertJInspection() {
                 val expectedCallExpression = statement.findOutmostMethodCall() ?: return
                 val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return
 
-                val replacementMethod = if (expectedResult) mapping.replacementForTrue else mapping.replacementForFalse
+                val replacementMethod = if (expectedResult) mapping.replacementForTrue else mapping.replacementForFalse ?: return
                 registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, replacementMethod, ::MoveOutMethodCallExpressionQuickFix)
             }
         }
@@ -70,6 +66,6 @@ class AssertThatStringExpressionInspection : AbstractAssertJInspection() {
     private class Mapping(
         val callMatcher: CallMatcher,
         val replacementForTrue: String,
-        val replacementForFalse: String
+        val replacementForFalse: String?
     )
 }

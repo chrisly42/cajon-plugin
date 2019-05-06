@@ -38,6 +38,13 @@ public class AssumeThat {
         assertThat(foobar).isNotEmpty();
     }
 
+    @org.junit.jupiter.api.Test
+    public void junit5_return_with_empty_else_block() {
+        String foobar = System.getProperty("car_manufacturer");
+        assumeThat(foobar.equals("Volkswagen")).isFalse();
+        assertThat(foobar).isNotEmpty();
+    }
+
     @org.junit.jupiter.api.TestTemplate
     public void junit5_return_inside_recursion_with_comments() {
         String foobar = System.getProperty("car_manufacturer");

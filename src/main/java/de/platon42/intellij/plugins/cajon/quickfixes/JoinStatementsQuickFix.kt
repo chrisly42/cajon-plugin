@@ -19,20 +19,20 @@ class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
         do {
             val commentsToKeep = ArrayList<PsiComment>()
             val stuffToDelete = ArrayList<PsiElement>()
-            var previousStatement = lastStatement.prevSibling ?: throw IllegalStateException("Internal error")
+            var previousStatement = lastStatement.prevSibling!!
             while (previousStatement !is PsiExpressionStatement) {
                 if (previousStatement is PsiComment) {
                     commentsToKeep.add(previousStatement.copy() as PsiComment)
                 }
                 stuffToDelete.add(previousStatement)
-                previousStatement = previousStatement.prevSibling ?: throw IllegalStateException("Internal error")
+                previousStatement = previousStatement.prevSibling!!
             }
             stuffToDelete.forEach { if (it.isValid) it.delete() }
 
             val statementComments = PsiTreeUtil.getChildrenOfAnyType(previousStatement, PsiComment::class.java)
             commentsToKeep.addAll(statementComments)
 
-            val assertThatCallOfCursorStatement = lastStatement.findStaticMethodCall() ?: throw IllegalStateException("Internal error")
+            val assertThatCallOfCursorStatement = lastStatement.findStaticMethodCall()!!
 
             val lastElementBeforeConcat = assertThatCallOfCursorStatement.parent
             commentsToKeep.forEach {
