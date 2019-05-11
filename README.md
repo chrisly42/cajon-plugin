@@ -81,8 +81,9 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
         assertThat(expected).anotherCondition();
     to: assertThat(expected).someCondition().anotherCondition();
   ```
-  Joining will work on actual expressions inside assertThat() that are equivalent expressions,
-  except for method calls with known side-effect methods such as ```Iterator.next()``` -- please notify me about others.
+  Joining will work on actual expressions inside ```assertThat()``` that are equivalent expressions,
+  except for method calls with known side-effect methods such as ```Iterator.next()``` and
+  pre/post-increment/decrement operations -- please notify me about others.
 
   The comments of the statements will be preserved. When using ```.extracting()``` or similar, the statements will not be merged.
 
@@ -145,7 +146,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatStringExpression
   
-  Moves string operations inside assertThat() out.
+  Moves string operations inside ```assertThat()``` out.
   
   ```
   from: assertThat(stringActual.isEmpty()).isTrue();
@@ -171,7 +172,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatCollectionOrMapExpression
 
-  Moves collection and map operations inside assertThat() out.
+  Moves collection and map operations inside ```assertThat()``` out.
 
   ```
   from: assertThat(collection.isEmpty()).isTrue();
@@ -192,7 +193,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(map.containsValue(value)).isTrue();
     to: assertThat(map).containsValue(value);
   ```
-  Analogously with ```isFalse()``` (except for containsAll()).
+  Analogously with ```isFalse()``` (except for ```containsAll()```).
 
 - AssertThatEnumerableIsEmpty
 
@@ -279,7 +280,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatJava8Optional
 
-  Examines the statement for Java 8 Optional type and whether the statement
+  Examines the statement for Java 8 ```Optional``` type and whether the statement
   effectively tries to assert the presence, absence or content and then 
   replaces the statement by better assertions.
   
@@ -313,7 +314,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatGuavaOptional
 
-  Examines the statement for Google Guava Optional type and whether the statement
+  Examines the statement for Google Guava ```Optional``` type and whether the statement
   effectively tries to assert the presence, absence or content and then 
   replaces the statement by better assertions.
 
@@ -444,9 +445,11 @@ Cajon is written in Kotlin 1.3.
 
 Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one that I'm aware of ;) ).
 The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and it took me quite a while to make it work with JUnit 5.
-Feel free to use the code (in package de.platon42.intellij.jupiter) for your projects (with attribution).
+Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for your projects (with attribution).
 
 ## Planned features
+- Joining .contains() expressions
+- Removing .isPresent().contains() combinations for Optionals
 - Extraction with property names to lambda with Java 8
   ```
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
@@ -455,11 +458,14 @@ Feel free to use the code (in package de.platon42.intellij.jupiter) for your pro
 
 ## Changelog
 
+#### V1.1 (unreleased)
+- Improved JoinAssertThatStatements detection of expressions with side-effects and added pre/post-increment/decrement detection.
+
 #### V1.0 (06-May-19)
 - First release to be considered stable enough for production use.
 - Fixed a NPE in AssumeThatInsteadOfReturn inspection quickfix for empty else branches.
 - Fixed missing description for AssumeThatInsteadOfReturn inspection.
-- Added new AssertThatCollectionOrMapExpression inspection that tries to pull out methods such as ```isEmpty()``` or ```contains()``` out of an actual assertThat() expression.
+- Added new AssertThatCollectionOrMapExpression inspection that tries to pull out methods such as ```isEmpty()``` or ```contains()``` out of an actual ```assertThat()``` expression.
 
 #### V0.8 (05-May-19)
 - Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).

@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '1.0'
+version '1.1'
 
 repositories {
     mavenCentral()
@@ -42,23 +42,16 @@ intellij {
 
 patchPluginXml {
     changeNotes """
+  <h4>V1.1 (unreleased)</h4>
+    <ul>
+      <li>Improved JoinAssertThatStatements detection of expressions with side-effects and added pre/post-increment/decrement detection.
+    </ul>
   <h4>V1.0 (06-May-19)</h4>
     <ul>
       <li>First release to be considered stable enough for production use.
       <li>Fixed a NPE in AssumeThatInsteadOfReturn inspection quickfix for empty else branches.
       <li>Fixed missing description for AssumeThatInsteadOfReturn inspection.
       <li>Added new AssertThatCollectionOrMapExpression inspection that tries to pull out methods such as isEmpty() or contains() out of an actual assertThat() expression.
-    </ul>
-  <h4>V0.8 (05-May-19)</h4>
-    <ul>
-      <li>Fixed missing description for JoinAssertThatStatements and detection of equivalent expressions (sorry, released it too hastily).
-      <li>Fixed isEmpty() for enumerables and strings and isNull() for object conversions to be applied only if it is the terminal method call as isEmpty() and isNull() return void.
-      <li>Heavily reworked inspections for edge cases, such as multiple isEqualTo() calls inside a single statement.
-      <li>Some inspections could generate bogus code for weird situations, this has been made more fool-proof.
-      <li>Corrected highlighting for many inspections.
-      <li>Fixed family names for inspections in batch mode.
-      <li>Reworded many inspection messages for better understanding.
-      <li>Added a first version of a new inspection that tries to detect bogus uses of return statements in test methods and replaces them by assumeThat() calls.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

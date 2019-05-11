@@ -50,5 +50,14 @@ public class JoinStatements {
         assertThat(iterator.next()).isEqualTo("bar");
         assertThat(iterator.next().toLowerCase()).isEqualTo("foo");
         assertThat(iterator.next().toLowerCase()).isEqualTo("bar");
+        assertThat(iterator.next() + "bar").isEqualTo("foobar");
+        assertThat(iterator.next() + "bar").isEqualTo("barbar");
+        int i = 0;
+        assertThat(++i).isEqualTo(1);
+        assertThat(++i).isEqualTo(2);
+        assertThat(list.get(i++).toLowerCase()).isEqualTo("foo");
+        assertThat(list.get(i++).toLowerCase()).isEqualTo("foo");
+        assertThat(list.get(--i)).isEqualTo("foo");
+        assertThat(list.get(--i)).isEqualTo("foo");
     }
 }

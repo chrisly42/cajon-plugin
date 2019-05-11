@@ -35,16 +35,9 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                         reset = (lastActualExpression == null)
                         actualExpression = assertThatCall.firstArg
                         if (!reset) {
-                            val isSame = when (actualExpression) {
-                                is PsiMethodCallExpression -> equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)
-                                        // Note: replace with PsiTreeUtil.findChildrenOfAnyType(strict = false) for IDEA >= 2018.1
-                                        && !KNOWN_METHODS_WITH_SIDE_EFFECTS.test(actualExpression)
-                                        && PsiTreeUtil.findChildrenOfAnyType(
-                                    actualExpression,
-                                    PsiMethodCallExpression::class.java
-                                ).none { KNOWN_METHODS_WITH_SIDE_EFFECTS.test(it) }
-                                else -> equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)
-                            }
+                            val isSame = equivalenceChecker.expressionsAreEquivalent(actualExpression, lastActualExpression)
+                                    && !hasExpressionWithSideEffects(actualExpression)
+
                             if (isSame) {
                                 sameCount++
                                 lastStatement = statement
@@ -77,6 +70,25 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                     return assertThatCall?.takeIf { it.findFluentCallTo(EXTRACTING_CALL_MATCHERS) == null }
                 }
                 return null
+            }
+
+            private fun hasExpressionWithSideEffects(actualExpression: PsiExpression): Boolean {
+                var result = false
+                PsiTreeUtil.processElements(actualExpression) { element ->
+                    val matched = when (element) {
+                        is PsiUnaryExpression -> (element.operationTokenType == JavaTokenType.PLUSPLUS)
+                                || (element.operationTokenType == JavaTokenType.MINUSMINUS)
+                        is PsiMethodCallExpression -> KNOWN_METHODS_WITH_SIDE_EFFECTS.test(element)
+                        else -> false
+                    }
+                    if (matched) {
+                        result = true
+                        false
+                    } else {
+                        true
+                    }
+                }
+                return result
             }
         }
     }
