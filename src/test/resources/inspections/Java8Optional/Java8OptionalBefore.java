@@ -24,6 +24,11 @@ public class Java8Optional {
         assertThat(opt.get()).isNotEqualTo("foo");
         assertThat(opt.get()).isNotSameAs("foo");
 
+        assertThat(opt.orElse(null)).as("foo").isEqualTo(null);
+        assertThat(opt.orElse(null)).isNull();
+        assertThat(opt.orElse(null)).isNotEqualTo(null);
+        assertThat(opt.orElse(null)).isNotNull();
+
         assertThat(opt).as("foo").isEqualTo(Optional.of("foo"));
         assertThat(opt).isEqualTo(Optional.ofNullable("foo"));
         assertThat(opt).isNotEqualTo(Optional.of("foo"));
@@ -36,5 +41,7 @@ public class Java8Optional {
         assertThat(opt.isPresent()).as("foo").isEqualTo(false).as("bar").isTrue();
 
         assertThat(opt.get()).isEqualTo("foo").isSameAs("foo").isNotEqualTo("foo").isNotSameAs("foo");
+
+        assertThat(opt.orElse("foo")).as("foo").isEqualTo(null);
     }
 }

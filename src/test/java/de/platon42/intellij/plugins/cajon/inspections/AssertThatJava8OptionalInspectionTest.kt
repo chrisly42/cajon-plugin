@@ -16,6 +16,8 @@ internal class AssertThatJava8OptionalInspectionTest : AbstractCajonTest() {
             myFixture.configureByFile("Java8OptionalBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove isPresent() of actual expression and use assertThat().isPresent() instead"), 6)
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove isPresent() of actual expression and use assertThat().isNotPresent() instead"), 5)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove orElse() of actual expression and use assertThat().isPresent() instead"), 2)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove orElse() of actual expression and use assertThat().isNotPresent() instead"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().contains() instead"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().containsSame() instead"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isNotPresent()"), 1)

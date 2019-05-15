@@ -265,7 +265,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(primActual).isEqualTo(primExpected);
 
   from: assertThat(10 < primActual).isNotEqualTo(false);
-    to: assertThat(primActual).isGreaterThan(primExpected);
+    to: assertThat(primActual).isGreaterThan(10);
 
   from: assertThat(objActual != objExpected).isEqualTo(true);
     to: assertThat(objActual).isNotSameAs(objExpected);
@@ -301,6 +301,12 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(opt.get()).isSameAs("foo");
     to: assertThat(opt).containsSame("foo"); 
 
+  from: assertThat(opt.orElse(null)).isEqualTo(null);
+    to: assertThat(opt).isNotPresent();
+     
+  from: assertThat(opt.orElse(null)).isNotEqualTo(null);
+    to: assertThat(opt).isPresent();
+     
   from: assertThat(opt).isEqualTo(Optional.of("foo"));
   from: assertThat(opt).isEqualTo(Optional.ofNullable("foo"));
     to: assertThat(opt).contains("foo"); 
@@ -331,6 +337,12 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     
   from: assertThat(opt.get()).isEqualTo("foo");
     to: assertThat(opt).contains("foo");
+     
+  from: assertThat(opt.orNull()).isEqualTo(null);
+    to: assertThat(opt).isAbsent();
+     
+  from: assertThat(opt.orNull()).isNotEqualTo(null);
+    to: assertThat(opt).isPresent();
      
   from: assertThat(opt).isEqualTo(Optional.of("foo"));
   from: assertThat(opt).isEqualTo(Optional.fromNullable("foo"));
@@ -436,8 +448,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   .flatExtracting(Extractors.resultOf("bareMethod")
   ```
   Works on both POJOs and ```Iterable```s/```Array```s. 
-  Implementation is very basic though and does not work with fancy cascaded .extracting() sequences.
-  If there's demand, I will add it.
+  Implementation is very basic though and does not work with fancy cascaded ```.extracting()``` sequences.
+  If there's demand, I could add it.
 
 ## Development notice
 
@@ -450,6 +462,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 ## Planned features
 - Joining .contains() expressions
 - Removing .isPresent().contains() combinations for Optionals
+- Converting ```foo.compareTo(bar) == 0``` to ```isEqualTo()``` (yes, I've *really* seen code like that)
 - Extraction with property names to lambda with Java 8
   ```
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
@@ -460,6 +473,8 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 #### V1.1 (unreleased)
 - Improved JoinAssertThatStatements detection of expressions with side-effects and added pre/post-increment/decrement detection.
+- Added Guava Optional ```opt.orNull() == null``` case. You know, I'm not making this stuff up, people actually write this kind of code.
+- Added Java 8 Optional ```opt.orElse(null) == null``` case, too.
 
 #### V1.0 (06-May-19)
 - First release to be considered stable enough for production use.

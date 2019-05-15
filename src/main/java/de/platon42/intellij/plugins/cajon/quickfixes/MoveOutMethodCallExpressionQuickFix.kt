@@ -5,7 +5,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiMethodCallExpression
 import de.platon42.intellij.plugins.cajon.*
 
-class MoveOutMethodCallExpressionQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
+class MoveOutMethodCallExpressionQuickFix(
+    description: String,
+    private val replacementMethod: String,
+    private val useNullNonNull: Boolean = false,
+    private val noExpectedExpression: Boolean = false
+) :
+    AbstractCommonQuickFix(description) {
 
     companion object {
         private const val REMOVE_ACTUAL_EXPRESSION_DESCRIPTION = "Move method calls in actual expressions out of assertThat()"
@@ -19,10 +25,10 @@ class MoveOutMethodCallExpressionQuickFix(description: String, private val repla
         val outmostCallExpression = descriptor.startElement as? PsiMethodCallExpression ?: return
         val assertThatMethodCall = outmostCallExpression.findStaticMethodCall() ?: return
         val assertExpression = assertThatMethodCall.firstArg as? PsiMethodCallExpression ?: return
-        val assertExpressionArg = assertExpression.getArgOrNull(0)?.copy()
+        val assertExpressionArg = if (noExpectedExpression) null else assertExpression.getArgOrNull(0)?.copy()
 
         val methodsToFix = assertThatMethodCall.collectMethodCallsUpToStatement()
-            .filter { it.getExpectedBooleanResult() != null }
+            .filter { (if (useNullNonNull) it.getExpectedNullNonNullResult() else it.getExpectedBooleanResult()) != null }
             .toList()
 
         assertExpression.replace(assertExpression.qualifierExpression)

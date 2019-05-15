@@ -35,7 +35,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.1.1'
+    version '2019.1.2'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
 }
@@ -45,6 +45,8 @@ patchPluginXml {
   <h4>V1.1 (unreleased)</h4>
     <ul>
       <li>Improved JoinAssertThatStatements detection of expressions with side-effects and added pre/post-increment/decrement detection.
+      <li>Added Guava Optional opt.orNull() == null case. You know, I'm not making this stuff up, people actually write this kind of code.
+      <li>Added Java 8 Optional opt.orElse(null) == null case, too.
     </ul>
   <h4>V1.0 (06-May-19)</h4>
     <ul>

@@ -1,10 +1,7 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.JavaElementVisitor
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiExpressionStatement
-import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.*
 import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.quickfixes.MoveOutMethodCallExpressionQuickFix
@@ -49,6 +46,12 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
                     val replacementMethod = expectedPresence.map(MethodNames.IS_PRESENT, MethodNames.IS_NOT_PRESENT)
                     registerMoveOutMethod(holder, outmostMethodCall, actualExpression, replacementMethod) { desc, method ->
                         MoveOutMethodCallExpressionQuickFix(desc, method)
+                    }
+                } else if (OPTIONAL_OR_ELSE.test(actualExpression) && (actualExpression.firstArg.type == PsiType.NULL)) {
+                    val expectedPresence = outmostMethodCall.getAllTheSameNullNotNullConstants() ?: return
+                    val replacementMethod = expectedPresence.map(MethodNames.IS_PRESENT, MethodNames.IS_NOT_PRESENT)
+                    registerMoveOutMethod(holder, outmostMethodCall, actualExpression, replacementMethod) { desc, method ->
+                        MoveOutMethodCallExpressionQuickFix(desc, method, useNullNonNull = true, noExpectedExpression = true)
                     }
                 }
             }

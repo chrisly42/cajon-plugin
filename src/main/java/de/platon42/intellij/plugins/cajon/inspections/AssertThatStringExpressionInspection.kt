@@ -62,7 +62,9 @@ class AssertThatStringExpressionInspection : AbstractAssertJInspection() {
                 val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return
 
                 val replacementMethod = if (expectedResult) mapping.replacementForTrue else mapping.replacementForFalse
-                registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, replacementMethod, ::MoveOutMethodCallExpressionQuickFix)
+                registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, replacementMethod) { desc, method ->
+                    MoveOutMethodCallExpressionQuickFix(desc, method)
+                }
             }
         }
     }

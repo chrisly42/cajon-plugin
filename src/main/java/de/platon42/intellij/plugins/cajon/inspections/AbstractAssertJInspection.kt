@@ -93,6 +93,11 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val IS_NOT_SAME_AS_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_SAME_AS)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
 
+        val IS_NULL = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NULL)
+            .parameterCount(0)!!
+        val IS_NOT_NULL = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_NULL)
+            .parameterCount(0)!!
+
         val HAS_SIZE = CallMatcher.instanceCall(ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME, MethodNames.HAS_SIZE)
             .parameterTypes("int")!!
 
@@ -129,6 +134,8 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
             .parameterCount(0)!!
         val OPTIONAL_IS_PRESENT = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_OPTIONAL, "isPresent")
             .parameterCount(0)!!
+        val OPTIONAL_OR_ELSE = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_OPTIONAL, "orElse")
+            .parameterCount(1)!!
 
         val OPTIONAL_OF = CallMatcher.staticCall(CommonClassNames.JAVA_UTIL_OPTIONAL, "of")
             .parameterCount(1)!!
@@ -140,6 +147,8 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val GUAVA_OPTIONAL_GET = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, "get")
             .parameterCount(0)!!
         val GUAVA_OPTIONAL_IS_PRESENT = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, "isPresent")
+            .parameterCount(0)!!
+        val GUAVA_OPTIONAL_OR_NULL = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, "orNull")
             .parameterCount(0)!!
 
         val GUAVA_OPTIONAL_OF = CallMatcher.staticCall(GUAVA_OPTIONAL_CLASSNAME, "of")

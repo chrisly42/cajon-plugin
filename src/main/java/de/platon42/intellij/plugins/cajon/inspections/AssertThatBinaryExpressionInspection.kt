@@ -36,7 +36,9 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
                 val assertThatArgument = staticMethodCall.firstArg
                 if (assertThatArgument is PsiMethodCallExpression && OBJECT_EQUALS.test(assertThatArgument)) {
                     val replacementMethod = expectedResult.map(MethodNames.IS_EQUAL_TO, MethodNames.IS_NOT_EQUAL_TO)
-                    registerSplitMethod(holder, expectedCallExpression, "${MethodNames.EQUALS}()", replacementMethod, ::MoveOutMethodCallExpressionQuickFix)
+                    registerSplitMethod(holder, expectedCallExpression, "${MethodNames.EQUALS}()", replacementMethod) { desc, method ->
+                        MoveOutMethodCallExpressionQuickFix(desc, method)
+                    }
                     return
                 }
 

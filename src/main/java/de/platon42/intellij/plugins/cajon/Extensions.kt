@@ -100,6 +100,21 @@ fun PsiMethodCallExpression.getExpectedBooleanResult(): Boolean? {
     return null
 }
 
+fun PsiMethodCallExpression.getExpectedNullNonNullResult(): Boolean? {
+    val isNull = AbstractAssertJInspection.IS_NULL.test(this)
+    val isNotNull = AbstractAssertJInspection.IS_NOT_NULL.test(this)
+    if (isNull || isNotNull) {
+        return isNotNull
+    } else {
+        val isEqualTo = AbstractAssertJInspection.IS_EQUAL_TO_OBJECT.test(this)
+        val isNotEqualTo = AbstractAssertJInspection.IS_NOT_EQUAL_TO_OBJECT.test(this)
+        if ((isEqualTo || isNotEqualTo) && firstArg.type == PsiType.NULL) {
+            return isNotEqualTo
+        }
+    }
+    return null
+}
+
 fun PsiMethodCallExpression.calculateConstantParameterValue(argIndex: Int): Any? {
     if (argIndex >= argumentList.expressions.size) return null
     val valueExpression = getArg(argIndex)
@@ -137,6 +152,33 @@ fun PsiExpression.getAllTheSameExpectedBooleanConstants(): Boolean? {
                 AbstractAssertJInspection.IS_EQUAL_TO_BOOLEAN,
                 AbstractAssertJInspection.IS_EQUAL_TO_OBJECT,
                 AbstractAssertJInspection.IS_NOT_EQUAL_TO_BOOLEAN,
+                AbstractAssertJInspection.IS_NOT_EQUAL_TO_OBJECT
+            ).test(methodCall)
+            if (isNotConstant) {
+                return null
+            }
+        }
+    }
+    return lockedResult
+}
+
+fun PsiExpression.getAllTheSameNullNotNullConstants(): Boolean? {
+    val assertThatMethodCall = findStaticMethodCall() ?: return null
+    var lockedResult: Boolean? = null
+    val methodsToView = generateSequence(assertThatMethodCall) { PsiTreeUtil.getParentOfType(it, PsiMethodCallExpression::class.java) }
+
+    for (methodCall in methodsToView) {
+        val expectedResult = methodCall.getExpectedNullNonNullResult()
+        if (expectedResult != null) {
+            if ((lockedResult != null) && (lockedResult != expectedResult)) {
+                return null
+            }
+            lockedResult = expectedResult
+        } else {
+            val isNotConstant = CallMatcher.anyOf(
+                EXTENSION_POINTS,
+                MORE_EXTENSION_POINTS,
+                AbstractAssertJInspection.IS_EQUAL_TO_OBJECT,
                 AbstractAssertJInspection.IS_NOT_EQUAL_TO_OBJECT
             ).test(methodCall)
             if (isNotConstant) {

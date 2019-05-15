@@ -51,6 +51,15 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
                             ForGuavaPostFix.REPLACE_BY_GUAVA_ASSERT_THAT_AND_STATIC_IMPORT
                         )
                     }
+                } else if (GUAVA_OPTIONAL_OR_NULL.test(actualExpression)) {
+                    val expectedPresence = outmostMethodCall.getAllTheSameNullNotNullConstants() ?: return
+                    val replacementMethod = expectedPresence.map(MethodNames.IS_PRESENT, MethodNames.IS_ABSENT)
+                    registerMoveOutMethod(holder, outmostMethodCall, actualExpression, replacementMethod) { desc, method ->
+                        QuickFixWithPostfixDelegate(
+                            MoveOutMethodCallExpressionQuickFix(desc, method, useNullNonNull = true),
+                            ForGuavaPostFix.REPLACE_BY_GUAVA_ASSERT_THAT_AND_STATIC_IMPORT
+                        )
+                    }
                 }
             }
 

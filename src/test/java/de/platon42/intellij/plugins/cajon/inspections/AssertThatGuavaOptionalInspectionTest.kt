@@ -19,6 +19,8 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
             myFixture.configureByFile("GuavaOptionalBefore.java")
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove isPresent() of actual expression and use assertThat().isPresent() instead"), 6)
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove isPresent() of actual expression and use assertThat().isAbsent() instead"), 5)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove orNull() of actual expression and use assertThat().isPresent() instead"), 2)
+            executeQuickFixes(myFixture, Regex.fromLiteral("Remove orNull() of actual expression and use assertThat().isAbsent() instead"), 2)
             executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().contains() instead"), 1)
             executeQuickFixes(myFixture, Regex.fromLiteral("Unwrap expected expression and replace isEqualTo() with contains()"), 6)
             executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with Guava assertThat().isAbsent()"), 3)

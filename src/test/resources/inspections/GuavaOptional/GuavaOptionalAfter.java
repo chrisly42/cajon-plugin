@@ -25,6 +25,11 @@ public class GuavaOptional {
         assertThat(opt.get()).isNotEqualTo("foo");
         assertThat(opt.get()).isNotSameAs("foo");
 
+        assertThat(opt).as("foo").isAbsent();
+        assertThat(opt).isAbsent();
+        assertThat(opt).isPresent();
+        assertThat(opt).isPresent();
+
         assertThat(opt).as("foo").contains("foo");
         assertThat(opt).contains("foo");
         assertThat(opt).isNotEqualTo(Optional.of("foo"));
