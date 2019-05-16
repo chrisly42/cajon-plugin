@@ -372,8 +372,11 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   
   Currently, the quickfix may lose some comments during operation. The other branch of the ```if``` statement
   will be inlined (blocks with declarations will remain a code block due to variable scope).
+  The quickfix will only work with AssertJ >= 2.9.0 (for 2.x releases) or >= 3.9.0 (for 3.x releases).
   
-  The generated ```assumeThat()``` statement could be optimized further (similar to ```assertThat()```).
+  The generated ```assumeThat()``` statement could be optimized further (similar to ```assertThat()```), but
+  there is currently no support in Cajon for this (you could rename the method to ```assertThat()``` optimize it
+  and turn it back into ```assumeThat()``` in the end).
 
   Example:
   
