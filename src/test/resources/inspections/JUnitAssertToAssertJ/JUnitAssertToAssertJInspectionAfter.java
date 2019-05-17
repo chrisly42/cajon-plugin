@@ -1,12 +1,18 @@
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.assertj.core.data.Offset.offset;
 import static org.junit.Assert.*;
+import static org.junit.Assume.*;
 
 public class JUnitAssertToAssertJ {
 
     private void jUnitAssertToAssertJ() {
         String foo = "foo";
         String bar = "bar";
+        int someInt = 1;
+        double someDouble = 1.0;
+        float someFloat = 1.0f;
+
         assertThat(foo == "foo").isTrue();
         assertThat(foo == "foo").as("oh no!").isTrue();
         assertThat(foo == "bar").isFalse();
@@ -52,5 +58,35 @@ public class JUnitAssertToAssertJ {
         assertThat(new double[1]).as("array equals").containsExactly(new double[2], offset(1.0));
         assertThat(new float[1]).containsExactly(new float[2], offset(1.0f));
         assertThat(new float[1]).as("array equals").containsExactly(new float[2], offset(1.0f));
+
+        assertThat(foo).isEqualTo("bar");
+        assertThat(bar).as("equals").isEqualTo("foo");
+        assertThat(bar).isNotEqualTo("foo");
+        assertThat(foo).as("equals").isNotEqualTo("bar");
+
+        assertThat(someInt).isEqualTo(2);
+        assertThat(someDouble).isCloseTo(2.0, offset(0.1));
+        assertThat(someDouble).as("equals").isEqualTo(1.0);
+        assertThat(someDouble).as("equals").isCloseTo(1.0, offset(0.1));
+        assertThat(someFloat).isEqualTo(1.0f);
+        assertThat(someFloat).isCloseTo(2.0f, offset(0.1f));
+
+        fail();
+        fail("oh no!")
+    }
+
+    private void jUnitAssumeToAssertJ() {
+        String foo = "foo";
+        String bar = "bar";
+        assumeThat(foo == "foo").isTrue();
+        assumeThat(foo == "foo").as("oh no!").isTrue();
+        assumeThat(foo == "bar").isFalse();
+        assumeThat(foo == "bar").as("boom!").isFalse();
+
+        assumeThat(foo).isNotNull();
+        assumeNotNull(foo, bar);
+
+        assumeThat(new IllegalArgumentException()).doesNotThrowAnyException();
+        assumeThat(new IllegalArgumentException()).as("oh no!").doesNotThrowAnyException();
     }
 }

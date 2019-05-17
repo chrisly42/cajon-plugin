@@ -9,6 +9,8 @@ open class AbstractJUnitAssertInspection : AbstractBaseJavaLocalInspectionTool()
     companion object {
         @NonNls
         const val JUNIT_ASSERT_CLASSNAME = "org.junit.Assert"
+        @NonNls
+        const val JUNIT_ASSUME_CLASSNAME = "org.junit.Assume"
 
         @NonNls
         const val ASSERT_TRUE_METHOD = "assertTrue"
@@ -28,6 +30,16 @@ open class AbstractJUnitAssertInspection : AbstractBaseJavaLocalInspectionTool()
         const val ASSERT_NOT_SAME_METHOD = "assertNotSame"
         @NonNls
         const val ASSERT_ARRAY_EQUALS_METHOD = "assertArrayEquals"
+
+        @NonNls
+        const val ASSUME_TRUE_METHOD = "assumeTrue"
+        @NonNls
+        const val ASSUME_FALSE_METHOD = "assumeFalse"
+        @NonNls
+        const val ASSUME_NOT_NULL_METHOD = "assumeNotNull"
+        @NonNls
+        const val ASSUME_NO_EXCEPTION = "assumeNoException"
+
     }
 
     override fun getGroupDisplayName(): String {

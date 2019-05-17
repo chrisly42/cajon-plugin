@@ -18,6 +18,10 @@ fun createAssertThat(context: PsiElement, baseclass: String, actualExpression: P
     return createMethodCall(context, "$baseclass.${MethodNames.ASSERT_THAT}", actualExpression)
 }
 
+fun createAssumeThat(context: PsiElement, actualExpression: PsiExpression): PsiMethodCallExpression {
+    return createMethodCall(context, "${AssertJClassNames.ASSUMPTIONS_CLASSNAME}.${MethodNames.ASSUME_THAT}", actualExpression)
+}
+
 fun createExpectedMethodCall(context: PsiElement, methodName: String, vararg arguments: PsiElement): PsiMethodCallExpression {
     return createMethodCall(context, "a.$methodName", *arguments)
 }

@@ -24,7 +24,7 @@ class ReplaceJUnitAssertMethodCallQuickFix(description: String, private val repl
         val args = methodCallExpression.argumentList
         val count = args.expressions.size
         val actualExpression = args.expressions[count - 1] ?: return
-        val (expectedExpression, messageExpression) = if (noExpectedExpression) {
+        val (expectedExpressions, messageExpression) = if (noExpectedExpression) {
             val message = args.expressions.getOrNull(count - 2)
             emptyArray<PsiExpression>() to message
         } else {
@@ -33,8 +33,15 @@ class ReplaceJUnitAssertMethodCallQuickFix(description: String, private val repl
             arrayOf(expected) to message
         }
 
-        val expectedMethodCall = createExpectedMethodCall(element, replacementMethod, *expectedExpression)
-        val newMethodCall = createAssertThat(element, actualExpression)
+        val swapActualAndExpected = ((expectedExpressions.getOrNull(0)?.calculateConstantValue() == null)
+                && (actualExpression.calculateConstantValue() != null))
+        val (expectedMethodCall, newMethodCall) = if (swapActualAndExpected) {
+            createExpectedMethodCall(element, replacementMethod, actualExpression) to
+                    createAssertThat(element, expectedExpressions.single())
+        } else {
+            createExpectedMethodCall(element, replacementMethod, *expectedExpressions) to
+                    createAssertThat(element, actualExpression)
+        }
 
         if (messageExpression != null) {
             val asExpression = createExpectedMethodCall(element, MethodNames.AS, messageExpression)

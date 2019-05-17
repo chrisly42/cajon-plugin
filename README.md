@@ -85,7 +85,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   except for method calls with known side-effect methods such as ```Iterator.next()``` and
   pre/post-increment/decrement operations -- please notify me about others.
 
-  The comments of the statements will be preserved. When using ```.extracting()``` or similar, the statements will not be merged.
+  The comments of the statements will be preserved. When using ```extracting()``` or similar,
+  the statements will not be merged.
 
 - AssertThatObjectIsNullOrNotNull
 
@@ -366,7 +367,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   as being skipped.
 
   Return statements in ```if``` statements in main test methods (must be annotated with JUnit 4 or 
-  Jupiter @Test annotations) will be verified to have at least one ```assertThat()``` statement in the code flow.
+  Jupiter ```@Test``` annotations) will be verified to have at least one ```assertThat()``` statement in the code flow.
   Method calls within the same class will be examined for ```assertThat()``` statements, too.
   However, at most 50 statements and down to five recursions will be tolerated before giving up.
   
@@ -402,7 +403,10 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - JUnitAssertToAssertJ
 
-  Tries to convert most of the JUnit 4 assertions to AssertJ format.
+  Tries to convert most of the JUnit 4 assertions and assumptions to AssertJ format.
+  Sometimes the expected and actual expressions are specified in wrong order -- 
+  Cajon tries to swap these when it detects the supposed actual expression to be a
+  constant while the expected one is not.
 
   Does not support Hamcrest-Matchers.
   If you need that kind of conversion, you might want to check out the
@@ -415,8 +419,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   assertFalse(message, condition);
   assertNull(object);
   assertNull(message, object);
-  assertNonNull(object);
-  assertNonNull(message, object);
+  assertNotNull(object);
+  assertNotNull(message, object);
   assertEquals(expected, actual);
   assertEquals(message, expected, actual);
   assertEquals(expectedDoubleOrFloat, actualDoubleOrFloat, delta);
@@ -433,6 +437,14 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   assertArrayEquals(message, expectedArray, actualArray);
   assertArrayEquals(expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
   assertArrayEquals(message, expectedDoubleOrFloatArray, actualDoubleOrFloatArray, delta);
+  
+  assumeTrue(condition);
+  assumeTrue(message, condition);
+  assumeFalse(condition);
+  assumeFalse(message, condition);
+  assumeNotNull(object); // single argument only!
+  assumeNoException(throwable);
+  assumeNoException(message, throwable);
   ```
 
 ### Implemented referencing
@@ -478,6 +490,8 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 - Improved JoinAssertThatStatements detection of expressions with side-effects and added pre/post-increment/decrement detection.
 - Added Guava Optional ```opt.orNull() == null``` case. You know, I'm not making this stuff up, people actually write this kind of code.
 - Added Java 8 Optional ```opt.orElse(null) == null``` case, too.
+- Extended JUnitAssertToAssertJ inspection to convert JUnit ```assume```-Statements, too.
+- Improved JUnitAssertToAssertJ quick fix to swap expected and actual expressions if the actual one is a constant.
 
 #### V1.0 (06-May-19)
 - First release to be considered stable enough for production use.

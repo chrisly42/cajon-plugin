@@ -27,8 +27,16 @@ class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val
         val deltaExpression = args.expressions[count - 1] ?: return
 
         val offsetMethodCall = createMethodCall(element, "org.assertj.core.data.Offset.offset", deltaExpression)
-        val expectedMethodCall = createExpectedMethodCall(element, replacementMethod, expectedExpression, offsetMethodCall)
-        val newMethodCall = createAssertThat(element, actualExpression)
+
+        val swapActualAndExpected = ((expectedExpression.calculateConstantValue() == null)
+                && (actualExpression.calculateConstantValue() != null))
+        val (expectedMethodCall, newMethodCall) = if (swapActualAndExpected) {
+            createExpectedMethodCall(element, replacementMethod, actualExpression, offsetMethodCall) to
+                    createAssertThat(element, expectedExpression)
+        } else {
+            createExpectedMethodCall(element, replacementMethod, expectedExpression, offsetMethodCall) to
+                    createAssertThat(element, actualExpression)
+        }
 
         if (messageExpression != null) {
             val asExpression = createExpectedMethodCall(element, MethodNames.AS, messageExpression)

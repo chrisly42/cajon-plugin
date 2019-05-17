@@ -117,11 +117,14 @@ fun PsiMethodCallExpression.getExpectedNullNonNullResult(): Boolean? {
 
 fun PsiMethodCallExpression.calculateConstantParameterValue(argIndex: Int): Any? {
     if (argIndex >= argumentList.expressions.size) return null
-    val valueExpression = getArg(argIndex)
+    return getArg(argIndex).calculateConstantValue()
+}
+
+fun PsiExpression.calculateConstantValue(): Any? {
     val constantEvaluationHelper = JavaPsiFacade.getInstance(project).constantEvaluationHelper
-    val value = constantEvaluationHelper.computeConstantExpression(valueExpression)
+    val value = constantEvaluationHelper.computeConstantExpression(this)
     if (value == null) {
-        val field = (valueExpression as? PsiReferenceExpression)?.resolve() as? PsiField
+        val field = (this as? PsiReferenceExpression)?.resolve() as? PsiField
         if (field?.containingClass?.qualifiedName == CommonClassNames.JAVA_LANG_BOOLEAN) {
             return when (field.name) {
                 "TRUE" -> true
