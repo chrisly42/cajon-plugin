@@ -279,6 +279,24 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
   ...and many, many more combinations (more than 150).
 
+- ImplicitAssertion
+
+  Detects and removes implicit use of ```isNotNull()```, ```isNotEmpty()``` and
+  ```isPresent()``` when followed by an assertion that will implicitly cover this
+  check.
+
+  ```
+  from: assertThat(string).isNotNull().startsWith("foo");
+    to: assertThat(string).startsWith("foo");
+
+  from: assertThat(list).isNotEmpty().hasSize(10);
+    to: assertThat(list).hasSize(10);
+
+  from: assertThat(optional).isPresent().contains("foo");
+    to: assertThat(optional).contains("foo");
+  ```
+  ...and many more combinations (more than 100).
+
 - AssertThatJava8Optional
 
   Examines the statement for Java 8 ```Optional``` type and whether the statement
@@ -492,6 +510,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 - Added Java 8 Optional ```opt.orElse(null) == null``` case, too.
 - Extended JUnitAssertToAssertJ inspection to convert JUnit ```assume```-Statements, too.
 - Improved JUnitAssertToAssertJ quick fix to swap expected and actual expressions if the actual one is a constant.
+- New ImplicitAssertion inspection for implicit ```isNotNull()```, ```isNotEmpty()``` and ```isPresent()``` assertions that will be covered by chained assertions.
 
 #### V1.0 (06-May-19)
 - First release to be considered stable enough for production use.

@@ -12,10 +12,10 @@ import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_BOOLEAN_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_COMPARABLE_ASSERT_CLASSNAME
-import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_INTEGER_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERTIONS_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERT_INTERFACE
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ENUMERABLE_ASSERT_INTERFACE
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_ASSERTIONS_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_OPTIONAL_CLASSNAME
 import de.platon42.intellij.plugins.cajon.MethodNames
@@ -98,7 +98,9 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val IS_NOT_NULL = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_NULL)
             .parameterCount(0)!!
 
-        val HAS_SIZE = CallMatcher.instanceCall(ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME, MethodNames.HAS_SIZE)
+        val IS_NOT_EMPTY = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.IS_NOT_EMPTY)
+            .parameterCount(0)!!
+        val HAS_SIZE = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.HAS_SIZE)
             .parameterTypes("int")!!
 
         val IS_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)

@@ -55,6 +55,9 @@
         <localInspection groupPath="Java" shortName="AssertThatGuavaOptional" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatGuavaOptionalInspection"/>
 
+        <localInspection groupPath="Java" shortName="ImplicitAssertion" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.ImplicitAssertionInspection"/>
+
         <localInspection groupPath="Java" shortName="JUnitAssertToAssertJ" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.JUnitAssertToAssertJInspection"/>
     </extensions>

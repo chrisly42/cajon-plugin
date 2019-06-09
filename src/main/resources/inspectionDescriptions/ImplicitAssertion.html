@@ -1,0 +1,8 @@
+<html>
+<body>
+Finds assertion method calls that are already implicitly covered by prior assertions.
+<!-- tooltip end -->
+This works for isNotNull(), isNotEmpty() and isPresent(). It does not cover all edge cases, such as .isNotNull().isNullOrEmpty()
+or comparing against non-null literals and is conservative to not eliminate legitimate assertions.
+</body>
+</html>

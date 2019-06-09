@@ -34,6 +34,11 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
             Mapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, "containsValue").parameterCount(1),
                 MethodNames.CONTAINS_VALUE, MethodNames.DOES_NOT_CONTAIN_VALUE
+            ),
+            // TODO not quite a collection or map expression, maybe move this out to new inspection together with equals and hashcode.
+            Mapping(
+                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_OBJECT, "toString").parameterCount(0),
+                MethodNames.HAS_TO_STRING, null
             )
         )
     }

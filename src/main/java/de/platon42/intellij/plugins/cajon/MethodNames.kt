@@ -32,6 +32,10 @@ class MethodNames {
         const val IS_SAME_AS = "isSameAs"
         @NonNls
         const val IS_NOT_SAME_AS = "isNotSameAs"
+
+        @NonNls
+        const val HAS_TO_STRING = "hasToString"
+
         @NonNls
         const val IS_GREATER_THAN = "isGreaterThan"
         @NonNls
@@ -61,6 +65,8 @@ class MethodNames {
         @NonNls
         const val IS_NOT_INSTANCE_OF = "isNotInstanceOf"
 
+        @NonNls
+        const val IS_NULL_OR_EMPTY = "isNullOrEmpty" // terminal, returns void
         @NonNls
         const val IS_EMPTY = "isEmpty" // terminal, returns void
         @NonNls

@@ -15,6 +15,8 @@ class AssertJClassNames {
         @NonNls
         const val EXTENSION_POINTS_INTERFACE = "org.assertj.core.api.ExtensionPoints"
         @NonNls
+        const val ENUMERABLE_ASSERT_INTERFACE = "org.assertj.core.api.EnumerableAssert"
+        @NonNls
         const val OBJECT_ENUMERABLE_ASSERT_INTERFACE = "org.assertj.core.api.ObjectEnumerableAssert"
 
         @NonNls
@@ -36,7 +38,7 @@ class AssertJClassNames {
         @NonNls
         const val ABSTRACT_ITERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIterableAssert"
         @NonNls
-        const val ABSTRACT_ENUMERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.EnumerableAssert"
+        const val ABSTRACT_OPTIONAL_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractOptionalAssert"
         @NonNls
         const val EXTRACTORS_CLASSNAME = "org.assertj.core.extractor.Extractors"
 
@@ -44,5 +46,7 @@ class AssertJClassNames {
         const val GUAVA_OPTIONAL_CLASSNAME = "com.google.common.base.Optional"
         @NonNls
         const val GUAVA_ASSERTIONS_CLASSNAME = "org.assertj.guava.api.Assertions"
+        @NonNls
+        const val GUAVA_OPTIONAL_ASSERTIONS_CLASSNAME = "org.assertj.guava.api.OptionalAssert"
     }
 }
