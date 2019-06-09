@@ -40,6 +40,8 @@
 
         <localInspection groupPath="Java" shortName="AssertThatBinaryExpression" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatBinaryExpressionInspection"/>
+        <localInspection groupPath="Java" shortName="AssertThatObjectExpression" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatObjectExpressionInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatStringExpression" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatStringExpressionInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatCollectionOrMapExpression" enabledByDefault="true" level="WARNING"

@@ -14,7 +14,6 @@ internal class AssertThatBinaryExpressionInspectionTest : AbstractCajonTest() {
         myFixture.enableInspections(AssertThatBinaryExpressionInspection::class.java)
         myFixture.configureByFile("BinaryExpressionBefore.java")
         executeQuickFixes(myFixture, Regex.fromLiteral("Split binary expression out of assertThat()"), 149)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Split equals() expression out of assertThat()"), 13)
         myFixture.checkResultByFile("BinaryExpressionAfter.java")
     }
 }

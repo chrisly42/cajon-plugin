@@ -8,6 +8,7 @@ public class StringExpression {
 
         assertThat(string).as("foo").isEmpty();
         assertThat(string).isEmpty();
+        assertThat(string).isEmpty();
         assertThat(string).isEqualTo("foo");
         assertThat(string).isEqualTo("foo");
         assertThat(string).isEqualToIgnoringCase("foo");
@@ -26,6 +27,7 @@ public class StringExpression {
         assertThat(string).endsWith("foo");
 
         assertThat(string).as("foo").isNotEmpty();
+        assertThat(string).isNotEmpty();
         assertThat(string).isNotEmpty();
         assertThat(string).isNotEqualTo("foo");
         assertThat(string).isNotEqualTo("foo");

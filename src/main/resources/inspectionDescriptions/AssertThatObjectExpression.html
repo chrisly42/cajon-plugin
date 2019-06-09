@@ -1,0 +1,9 @@
+<html>
+<body>
+Tries to simplify Object method calls such as toString, hashCode() and equals().
+<!-- tooltip end -->
+<br>Turns assertThat(object.toString()).isEqualTo(expression) into assertThat(object).hasToString(expression).
+<br>Turns assertThat(object.hashCode()).isEqualTo(otherObject.hashCode()) into assertThat(object).hasSameHashCodeAs(otherObject).
+<br>Turns assertThat(object.equals(otherObject)).isEqualTo(true) into assertThat(object).isEqualTo(otherObject) (and variations).
+</body>
+</html>

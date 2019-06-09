@@ -115,8 +115,7 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                 if (!expression.hasAssertThat()) {
                     return
                 }
-                val isHasSize = HAS_SIZE.test(expression)
-                if (!(isHasSize)) {
+                if (!HAS_SIZE.test(expression)) {
                     return
                 }
                 val actualExpression = expression.firstArg

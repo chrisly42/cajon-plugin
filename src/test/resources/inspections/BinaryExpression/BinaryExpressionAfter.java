@@ -146,12 +146,12 @@ public class BinaryExpression {
         assertThat(numberObjAct).isGreaterThan(1);
         assertThat(numberObjAct).isGreaterThan(1);
 
-        assertThat(numberObjAct).as("doh!").isEqualTo(numberObjExp);
-        assertThat(numberObjAct).isEqualTo(numberObjExp);
-        assertThat(numberObjAct).isEqualTo(numberObjExp);
-        assertThat(numberObjAct).isNotEqualTo(numberObjExp);
-        assertThat(numberObjAct).isNotEqualTo(numberObjExp);
-        assertThat(numberObjAct).isNotEqualTo(numberObjExp);
+        assertThat(numberObjAct.equals(numberObjExp)).as("doh!").isTrue();
+        assertThat(numberObjAct.equals(numberObjExp)).isEqualTo(true);
+        assertThat(numberObjAct.equals(numberObjExp)).isNotEqualTo(false);
+        assertThat(numberObjAct.equals(numberObjExp)).isFalse();
+        assertThat(numberObjAct.equals(numberObjExp)).isEqualTo(false);
+        assertThat(numberObjAct.equals(numberObjExp)).isNotEqualTo(true);
 
         assertThat(stringAct).as("doh!").isSameAs(stringExp);
         assertThat(stringAct).isSameAs(stringExp);
@@ -160,12 +160,12 @@ public class BinaryExpression {
         assertThat(stringAct).isNotSameAs(stringExp);
         assertThat(stringAct).isNotSameAs(stringExp);
 
-        assertThat(stringAct).as("doh!").isEqualTo(stringExp);
-        assertThat(stringAct).isEqualTo(stringExp);
-        assertThat(stringAct).isEqualTo(stringExp);
-        assertThat(stringAct).isNotEqualTo(stringExp);
-        assertThat(stringAct).isNotEqualTo(stringExp);
-        assertThat(stringAct).isNotEqualTo(stringExp);
+        assertThat(stringAct.equals(stringExp)).as("doh!").isTrue();
+        assertThat(stringAct.equals(stringExp)).isEqualTo(true);
+        assertThat(stringAct.equals(stringExp)).isNotEqualTo(false);
+        assertThat(stringAct.equals(stringExp)).isFalse();
+        assertThat(stringAct.equals(stringExp)).isEqualTo(false);
+        assertThat(stringAct.equals(stringExp)).isNotEqualTo(true);
 
         assertThat(stringAct).as("doh!").isNotSameAs(stringExp);
         assertThat(stringAct).isNotSameAs(stringExp);
@@ -194,6 +194,6 @@ public class BinaryExpression {
         assertThat(primAct).as("doh!").isEqualTo(primExp).isEqualTo(primExp);
         assertThat(primAct == primExp).isFalse().as("doh!").isEqualTo(true);
 
-        assertThat(numberObjAct).as("doh!").isEqualTo(numberObjExp).isEqualTo(numberObjExp);
+        assertThat(numberObjAct.equals(numberObjExp)).as("doh!").isTrue().isEqualTo(true);
     }
 }

@@ -171,6 +171,21 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
   Analogously with ```isFalse()```.
 
+- AssertThatObjectExpression
+
+  Handles equals(), toString() and hashCode() inside an expected expression.
+  
+  ```
+  from: assertThat(objActual.equals(objExpected)).isTrue();
+    to: assertThat(objActual).isEqualTo(objExpected);
+
+  from: assertThat(objActual.toString()).isEqualTo(stringExpected);
+    to: assertThat(objActual).hasToString(stringExpected);
+
+  from: assertThat(objActual.hashCode()).isEqualTo(objExpected.hashCode());
+    to: assertThat(objActual).hasSameHashCodeAs(objExpected);
+  ```
+
 - AssertThatCollectionOrMapExpression
 
   Moves collection and map operations inside ```assertThat()``` out.
@@ -273,9 +288,6 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   from: assertThat(null == objActual).isFalse();
     to: assertThat(objActual).isNotNull();
-
-  from: assertThat(objActual.equals(objExpected).isTrue();
-    to: assertThat(objActual).isEqualTo(objExpected);
   ```
   ...and many, many more combinations (more than 150).
 
@@ -494,9 +506,9 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Planned features
 - Joining .contains() expressions
-- Removing .isPresent().contains() combinations for Optionals
 - Converting ```foo.compareTo(bar) == 0``` to ```isEqualTo()``` (yes, I've *really* seen code like that)
 - Extraction with property names to lambda with Java 8
+
   ```
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
     to: assertThat(object).extracting(type::getPropOne, it -> it.propNoGetter, it -> it.getPropTwo().getInnerProp())...
@@ -504,13 +516,15 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-#### V1.1 (unreleased)
+#### V1.1 (09-Jun-19)
 - Improved JoinAssertThatStatements detection of expressions with side-effects and added pre/post-increment/decrement detection.
 - Added Guava Optional ```opt.orNull() == null``` case. You know, I'm not making this stuff up, people actually write this kind of code.
 - Added Java 8 Optional ```opt.orElse(null) == null``` case, too.
-- Extended JUnitAssertToAssertJ inspection to convert JUnit ```assume```-Statements, too.
+- Extended JUnitAssertToAssertJ inspection to convert JUnit ```assume``` statements, too.
 - Improved JUnitAssertToAssertJ quick fix to swap expected and actual expressions if the actual one is a constant.
 - New ImplicitAssertion inspection for implicit ```isNotNull()```, ```isNotEmpty()``` and ```isPresent()``` assertions that will be covered by chained assertions.
+- Fix for multiple JUnit Conversions in batch mode with and without delta creating an exception.
+- Added new AssertThatObjectExpression inspection for ```toString()``` and ```hashCode()``` and moved ```equals()``` from AssertThatBinaryExpression there.
 
 #### V1.0 (06-May-19)
 - First release to be considered stable enough for production use.

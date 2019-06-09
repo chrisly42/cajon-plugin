@@ -42,14 +42,16 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.1 (unreleased)</h4>
+  <h4>V1.1 (09-Jun-19)</h4>
     <ul>
       <li>Improved JoinAssertThatStatements detection of expressions with side-effects and added pre/post-increment/decrement detection.
       <li>Added Guava Optional opt.orNull() == null case. You know, I'm not making this stuff up, people actually write this kind of code.
       <li>Added Java 8 Optional opt.orElse(null) == null case, too.
-      <li>Extended JUnitAssertToAssertJ inspection to convert JUnit assume-Statements, too.
+      <li>Extended JUnitAssertToAssertJ inspection to convert JUnit assume statements, too.
       <li>Improved JUnitAssertToAssertJ quick fix to swap expected and actual expressions if the actual one is a constant.
       <li>New ImplicitAssertion inspection for implicit isNotNull(), isNotEmpty() and isPresent() assertions that will be covered by chained assertions.
+      <li>Fix for multiple JUnit Conversions in batch mode with and without delta creating an exception.
+      <li>Added new AssertThatObjectExpression inspection for toString() and hashCode() and moved equals() from AssertThatBinaryExpression there.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """
