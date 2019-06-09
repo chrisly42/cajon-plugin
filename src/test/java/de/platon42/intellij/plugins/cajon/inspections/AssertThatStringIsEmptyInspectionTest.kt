@@ -13,17 +13,15 @@ internal class AssertThatStringIsEmptyInspectionTest : AbstractCajonTest() {
     @Test
     @TestDataSubPath("inspections/StringIsEmpty")
     internal fun assertThat_with_isEqualTo_emptyString_can_use_isEmpty(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.enableInspections(AssertThatStringIsEmptyInspection::class.java)
-            myFixture.configureByFile("StringIsEmptyBefore.java")
-            val highlights = myFixture.doHighlighting()
-                .asSequence()
-                .filter { it.description?.contains(" can be simplified to") ?: false }
-                .toList()
-            assertThat(highlights).hasSize(6).extrakting { it.text }.doesNotContain("assertThat")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isEmpty()"), 3)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace hasSize() with isEmpty()"), 3)
-            myFixture.checkResultByFile("StringIsEmptyAfter.java")
-        }
+        myFixture.enableInspections(AssertThatStringIsEmptyInspection::class.java)
+        myFixture.configureByFile("StringIsEmptyBefore.java")
+        val highlights = myFixture.doHighlighting()
+            .asSequence()
+            .filter { it.description?.contains(" can be simplified to") ?: false }
+            .toList()
+        assertThat(highlights).hasSize(6).extrakting { it.text }.doesNotContain("assertThat")
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isEmpty()"), 3)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace hasSize() with isEmpty()"), 3)
+        myFixture.checkResultByFile("StringIsEmptyAfter.java")
     }
 }

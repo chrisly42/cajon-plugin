@@ -11,11 +11,9 @@ internal class JoinAssertThatStatementsInspectionTest : AbstractCajonTest() {
     @Test
     @TestDataSubPath("inspections/JoinStatements")
     internal fun assertThat_statements_can_be_joined_together(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.enableInspections(JoinAssertThatStatementsInspection::class.java)
-            myFixture.configureByFile("JoinStatementsBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Join assertThat() statements"), 5)
-            myFixture.checkResultByFile("JoinStatementsAfter.java")
-        }
+        myFixture.enableInspections(JoinAssertThatStatementsInspection::class.java)
+        myFixture.configureByFile("JoinStatementsBefore.java")
+        executeQuickFixes(myFixture, Regex.fromLiteral("Join assertThat() statements"), 5)
+        myFixture.checkResultByFile("JoinStatementsAfter.java")
     }
 }

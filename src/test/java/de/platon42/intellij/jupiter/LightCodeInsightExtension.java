@@ -8,9 +8,8 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.PsiTestUtil;
-import com.intellij.testFramework.UsefulTestCase;
+import com.intellij.testFramework.*;
+import com.intellij.testFramework.fixtures.IdeaTestExecutionPolicy;
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -26,7 +26,7 @@ import java.nio.file.Paths;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-public class LightCodeInsightExtension implements ParameterResolver, AfterTestExecutionCallback {
+public class LightCodeInsightExtension implements ParameterResolver, AfterTestExecutionCallback, InvocationInterceptor {
 
     private static final Logger LOG = Logger.getLogger(LightCodeInsightExtension.class.getName());
 
@@ -75,6 +75,41 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
 
     private static Store getStore(ExtensionContext context) {
         return context.getStore(Namespace.create(LightCodeInsightExtension.class, context.getRequiredTestMethod()));
+    }
+
+    @Override
+    public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        Throwable[] throwables = new Throwable[1];
+
+        Runnable runnable = () -> {
+            try {
+                TestLoggerFactory.onTestStarted();
+                invocation.proceed();
+                TestLoggerFactory.onTestFinished(true);
+            } catch (Throwable e) {
+                TestLoggerFactory.onTestFinished(false);
+                e.fillInStackTrace();
+                throwables[0] = e;
+            }
+        };
+
+        invokeTestRunnable(runnable);
+
+        if (throwables[0] != null) {
+            throw throwables[0];
+        }
+    }
+
+    private static void invokeTestRunnable(@NotNull Runnable runnable) {
+        IdeaTestExecutionPolicy policy = IdeaTestExecutionPolicy.current();
+        if (policy != null && !policy.runInDispatchThread()) {
+            runnable.run();
+        } else {
+            EdtTestUtilKt.runInEdtAndWait(() -> {
+                runnable.run();
+                return null;
+            });
+        }
     }
 
     private static class LightCodeInsightFixtureTestCaseWrapper extends LightCodeInsightFixtureTestCase {

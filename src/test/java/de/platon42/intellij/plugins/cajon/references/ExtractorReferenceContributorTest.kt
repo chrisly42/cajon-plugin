@@ -13,81 +13,61 @@ internal class ExtractorReferenceContributorTest : AbstractCajonTest() {
 
     @Test
     internal fun extractor_is_able_to_find_reference_for_field_extracting(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference1.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).isEqualTo("private String name;")
-        }
+        myFixture.configureByFiles("FindReference1.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).isEqualTo("private String name;")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_for_first_part_of_a_path(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference2.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).isEqualTo("protected Address address;")
-        }
+        myFixture.configureByFiles("FindReference2.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).isEqualTo("protected Address address;")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_for_second_part_of_a_path_and_both_getter_and_field(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference3.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).startsWith("private String street;")
-        }
+        myFixture.configureByFiles("FindReference3.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).startsWith("private String street;")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_on_a_bare_method_call(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference4.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).startsWith("public Boolean getREALLYnoMAILINGS()")
-        }
+        myFixture.configureByFiles("FindReference4.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).startsWith("public Boolean getREALLYnoMAILINGS()")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_with_only_Getter_on_second_part(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference5.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).startsWith("public boolean isNoMailings()")
-        }
+        myFixture.configureByFiles("FindReference5.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).startsWith("public boolean isNoMailings()")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_using_byName_extractor(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference6.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).isEqualTo("private String name;")
-        }
+        myFixture.configureByFiles("FindReference6.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).isEqualTo("private String name;")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_using_resultOf_extractor(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference7.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).startsWith("public String getStreetName()")
-        }
+        myFixture.configureByFiles("FindReference7.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).startsWith("public String getStreetName()")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_for_field_extraction_on_list(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference8.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).isEqualTo("private String name;")
-        }
+        myFixture.configureByFiles("FindReference8.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).isEqualTo("private String name;")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_for_field_flat_extraction_of_path_on_list(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference9.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).startsWith("private String street;")
-        }
+        myFixture.configureByFiles("FindReference9.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).startsWith("private String street;")
     }
 
     @Test
     internal fun extractor_is_able_to_find_reference_for_extraction_on_result_of_method(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.configureByFiles("FindReference10.java", "Address.java", "Contact.java")
-            assertThat(myFixture.elementAtCaret.text).startsWith("public String getStreetName()")
-        }
+        myFixture.configureByFiles("FindReference10.java", "Address.java", "Contact.java")
+        assertThat(myFixture.elementAtCaret.text).startsWith("public String getStreetName()")
     }
 }

@@ -11,12 +11,10 @@ internal class AssertThatInstanceOfInspectionTest : AbstractCajonTest() {
     @Test
     @TestDataSubPath("inspections/InstanceOf")
     internal fun assertThat_with_instanceof_can_be_moved_out(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.enableInspections(AssertThatInstanceOfInspection::class.java)
-            myFixture.configureByFile("InstanceOfBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Remove instanceof in actual expression and use assertThat().isInstanceOf() instead"), 6)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Remove instanceof in actual expression and use assertThat().isNotInstanceOf() instead"), 6)
-            myFixture.checkResultByFile("InstanceOfAfter.java")
-        }
+        myFixture.enableInspections(AssertThatInstanceOfInspection::class.java)
+        myFixture.configureByFile("InstanceOfBefore.java")
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove instanceof in actual expression and use assertThat().isInstanceOf() instead"), 6)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove instanceof in actual expression and use assertThat().isNotInstanceOf() instead"), 6)
+        myFixture.checkResultByFile("InstanceOfAfter.java")
     }
 }

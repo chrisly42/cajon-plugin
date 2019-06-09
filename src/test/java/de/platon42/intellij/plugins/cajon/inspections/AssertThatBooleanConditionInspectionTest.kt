@@ -11,14 +11,12 @@ internal class AssertThatBooleanConditionInspectionTest : AbstractCajonTest() {
     @Test
     @TestDataSubPath("inspections/BooleanCondition")
     internal fun assertThat_with_isEqualTo_true_or_false_can_use_isTrue_or_isFalse(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.enableInspections(AssertThatBooleanConditionInspection::class.java)
-            myFixture.configureByFile("BooleanConditionBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isTrue()"), 6)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isFalse()"), 5)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isTrue()"), 4)
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isFalse()"), 4)
-            myFixture.checkResultByFile("BooleanConditionAfter.java")
-        }
+        myFixture.enableInspections(AssertThatBooleanConditionInspection::class.java)
+        myFixture.configureByFile("BooleanConditionBefore.java")
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isTrue()"), 6)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isFalse()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isTrue()"), 4)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotEqualTo() with isFalse()"), 4)
+        myFixture.checkResultByFile("BooleanConditionAfter.java")
     }
 }

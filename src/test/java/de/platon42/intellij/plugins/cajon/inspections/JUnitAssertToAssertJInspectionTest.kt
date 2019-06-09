@@ -15,12 +15,10 @@ internal class JUnitAssertToAssertJInspectionTest : AbstractCajonTest() {
     @Test
     @TestDataSubPath("inspections/JUnitAssertToAssertJ")
     internal fun junit_Assertions_can_be_converted_into_AssertJ(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.enableInspections(JUnitAssertToAssertJInspection::class.java)
-            myFixture.configureByFile("JUnitAssertToAssertJInspectionBefore.java")
-            executeQuickFixes(myFixture, Regex("Convert assert.*\\(\\) to assertThat\\(\\).*"), 48)
-            executeQuickFixes(myFixture, Regex("Convert assume.*\\(\\) to assumeThat\\(\\).*"), 7)
-            myFixture.checkResultByFile("JUnitAssertToAssertJInspectionAfter.java")
-        }
+        myFixture.enableInspections(JUnitAssertToAssertJInspection::class.java)
+        myFixture.configureByFile("JUnitAssertToAssertJInspectionBefore.java")
+        executeQuickFixes(myFixture, Regex("Convert assert.*\\(\\) to assertThat\\(\\).*"), 48)
+        executeQuickFixes(myFixture, Regex("Convert assume.*\\(\\) to assumeThat\\(\\).*"), 7)
+        myFixture.checkResultByFile("JUnitAssertToAssertJInspectionAfter.java")
     }
 }

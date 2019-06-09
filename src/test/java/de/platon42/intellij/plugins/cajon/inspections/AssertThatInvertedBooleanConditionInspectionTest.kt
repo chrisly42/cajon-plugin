@@ -11,11 +11,9 @@ internal class AssertThatInvertedBooleanConditionInspectionTest : AbstractCajonT
     @Test
     @TestDataSubPath("inspections/InvertedBooleanCondition")
     internal fun assertThat_with_inverted_boolean_condition_can_be_inverted(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.enableInspections(AssertThatInvertedBooleanConditionInspection::class.java)
-            myFixture.configureByFile("InvertedBooleanConditionBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Invert condition in assertThat()"), 25)
-            myFixture.checkResultByFile("InvertedBooleanConditionAfter.java")
-        }
+        myFixture.enableInspections(AssertThatInvertedBooleanConditionInspection::class.java)
+        myFixture.configureByFile("InvertedBooleanConditionBefore.java")
+        executeQuickFixes(myFixture, Regex.fromLiteral("Invert condition in assertThat()"), 25)
+        myFixture.checkResultByFile("InvertedBooleanConditionAfter.java")
     }
 }

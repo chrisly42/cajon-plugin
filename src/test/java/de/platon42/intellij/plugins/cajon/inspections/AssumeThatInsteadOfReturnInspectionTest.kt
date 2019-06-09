@@ -14,11 +14,9 @@ internal class AssumeThatInsteadOfReturnInspectionTest : AbstractCajonTest() {
     @Test
     @TestDataSubPath("inspections/AssumeThat")
     internal fun conditional_returns_can_be_replaced_by_assumeThat(@MyFixture myFixture: JavaCodeInsightTestFixture) {
-        runTest {
-            myFixture.enableInspections(AssumeThatInsteadOfReturnInspection::class.java)
-            myFixture.configureByFile("AssumeThatBefore.java")
-            executeQuickFixes(myFixture, Regex.fromLiteral("Replace if statement by assumeTrue()"), 5)
-            myFixture.checkResultByFile("AssumeThatAfter.java")
-        }
+        myFixture.enableInspections(AssumeThatInsteadOfReturnInspection::class.java)
+        myFixture.configureByFile("AssumeThatBefore.java")
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace if statement by assumeTrue()"), 5)
+        myFixture.checkResultByFile("AssumeThatAfter.java")
     }
 }
