@@ -35,5 +35,8 @@ public class InvertedBooleanCondition {
 
         assertThat(primitive).as("foo").isFalse().as("bar").isFalse();
         assertThat(primitive).as("foo").isFalse().as("bar").isTrue();
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

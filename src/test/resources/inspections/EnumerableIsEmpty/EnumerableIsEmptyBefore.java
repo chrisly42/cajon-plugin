@@ -16,5 +16,8 @@ public class EnumerableIsEmpty {
         assertThat(new Long[1]).as("etc").hasSize(1);
 
         assertThat("string").as("foo").hasSize(0).hasSameSizeAs("foo").hasSize(0);
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

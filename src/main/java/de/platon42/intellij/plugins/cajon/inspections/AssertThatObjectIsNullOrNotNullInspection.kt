@@ -19,15 +19,11 @@ class AssertThatObjectIsNullOrNotNullInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
                 val isNotEqualTo = IS_NOT_EQUAL_TO_OBJECT.test(expression)
                 val isEqualTo = IS_EQUAL_TO_OBJECT.test(expression)
                 val isLastExpression = expression.parent is PsiStatement
-                if (!((isEqualTo && isLastExpression) || isNotEqualTo)) {
-                    return
-                }
+                if (!((isEqualTo && isLastExpression) || isNotEqualTo)) return
 
                 if (expression.firstArg.type == PsiType.NULL) {
                     registerSimplifyMethod(holder, expression, isEqualTo.map(MethodNames.IS_NULL, MethodNames.IS_NOT_NULL))

@@ -113,9 +113,8 @@ class ImplicitAssertionInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
+
                 val mapping = MAPPINGS.firstOrNull { it.first.test(expression) } ?: return
                 val followupExpression = expression.findFluentCallTo(mapping.second) ?: return
                 val redundantName = getOriginalMethodName(expression) ?: return

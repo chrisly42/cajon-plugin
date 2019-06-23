@@ -21,13 +21,9 @@ class AssertThatEnumerableIsEmptyInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
                 val isLastExpression = expression.parent is PsiStatement
-                if (!(HAS_SIZE.test(expression) && isLastExpression)) {
-                    return
-                }
+                if (!(HAS_SIZE.test(expression) && isLastExpression)) return
 
                 val value = expression.calculateConstantParameterValue(0) ?: return
                 if (value == 0) {

@@ -20,24 +20,17 @@ class AssertThatBooleanConditionInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
                 val matchingCalls = listOf(
                     IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_BOOLEAN,
                     IS_NOT_EQUAL_TO_OBJECT, IS_NOT_EQUAL_TO_BOOLEAN
                 ).map { it.test(expression) }
-                if (matchingCalls.none { it }) {
-                    return
-                }
-                if (!checkAssertedType(expression, ABSTRACT_BOOLEAN_ASSERT_CLASSNAME)) {
-                    return
-                }
+                if (matchingCalls.none { it }) return
+                if (!checkAssertedType(expression, ABSTRACT_BOOLEAN_ASSERT_CLASSNAME)) return
 
                 val expectedExpression = expression.firstArg
-                if (!TypeConversionUtil.isBooleanType(expectedExpression.type)) {
-                    return
-                }
+                if (!TypeConversionUtil.isBooleanType(expectedExpression.type)) return
+
                 val expectedResult = expression.calculateConstantParameterValue(0) as? Boolean ?: return
                 val flippedBooleanTest = matchingCalls.drop(2).any { it }
 

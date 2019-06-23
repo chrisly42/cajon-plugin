@@ -7,15 +7,14 @@
     Cajon is an IntelliJ IDEA Plugin for shortening and optimizing AssertJ assertions.
     It adds several inspections and quick fixes to fully use the fluent assertion methods
     and thus makes the intention clear and concise, also generating better messages on test failures.
-    It can also be used to convert JUnit 4 assertions to AssertJ.
+    It can also be used to convert JUnit 4 assertions and assumptions to AssertJ.
     It supports referencing inside extracting()-methods with strings, adding refactoring safety.
+    <p>
+    <a href="https://github.com/chrisly42/cajon-plugin/blob/master/README.md">Full documentation here...</a>
     ]]></description>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
     <idea-version since-build="173.2696.26"/>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>

@@ -99,5 +99,12 @@ public class Size {
         assertThat(stringBuilder.length()).as("foo").isEqualTo(0).isZero().as("bar").isNotZero().isEqualTo(10);
 
         assertThat(stringBuilder).as("foo").isNotEmpty().hasSize(2).as("bar").hasSameSizeAs(otherList).hasSameSizeAs(array);
+
+        int foo = 1;
+        assertThat(foo).isEqualTo(0);
+        assertThat(string.length()).isPositive();
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

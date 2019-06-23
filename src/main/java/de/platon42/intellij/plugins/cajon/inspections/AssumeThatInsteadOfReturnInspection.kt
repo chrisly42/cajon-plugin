@@ -54,9 +54,7 @@ class AssumeThatInsteadOfReturnInspection : AbstractAssertJInspection() {
                 super.visitMethod(method)
                 // Note: replace with if(TEST_ANNOTATIONS.none(method::hasAnnotation)) for IDEA >= 2018.2
                 val annotations = method.annotations.mapNotNull { it.qualifiedName }
-                if (annotations.none(TEST_ANNOTATIONS::contains)) {
-                    return
-                }
+                if (annotations.none(TEST_ANNOTATIONS::contains)) return
                 val containingClass = method.containingClass ?: return
                 val visitor: PsiElementVisitor = TestMethodVisitor(holder, isOnTheFly, containingClass)
                 method.accept(visitor)
@@ -119,9 +117,7 @@ class AssumeThatInsteadOfReturnInspection : AbstractAssertJInspection() {
         var aborted = false
 
         override fun visitExpressionStatement(statement: PsiExpressionStatement) {
-            if (foundAssertThat || aborted) {
-                return
-            }
+            if (foundAssertThat || aborted) return
             if (++statementCount > MAX_STATEMENTS_COUNT) {
                 aborted = true
                 return

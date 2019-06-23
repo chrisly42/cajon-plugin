@@ -20,13 +20,9 @@ class AssertThatInstanceOfInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                if (!statement.hasAssertThat()) {
-                    return
-                }
+                if (!statement.hasAssertThat()) return
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
-                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
-                    return
-                }
+                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) return
 
                 val expectedCallExpression = statement.findOutmostMethodCall() ?: return
                 val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return

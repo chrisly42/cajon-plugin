@@ -23,5 +23,8 @@ public class ObjectExpression {
         assertThat(object.equals(otherObject)).isEqualTo(foo);
 
         assertThat(object.equals(otherObject)).as("doh!").isTrue().isEqualTo(true);
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

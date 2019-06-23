@@ -24,9 +24,7 @@ class AssertThatObjectExpressionInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                if (!statement.hasAssertThat()) {
-                    return
-                }
+                if (!statement.hasAssertThat()) return
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
 
                 val assertThatArgument = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return

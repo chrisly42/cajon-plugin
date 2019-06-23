@@ -23,6 +23,7 @@ abstract class AbstractCajonTest {
     protected fun executeQuickFixes(myFixture: JavaCodeInsightTestFixture, regex: Regex, expectedFixes: Int) {
         val quickfixes = myFixture.getAllQuickFixes().filter { it.text.matches(regex) }
         assertThat(quickfixes).`as`("Fixes matched by $regex: ${myFixture.getAllQuickFixes().map { it.text }}").hasSize(expectedFixes)
+        quickfixes.forEach { it.familyName }
         quickfixes.forEach(myFixture::launchAction)
     }
 

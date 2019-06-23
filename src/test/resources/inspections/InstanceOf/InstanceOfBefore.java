@@ -21,5 +21,8 @@ public class InstanceOf {
 
         assertThat(object instanceof Boolean).as("foo").isEqualTo(Boolean.TRUE).as("bar").isEqualTo(true);
         assertThat(object instanceof Boolean).as("foo").isEqualTo(Boolean.TRUE).as("bar").isEqualTo(false);
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

@@ -74,19 +74,15 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                if (!statement.hasAssertThat()) {
-                    return
-                }
+                if (!statement.hasAssertThat()) return
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
-                if (!ASSERT_THAT_INT.test(staticMethodCall)) {
-                    return
-                }
+                if (!ASSERT_THAT_INT.test(staticMethodCall)) return
+
                 val actualExpression = staticMethodCall.firstArg
                 val isForArrayOrCollection = isArrayLength(actualExpression) || isCollectionSize(actualExpression)
                 val isForString = isCharSequenceLength(actualExpression)
-                if (!(isForArrayOrCollection || isForString)) {
-                    return
-                }
+                if (!(isForArrayOrCollection || isForString)) return
+
                 val matches = staticMethodCall.collectMethodCallsUpToStatement()
                     .mapNotNull { getMatch(it, isForArrayOrCollection, isForString) }
                     .toList()
@@ -112,21 +108,16 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
 
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
-                if (!HAS_SIZE.test(expression)) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
+                if (!HAS_SIZE.test(expression)) return
                 val actualExpression = expression.firstArg
 
                 val isForArrayOrCollection = isArrayLength(actualExpression) || isCollectionSize(actualExpression)
                 val isForString = isCharSequenceLength(actualExpression)
                 if (!(isForArrayOrCollection
                             || (isForString && checkAssertedType(expression, ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME)))
-                ) {
-                    return
-                }
+                ) return
+
                 registerConciseMethod(
                     REMOVE_SIZE_DESCRIPTION_TEMPLATE,
                     holder,

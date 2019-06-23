@@ -79,7 +79,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
   from: assertThat(expected).someCondition();
         assertThat(expected).anotherCondition();
-    to: assertThat(expected).someCondition().anotherCondition();
+    to: assertThat(expected).someCondition()
+                            .anotherCondition();
   ```
   Joining will work on actual expressions inside ```assertThat()``` that are equivalent expressions,
   except for method calls with known side-effect methods such as ```Iterator.next()``` and
@@ -87,6 +88,9 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   The comments of the statements will be preserved. When using ```extracting()``` or similar,
   the statements will not be merged.
+  
+  The behavior regarding the insertion of line breaks between the expressions can be configured in the
+  inspection settings.
 
 - AssertThatObjectIsNullOrNotNull
 
@@ -516,6 +520,10 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.2 (23-Jun-19)
+- Due to popular demand the JoinAssertThatStatements inspection will now add line breaks on joining statements.
+  The amount of statements joined without causing line breaks can be configured but defaults to 1 (always).
+          
 #### V1.1 (09-Jun-19)
 - Improved JoinAssertThatStatements detection of expressions with side-effects and added pre/post-increment/decrement detection.
 - Added Guava Optional ```opt.orNull() == null``` case. You know, I'm not making this stuff up, people actually write this kind of code.

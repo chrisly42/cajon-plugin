@@ -21,13 +21,9 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                if (!statement.hasAssertThat()) {
-                    return
-                }
+                if (!statement.hasAssertThat()) return
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
-                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
-                    return
-                }
+                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) return
 
                 val expectedCallExpression = statement.findOutmostMethodCall() ?: return
                 val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return
@@ -39,9 +35,9 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
 
                 val bothTypes = listOf(leftType, rightType)
                 val (isLeftNull, isRightNull) = bothTypes.map(TypeConversionUtil::isNullType)
-                if (isLeftNull && isRightNull) {
-                    return
-                } else if (isLeftNull || isRightNull) {
+
+                if (isLeftNull && isRightNull) return
+                if (isLeftNull || isRightNull) {
                     val replacementMethod = expectedResult.map(MethodNames.IS_NULL, MethodNames.IS_NOT_NULL)
                     registerSplitMethod(holder, expectedCallExpression, replacementMethod) { desc, method ->
                         SplitBinaryExpressionMethodCallQuickFix(desc, method, pickRightOperand = isLeftNull, noExpectedExpression = true)

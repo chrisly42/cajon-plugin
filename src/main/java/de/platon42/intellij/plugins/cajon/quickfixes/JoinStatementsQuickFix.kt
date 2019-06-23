@@ -7,7 +7,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import de.platon42.intellij.plugins.cajon.findStaticMethodCall
 import de.platon42.intellij.plugins.cajon.shortenAndReformat
 
-class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
+class JoinStatementsQuickFix(private val separateLineLimit: Int) : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
 
     companion object {
         private const val JOIN_STATEMENTS_MESSAGE = "Join assertThat() statements"
@@ -16,6 +16,10 @@ class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val firstStatement = descriptor.startElement as PsiExpressionStatement
         val lastStatement = descriptor.endElement as PsiExpressionStatement
+
+        val expressionCount = countExpressions(firstStatement, lastStatement)
+        val addLineBreaks = (expressionCount > separateLineLimit)
+
         do {
             val commentsToKeep = ArrayList<PsiComment>()
             val stuffToDelete = ArrayList<PsiElement>()
@@ -37,10 +41,10 @@ class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
             val lastElementBeforeConcat = assertThatCallOfCursorStatement.parent
             commentsToKeep.forEach {
                 lastElementBeforeConcat.addAfter(it, lastElementBeforeConcat.firstChild)
-                val newLineNode =
-                    PsiParserFacade.SERVICE.getInstance(project).createWhiteSpaceFromText("\n\t")
-
-                lastElementBeforeConcat.addAfter(newLineNode, lastElementBeforeConcat.firstChild)
+                addLineBreak(project, lastElementBeforeConcat)
+            }
+            if (commentsToKeep.isEmpty() && addLineBreaks) {
+                addLineBreak(project, lastElementBeforeConcat)
             }
 
             val newLeaf = previousStatement.firstChild
@@ -49,5 +53,28 @@ class JoinStatementsQuickFix : AbstractCommonQuickFix(JOIN_STATEMENTS_MESSAGE) {
         } while (previousStatement !== firstStatement)
         val codeBlock = PsiTreeUtil.getParentOfType(lastStatement, PsiCodeBlock::class.java) ?: return
         codeBlock.shortenAndReformat()
+    }
+
+    private fun addLineBreak(project: Project, lastElementBeforeConcat: PsiElement) {
+        val newLineNode =
+            PsiParserFacade.SERVICE.getInstance(project).createWhiteSpaceFromText("\n\t")
+
+        lastElementBeforeConcat.addAfter(newLineNode, lastElementBeforeConcat.firstChild)
+    }
+
+    private fun countExpressions(firstStatement: PsiElement, lastStatement: PsiElement): Int {
+        var count = 0
+        var currentStatement = firstStatement
+        do {
+            while (currentStatement !is PsiExpressionStatement) {
+                currentStatement = currentStatement.nextSibling!!
+            }
+            count++
+            if (currentStatement === lastStatement) {
+                break
+            }
+            currentStatement = currentStatement.nextSibling!!
+        } while (true)
+        return count
     }
 }

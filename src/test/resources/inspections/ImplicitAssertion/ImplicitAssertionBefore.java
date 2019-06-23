@@ -284,5 +284,8 @@ public class ImplicitAssertion {
         assertThat(guavaOptional).isPresent().contains("foo");
         assertThat(guavaOptional).isPresent().extractingValue().isEqualTo("foo");
         assertThat(guavaOptional).isPresent().extractingCharSequence().isEqualTo("foo");
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

@@ -144,9 +144,7 @@ fun PsiExpression.getAllTheSameExpectedBooleanConstants(): Boolean? {
     for (methodCall in methodsToView) {
         val expectedResult = methodCall.getExpectedBooleanResult()
         if (expectedResult != null) {
-            if ((lockedResult != null) && (lockedResult != expectedResult)) {
-                return null
-            }
+            if ((lockedResult != null) && (lockedResult != expectedResult)) return null
             lockedResult = expectedResult
         } else {
             val isNotConstant = CallMatcher.anyOf(
@@ -157,9 +155,7 @@ fun PsiExpression.getAllTheSameExpectedBooleanConstants(): Boolean? {
                 AbstractAssertJInspection.IS_NOT_EQUAL_TO_BOOLEAN,
                 AbstractAssertJInspection.IS_NOT_EQUAL_TO_OBJECT
             ).test(methodCall)
-            if (isNotConstant) {
-                return null
-            }
+            if (isNotConstant) return null
         }
     }
     return lockedResult
@@ -173,9 +169,7 @@ fun PsiExpression.getAllTheSameNullNotNullConstants(): Boolean? {
     for (methodCall in methodsToView) {
         val expectedResult = methodCall.getExpectedNullNonNullResult()
         if (expectedResult != null) {
-            if ((lockedResult != null) && (lockedResult != expectedResult)) {
-                return null
-            }
+            if ((lockedResult != null) && (lockedResult != expectedResult)) return null
             lockedResult = expectedResult
         } else {
             val isNotConstant = CallMatcher.anyOf(
@@ -184,9 +178,7 @@ fun PsiExpression.getAllTheSameNullNotNullConstants(): Boolean? {
                 AbstractAssertJInspection.IS_EQUAL_TO_OBJECT,
                 AbstractAssertJInspection.IS_NOT_EQUAL_TO_OBJECT
             ).test(methodCall)
-            if (isNotConstant) {
-                return null
-            }
+            if (isNotConstant) return null
         }
     }
     return lockedResult

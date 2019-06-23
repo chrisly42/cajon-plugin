@@ -195,5 +195,8 @@ public class BinaryExpression {
         assertThat(primAct == primExp).isFalse().as("doh!").isEqualTo(true);
 
         assertThat(numberObjAct.equals(numberObjExp)).as("doh!").isTrue().isEqualTo(true);
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

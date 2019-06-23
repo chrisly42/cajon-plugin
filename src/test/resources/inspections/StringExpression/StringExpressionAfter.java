@@ -49,5 +49,8 @@ public class StringExpression {
         assertThat(string).as("foo").doesNotEndWith("foo").as("bar").doesNotEndWith("foo");
         assertThat(string.endsWith("foo")).as("foo").isEqualTo(false).as("bar").isTrue();
         assertThat(string.endsWith("foo")).as("foo").satisfies(it -> it.booleanValue()).as("bar").isFalse();
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

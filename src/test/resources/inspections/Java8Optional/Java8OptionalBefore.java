@@ -43,5 +43,10 @@ public class Java8Optional {
         assertThat(opt.get()).isEqualTo("foo").isSameAs("foo").isNotEqualTo("foo").isNotSameAs("foo");
 
         assertThat(opt.orElse("foo")).as("foo").isEqualTo(null);
+
+        assertThat(opt.orElse(null)).as("foo").isEqualTo(null).isNotNull();
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

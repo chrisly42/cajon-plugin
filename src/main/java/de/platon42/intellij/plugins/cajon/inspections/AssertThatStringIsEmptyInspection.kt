@@ -22,19 +22,13 @@ class AssertThatStringIsEmptyInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
                 val isEqual = IS_EQUAL_TO_OBJECT.test(expression)
                 val hasSize = HAS_SIZE.test(expression)
                 val isLastExpression = expression.parent is PsiStatement
-                if (!((isEqual || hasSize) && isLastExpression)) {
-                    return
-                }
+                if (!((isEqual || hasSize) && isLastExpression)) return
 
-                if (!checkAssertedType(expression, ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME)) {
-                    return
-                }
+                if (!checkAssertedType(expression, ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME)) return
 
                 val value = expression.calculateConstantParameterValue(0) ?: return
                 if ((isEqual && (value == "")) || (hasSize && (value == 0))) {

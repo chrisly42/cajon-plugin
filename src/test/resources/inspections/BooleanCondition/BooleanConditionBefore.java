@@ -30,5 +30,9 @@ public class BooleanCondition {
         assertThat("").isEqualTo(Boolean.TRUE);
 
         assertThat(primitive).isEqualTo(Boolean.TRUE).as("foo").isEqualTo(true).as("bar").isTrue().isFalse();
+
+        assertThat(object).isEqualTo(Boolean.TYPE);
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

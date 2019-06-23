@@ -48,13 +48,10 @@ class AssertThatStringExpressionInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                if (!statement.hasAssertThat()) {
-                    return
-                }
+                if (!statement.hasAssertThat()) return
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
-                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
-                    return
-                }
+                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) return
+
                 val assertThatArgument = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
                 val mapping = MAPPINGS.firstOrNull { it.callMatcher.test(assertThatArgument) } ?: return
 

@@ -5,6 +5,7 @@ import de.platon42.intellij.jupiter.MyFixture
 import de.platon42.intellij.jupiter.TestDataSubPath
 import de.platon42.intellij.plugins.cajon.AbstractCajonTest
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 
@@ -69,5 +70,11 @@ internal class ExtractorReferenceContributorTest : AbstractCajonTest() {
     internal fun extractor_is_able_to_find_reference_for_extraction_on_result_of_method(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         myFixture.configureByFiles("FindReference10.java", "Address.java", "Contact.java")
         assertThat(myFixture.elementAtCaret.text).startsWith("public String getStreetName()")
+    }
+
+    @Test
+    internal fun extractor_is_unable_to_find_reference(@MyFixture myFixture: JavaCodeInsightTestFixture) {
+        myFixture.configureByFiles("FindReference11.java", "Address.java", "Contact.java")
+        assertThatThrownBy { myFixture.elementAtCaret.text }.isInstanceOf(AssertionError::class.java)
     }
 }

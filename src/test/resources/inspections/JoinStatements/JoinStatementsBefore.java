@@ -1,6 +1,7 @@
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class JoinStatements {
 
@@ -39,6 +40,8 @@ public class JoinStatements {
         assertThat(otherList.get(0)).isNotEmpty();
         assertThat(list.get(0)).hasSize(3);
 
+        assertThat(list.get(0) + "foo").isNotNull();
+        // hey, a comment mixed with line breaks due to too many joins
         assertThat(list.get(0) + "foo").isEqualTo("bar");
         assertThat(list.get(0) + "foo").doesNotStartWith("foo");
 
@@ -59,5 +62,8 @@ public class JoinStatements {
         assertThat(list.get(i++).toLowerCase()).isEqualTo("foo");
         assertThat(list.get(--i)).isEqualTo("foo");
         assertThat(list.get(--i)).isEqualTo("foo");
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

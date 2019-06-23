@@ -2,6 +2,9 @@
 <body>
 Joins consecutive assertThat() statements with the same actual expression together.
 <!-- tooltip end -->
-<br>Retains comments during operation. If the AssertThat()-Statement contains .extracting() methods, they will not be joined.
+<br>If the AssertThat()-Statement contains .extracting() methods, they will not be joined.
+<br>During joining multiple statements, line breaks may be added to avoid too long lines. The number of statements to join without
+adding line breaks can be configured.
+<br>Also retains comments during operation and forces a line break for these cases.
 </body>
 </html>

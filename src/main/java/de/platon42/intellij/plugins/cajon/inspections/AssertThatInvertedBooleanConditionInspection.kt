@@ -18,13 +18,9 @@ class AssertThatInvertedBooleanConditionInspection : AbstractAssertJInspection()
         return object : JavaElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
                 val staticMethodCall = expression.findStaticMethodCall() ?: return
-                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) {
-                    return
-                }
+                if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) return
                 expression.getExpectedBooleanResult() ?: return
 
                 val prefixExpression = staticMethodCall.firstArg as? PsiPrefixExpression ?: return

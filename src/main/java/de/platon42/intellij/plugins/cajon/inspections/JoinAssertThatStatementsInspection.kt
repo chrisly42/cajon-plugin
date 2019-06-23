@@ -2,18 +2,24 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
+import com.intellij.codeInspection.ui.SingleIntegerFieldOptionsPanel
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.siyeh.ig.psiutils.EquivalenceChecker
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.quickfixes.JoinStatementsQuickFix
+import javax.swing.JComponent
 
 class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Join multiple assertThat() statements with same actual expression"
         private const val CAN_BE_JOINED_DESCRIPTION = "Multiple assertThat() statements can be joined together"
+        private const val DEFAULT_SEPARATE_LINE_LIMIT = 1
     }
+
+    @JvmField
+    var separateLineLimit: Int = DEFAULT_SEPARATE_LINE_LIMIT
 
     override fun getDisplayName() = DISPLAY_NAME
 
@@ -63,9 +69,8 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
 
             private fun isLegitAssertThatCall(statement: PsiStatement?): PsiMethodCallExpression? {
                 if ((statement is PsiExpressionStatement) && (statement.expression is PsiMethodCallExpression)) {
-                    if (!statement.hasAssertThat()) {
-                        return null
-                    }
+                    if (!statement.hasAssertThat()) return null
+
                     val assertThatCall = PsiTreeUtil.findChildrenOfType(statement, PsiMethodCallExpression::class.java).find { ALL_ASSERT_THAT_MATCHERS.test(it) }
                     return assertThatCall?.takeIf { it.findFluentCallTo(EXTRACTING_CALL_MATCHERS) == null }
                 }
@@ -93,6 +98,10 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
         }
     }
 
+    override fun createOptionsPanel(): JComponent {
+        return SingleIntegerFieldOptionsPanel("Limit for joins before adding line breaks:", this, "separateLineLimit")
+    }
+
     private fun registerProblem(holder: ProblemsHolder, isOnTheFly: Boolean, firstStatement: PsiStatement, lastStatement: PsiStatement) {
         val problemDescriptor = holder.manager.createProblemDescriptor(
             firstStatement,
@@ -100,7 +109,7 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
             CAN_BE_JOINED_DESCRIPTION,
             ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
             isOnTheFly,
-            JoinStatementsQuickFix()
+            JoinStatementsQuickFix(separateLineLimit)
         )
         holder.registerProblem(problemDescriptor)
     }

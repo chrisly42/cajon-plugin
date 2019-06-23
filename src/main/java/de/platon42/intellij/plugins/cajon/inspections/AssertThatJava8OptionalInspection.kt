@@ -20,15 +20,11 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                if (!statement.hasAssertThat()) {
-                    return
-                }
+                if (!statement.hasAssertThat()) return
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
-                if (!ASSERT_THAT_ANY.test(staticMethodCall)) {
-                    return
-                }
-                val actualExpression = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
+                if (!ASSERT_THAT_ANY.test(staticMethodCall)) return
 
+                val actualExpression = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
                 val outmostMethodCall = statement.findOutmostMethodCall() ?: return
                 if (OPTIONAL_GET.test(actualExpression)) {
                     val expectedCallExpression = staticMethodCall.gatherAssertionCalls().singleOrNull() ?: return
@@ -58,13 +54,9 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
 
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
                 val staticMethodCall = expression.findStaticMethodCall() ?: return
-                if (!ASSERT_THAT_JAVA8_OPTIONAL.test(staticMethodCall)) {
-                    return
-                }
+                if (!ASSERT_THAT_JAVA8_OPTIONAL.test(staticMethodCall)) return
                 if (IS_EQUAL_TO_OBJECT.test(expression)) {
                     val innerExpectedCall = expression.firstArg as? PsiMethodCallExpression ?: return
                     if (CallMatcher.anyOf(OPTIONAL_OF, OPTIONAL_OF_NULLABLE).test(innerExpectedCall)) {

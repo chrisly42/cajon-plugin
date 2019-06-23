@@ -7,7 +7,6 @@ import com.intellij.psi.*
 import com.intellij.psi.util.PropertyUtilBase
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiTypesUtil
-import com.intellij.util.ArrayUtil
 import com.intellij.util.ProcessingContext
 import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
@@ -56,11 +55,9 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
 
         private fun findAndCreateReferences(element: PsiElement, finder: (PsiLiteralExpression) -> List<Pair<TextRange, List<PsiElement>>>?): Array<PsiReference> {
             val literal = element as PsiLiteralExpression
-            val results = finder(literal)
-            if (results != null) {
-                return results.map { ExtractorReference(literal, it.first, it.second) }.toTypedArray()
-            }
-            return PsiReference.EMPTY_ARRAY
+            val results = finder(literal) ?: return PsiReference.EMPTY_ARRAY
+
+            return results.map { ExtractorReference(literal, it.first, it.second) }.toTypedArray()
         }
     }
 
@@ -73,10 +70,6 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
     class ExtractorReference(literal: PsiLiteralExpression, range: TextRange, private val targets: List<PsiElement>) :
         PsiPolyVariantReferenceBase<PsiLiteralExpression>(literal, range, true) {
 
-        override fun getVariants(): Array<Any> {
-            return ArrayUtil.EMPTY_OBJECT_ARRAY
-        }
-
         override fun resolve(): PsiElement? {
             return multiResolve(false).map(ResolveResult::getElement).firstOrNull()
         }
@@ -88,9 +81,7 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
 
     class PropertyOrFieldReferenceProvider : PsiReferenceProvider() {
 
-        override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
-            return findAndCreateReferences(element, ::findReferences)
-        }
+        override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> = findAndCreateReferences(element, ::findReferences)
 
         fun findReferences(element: PsiLiteralExpression): List<Pair<TextRange, List<PsiElement>>>? {
             val literal = element.value as? String ?: return null
@@ -112,9 +103,7 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
 
     class IterablePropertyOrFieldReferenceProvider : PsiReferenceProvider() {
 
-        override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
-            return findAndCreateReferences(element, ::findReferences)
-        }
+        override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> = findAndCreateReferences(element, ::findReferences)
 
         fun findReferences(element: PsiLiteralExpression): List<Pair<TextRange, List<PsiElement>>>? {
             val literal = element.value as? String ?: return null
@@ -127,9 +116,8 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
                 isResultOf = true
             }
 
-            if (!CallMatcher.anyOf(EXTRACTING_FROM_ITERABLE, FLAT_EXTRACTING_FROM_ITERABLE).test(methodCallExpression)) {
-                return null
-            }
+            if (!CallMatcher.anyOf(EXTRACTING_FROM_ITERABLE, FLAT_EXTRACTING_FROM_ITERABLE).test(methodCallExpression)) return null
+
             val iterableType = findActualType(methodCallExpression) ?: return null
             val innerType = iterableType.resolveGenerics().substitutor.substitute(iterableType.parameters[0])
             val containingClass = PsiTypesUtil.getPsiClass(innerType) ?: return null
@@ -139,16 +127,13 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
 
     class IterableResultOfReferenceProvider : PsiReferenceProvider() {
 
-        override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
-            return findAndCreateReferences(element, ::findReferences)
-        }
+        override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> = findAndCreateReferences(element, ::findReferences)
 
         fun findReferences(element: PsiLiteralExpression): List<Pair<TextRange, List<PsiElement>>>? {
             val literal = element.value as? String ?: return null
             val methodCallExpression = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression::class.java) ?: return null
-            if (!EXTRACTING_RESULT_OF_FROM_ITERABLE.test(methodCallExpression)) {
-                return null
-            }
+            if (!EXTRACTING_RESULT_OF_FROM_ITERABLE.test(methodCallExpression)) return null
+
             val iterableType = findActualType(methodCallExpression) ?: return null
             val innerType = iterableType.resolveGenerics().substitutor.substitute(iterableType.parameters[0])
             val containingClass = PsiTypesUtil.getPsiClass(innerType) ?: return null

@@ -18,5 +18,8 @@ public class StringIsEmpty {
 
         assertThat(string).as("foo").isEqualTo("").as("bar").hasSize(0).hasSameSizeAs("foo").isEqualTo("");
         assertThat(string).as("foo").isEqualTo("").as("bar").hasSize(0).hasSameSizeAs("foo").hasSize(0);
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

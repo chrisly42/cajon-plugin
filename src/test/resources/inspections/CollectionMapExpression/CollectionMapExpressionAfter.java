@@ -40,5 +40,8 @@ public class CollectionMapExpression {
         assertThat(stringList).as("foo").isNotEmpty().as("bar").isNotEmpty();
         assertThat(stringList.isEmpty()).as("foo").isEqualTo(false).as("bar").isTrue();
         assertThat(stringList.isEmpty()).as("foo").satisfies(it -> it.booleanValue()).as("bar").isFalse();
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

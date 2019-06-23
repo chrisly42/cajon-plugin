@@ -56,5 +56,10 @@ public class GuavaOptional {
 
         assertThat(opt.isPresent()).as("foo").isEqualTo(true).as("bar").isEqualTo(Boolean.TRUE);
         assertThat(opt.isPresent()).as("foo").isEqualTo(true).as("bar").isEqualTo(Boolean.FALSE);
+
+        assertThat(opt.orNull()).as("foo").isEqualTo(null).isNotNull();
+
+        org.junit.Assert.assertThat(foo, null);
+        fail("oh no!");
     }
 }

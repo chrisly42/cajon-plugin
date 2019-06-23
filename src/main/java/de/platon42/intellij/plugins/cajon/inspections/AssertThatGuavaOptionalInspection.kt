@@ -21,16 +21,12 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
         return object : JavaElementVisitor() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
-                if (!statement.hasAssertThat()) {
-                    return
-                }
+                if (!statement.hasAssertThat()) return
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
 
-                if (!checkPreconditions(staticMethodCall)) {
-                    return
-                }
-                val actualExpression = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
+                if (!checkPreconditions(staticMethodCall)) return
 
+                val actualExpression = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
                 val outmostMethodCall = statement.findOutmostMethodCall() ?: return
                 if (GUAVA_OPTIONAL_GET.test(actualExpression)) {
                     val expectedCallExpression = staticMethodCall.gatherAssertionCalls().singleOrNull() ?: return
@@ -65,13 +61,10 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
 
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
-                if (!expression.hasAssertThat()) {
-                    return
-                }
+                if (!expression.hasAssertThat()) return
                 val staticMethodCall = expression.findStaticMethodCall() ?: return
-                if (!checkPreconditions(staticMethodCall)) {
-                    return
-                }
+                if (!checkPreconditions(staticMethodCall)) return
+
                 // We're not calling an assertThat() from Guava, but a core-AssertJ one!
                 // We need to replace that by the Guava one, if we want to apply a formally correct fix.
                 if (IS_EQUAL_TO_OBJECT.test(expression)) {
