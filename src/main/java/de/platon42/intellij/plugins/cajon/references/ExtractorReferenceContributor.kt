@@ -7,6 +7,7 @@ import com.intellij.psi.*
 import com.intellij.psi.util.PropertyUtilBase
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiTypesUtil
+import com.intellij.util.ArrayUtil
 import com.intellij.util.ProcessingContext
 import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
@@ -69,6 +70,11 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
 
     class ExtractorReference(literal: PsiLiteralExpression, range: TextRange, private val targets: List<PsiElement>) :
         PsiPolyVariantReferenceBase<PsiLiteralExpression>(literal, range, true) {
+
+        // Do not remove due to compatiblity issue with IDEA <= 2018.2
+        override fun getVariants(): Array<Any> {
+            return ArrayUtil.EMPTY_OBJECT_ARRAY
+        }
 
         override fun resolve(): PsiElement? {
             return multiResolve(false).map(ResolveResult::getElement).firstOrNull()
