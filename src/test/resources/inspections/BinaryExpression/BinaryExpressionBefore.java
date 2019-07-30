@@ -1,4 +1,5 @@
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class BinaryExpression {
 
@@ -196,7 +197,7 @@ public class BinaryExpression {
 
         assertThat(numberObjAct.equals(numberObjExp)).as("doh!").isTrue().isEqualTo(true);
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(stringAct, null);
         fail("oh no!");
     }
 }

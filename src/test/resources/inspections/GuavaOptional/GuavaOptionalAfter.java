@@ -1,6 +1,7 @@
 import com.google.common.base.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.guava.api.Assertions.assertThat;
 
 public class GuavaOptional {
@@ -59,7 +60,7 @@ public class GuavaOptional {
 
         assertThat(opt.orNull()).as("foo").isEqualTo(null).isNotNull();
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(opt, null);
         fail("oh no!");
     }
 }

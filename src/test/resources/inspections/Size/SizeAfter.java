@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class Size {
 
@@ -104,7 +105,7 @@ public class Size {
         assertThat(foo).isEqualTo(0);
         assertThat(string.length()).isPositive();
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(string, null);
         fail("oh no!");
     }
 }

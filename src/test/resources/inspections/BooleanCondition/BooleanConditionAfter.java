@@ -1,4 +1,5 @@
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class BooleanCondition {
 
@@ -32,7 +33,7 @@ public class BooleanCondition {
         assertThat(primitive).isTrue().as("foo").isTrue().as("bar").isTrue().isFalse();
 
         assertThat(object).isEqualTo(Boolean.TYPE);
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(object, null);
         fail("oh no!");
     }
 }

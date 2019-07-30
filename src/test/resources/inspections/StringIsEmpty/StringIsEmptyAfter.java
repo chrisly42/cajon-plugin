@@ -1,4 +1,5 @@
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class StringIsEmpty {
 
@@ -19,7 +20,7 @@ public class StringIsEmpty {
         assertThat(string).as("foo").isEqualTo("").as("bar").hasSize(0).hasSameSizeAs("foo").isEmpty();
         assertThat(string).as("foo").isEqualTo("").as("bar").hasSize(0).hasSameSizeAs("foo").isEmpty();
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(string, null);
         fail("oh no!");
     }
 }

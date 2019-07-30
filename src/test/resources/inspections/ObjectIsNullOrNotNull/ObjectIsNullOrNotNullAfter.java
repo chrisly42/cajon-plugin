@@ -1,4 +1,5 @@
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class ObjectIsNull {
 
@@ -14,7 +15,7 @@ public class ObjectIsNull {
         assertThat(new Object()).as("foo").isNotNull().as("bar").isEqualTo(new Object()).as("etc").isNull();
         assertThat(new Object()).as("foo").isEqualTo(null).as("bar").isEqualTo(new Object()).as("etc").isNotNull();
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat("foo", null);
         fail("oh no!");
     }
 }

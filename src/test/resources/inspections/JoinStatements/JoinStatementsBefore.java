@@ -63,7 +63,7 @@ public class JoinStatements {
         assertThat(list.get(--i)).isEqualTo("foo");
         assertThat(list.get(--i)).isEqualTo("foo");
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(list, null);
         fail("oh no!");
     }
 }

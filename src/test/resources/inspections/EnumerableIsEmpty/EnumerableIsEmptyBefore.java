@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class EnumerableIsEmpty {
 
@@ -17,7 +18,7 @@ public class EnumerableIsEmpty {
 
         assertThat("string").as("foo").hasSize(0).hasSameSizeAs("foo").hasSize(0);
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat("foo", null);
         fail("oh no!");
     }
 }

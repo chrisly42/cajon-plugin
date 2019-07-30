@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.guava.api.Assertions.assertThat;
 
 public class ImplicitAssertion {
@@ -285,7 +286,7 @@ public class ImplicitAssertion {
         assertThat(guavaOptional).extractingValue().isEqualTo("foo");
         assertThat(guavaOptional).extractingCharSequence().isEqualTo("foo");
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(string, null);
         fail("oh no!");
     }
 }

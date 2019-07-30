@@ -1,4 +1,5 @@
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class StringExpression {
 
@@ -50,7 +51,7 @@ public class StringExpression {
         assertThat(string.endsWith("foo")).as("foo").isEqualTo(false).as("bar").isTrue();
         assertThat(string.endsWith("foo")).as("foo").satisfies(it -> it.booleanValue()).as("bar").isFalse();
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(string, null);
         fail("oh no!");
     }
 }

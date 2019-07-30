@@ -1,6 +1,7 @@
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class Java8Optional {
 
@@ -46,7 +47,7 @@ public class Java8Optional {
 
         assertThat(opt.orElse(null)).as("foo").isEqualTo(null).isNotNull();
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(opt, null);
         fail("oh no!");
     }
 }

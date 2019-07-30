@@ -1,4 +1,5 @@
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.util.*;
 
@@ -41,7 +42,7 @@ public class CollectionMapExpression {
         assertThat(stringList.isEmpty()).as("foo").isEqualTo(false).as("bar").isTrue();
         assertThat(stringList.isEmpty()).as("foo").satisfies(it -> it.booleanValue()).as("bar").isFalse();
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(stringList, null);
         fail("oh no!");
     }
 }

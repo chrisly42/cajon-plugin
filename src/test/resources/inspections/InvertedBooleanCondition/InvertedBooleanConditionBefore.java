@@ -1,4 +1,5 @@
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class InvertedBooleanCondition {
 
@@ -36,7 +37,7 @@ public class InvertedBooleanCondition {
         assertThat(!primitive).as("foo").isEqualTo(Boolean.TRUE).as("bar").isNotEqualTo(false);
         assertThat(!primitive).as("foo").isEqualTo(Boolean.TRUE).as("bar").isNotEqualTo(true);
 
-        org.junit.Assert.assertThat(foo, null);
+        org.junit.Assert.assertThat(object, null);
         fail("oh no!");
     }
 }
