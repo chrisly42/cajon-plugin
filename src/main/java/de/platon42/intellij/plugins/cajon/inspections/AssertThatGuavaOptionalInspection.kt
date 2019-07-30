@@ -30,7 +30,7 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
                 val outmostMethodCall = statement.findOutmostMethodCall() ?: return
                 if (GUAVA_OPTIONAL_GET.test(actualExpression)) {
                     val expectedCallExpression = staticMethodCall.gatherAssertionCalls().singleOrNull() ?: return
-                    if (IS_EQUAL_TO_OBJECT.test(expectedCallExpression)) {
+                    if (CallMatcher.anyOf(IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_STRING).test(expectedCallExpression)) {
                         registerMoveOutMethod(holder, outmostMethodCall, actualExpression, MethodNames.CONTAINS) { desc, method ->
                             QuickFixWithPostfixDelegate(
                                 RemoveActualOutmostMethodCallQuickFix(desc, method),

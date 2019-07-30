@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.*;
 import com.intellij.testFramework.fixtures.IdeaTestExecutionPolicy;
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -88,7 +88,6 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
                 TestLoggerFactory.onTestFinished(true);
             } catch (Throwable e) {
                 TestLoggerFactory.onTestFinished(false);
-                e.fillInStackTrace();
                 throwables[0] = e;
             }
         };
@@ -112,7 +111,7 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
         }
     }
 
-    private static class LightCodeInsightFixtureTestCaseWrapper extends LightCodeInsightFixtureTestCase {
+    private static class LightCodeInsightFixtureTestCaseWrapper extends LightJavaCodeInsightFixtureTestCase {
         private final ExtensionContext extensionContext;
 
         private LightCodeInsightFixtureTestCaseWrapper(ExtensionContext extensionContext) {
@@ -159,7 +158,7 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
             };
         }
 
-        protected void addJarContaining(ModifiableRootModel model, Class clazz) {
+        void addJarContaining(ModifiableRootModel model, Class clazz) {
             try {
                 Path jarPath = Paths.get(clazz.getProtectionDomain().getCodeSource().getLocation().toURI());
 

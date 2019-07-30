@@ -2,6 +2,7 @@ package de.platon42.intellij.plugins.cajon.inspections
 
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.*
+import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.firstArg
 import de.platon42.intellij.plugins.cajon.hasAssertThat
@@ -21,7 +22,7 @@ class AssertThatObjectIsNullOrNotNullInspection : AbstractAssertJInspection() {
                 super.visitMethodCallExpression(expression)
                 if (!expression.hasAssertThat()) return
                 val isNotEqualTo = IS_NOT_EQUAL_TO_OBJECT.test(expression)
-                val isEqualTo = IS_EQUAL_TO_OBJECT.test(expression)
+                val isEqualTo = CallMatcher.anyOf(IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_STRING).test(expression)
                 val isLastExpression = expression.parent is PsiStatement
                 if (!((isEqualTo && isLastExpression) || isNotEqualTo)) return
 

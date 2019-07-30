@@ -13,6 +13,7 @@ import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_A
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_BOOLEAN_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_COMPARABLE_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_INTEGER_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_STRING_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERTIONS_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERT_INTERFACE
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ENUMERABLE_ASSERT_INTERFACE
@@ -81,6 +82,8 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
 
         val IS_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
+        val IS_EQUAL_TO_STRING = CallMatcher.instanceCall(ABSTRACT_STRING_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
+            .parameterTypes(CommonClassNames.JAVA_LANG_STRING)!!
         val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
         val IS_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)

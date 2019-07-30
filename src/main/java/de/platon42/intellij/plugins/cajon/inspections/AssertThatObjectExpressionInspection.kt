@@ -38,7 +38,7 @@ class AssertThatObjectExpressionInspection : AbstractAssertJInspection() {
                         }
                     }
                     OBJECT_TO_STRING.test(assertThatArgument) -> {
-                        staticMethodCall.findFluentCallTo(IS_EQUAL_TO_OBJECT) ?: return
+                        staticMethodCall.findFluentCallTo(IS_EQUAL_TO_OBJECT) ?: staticMethodCall.findFluentCallTo(IS_EQUAL_TO_STRING) ?: return
                         registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, MethodNames.HAS_TO_STRING) { desc, method ->
                             RemoveActualOutmostMethodCallQuickFix(desc, method)
                         }

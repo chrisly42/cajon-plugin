@@ -106,7 +106,7 @@ fun PsiMethodCallExpression.getExpectedNullNonNullResult(): Boolean? {
     if (isNull || isNotNull) {
         return isNotNull
     } else {
-        val isEqualTo = AbstractAssertJInspection.IS_EQUAL_TO_OBJECT.test(this)
+        val isEqualTo = CallMatcher.anyOf(AbstractAssertJInspection.IS_EQUAL_TO_OBJECT, AbstractAssertJInspection.IS_EQUAL_TO_STRING).test(this)
         val isNotEqualTo = AbstractAssertJInspection.IS_NOT_EQUAL_TO_OBJECT.test(this)
         if ((isEqualTo || isNotEqualTo) && firstArg.type == PsiType.NULL) {
             return isNotEqualTo
