@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.9'
     id 'org.jetbrains.kotlin.jvm' version '1.3.41'
     id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.8.2'
+    id 'com.github.kt3k.coveralls' version '2.8.4'
 }
 
 group 'de.platon42'
@@ -43,9 +43,12 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.3 (01-Aug-19)</h4>
+  <h4>V1.3 (02-Aug-19)</h4>
     <ul>
-      <li>AssertJ 3.13.0 broke some inspections due to new AbstractStringAssert::isEqualTo().
+      <li>AssertJ 3.13.0 broke some inspections due to new AbstractStringAssert::isEqualTo() method.
+      <li>AssertThatJava8Optional and AssertThatGuavaOptional inspections do not longer try to fix
+          assertThat(optional).isEqualTo(Optional.fromNullable(expression)) to contains()
+          when expression is not a non-null constant expression.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

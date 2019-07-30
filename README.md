@@ -509,7 +509,7 @@ The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and
 Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for your projects (with attribution).
 
 ## Planned features
-- Joining .contains() expressions
+- Joining ```.contains()``` expressions
 - Converting ```foo.compareTo(bar) == 0``` to ```isEqualTo()``` (yes, I've *really* seen code like that)
 - Extraction with property names to lambda with Java 8
 
@@ -520,6 +520,12 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.3 (02-Aug-19)
+- AssertJ 3.13.0 broke some inspections due to new ```AbstractStringAssert::isEqualTo()``` method.
+- AssertThatJava8Optional and AssertThatGuavaOptional inspections do not longer try to fix
+  ```assertThat(optional).isEqualTo(Optional.fromNullable(expression))``` to ```contains()```
+  when ```expression``` is not a non-null constant expression.
+  
 #### V1.2 (23-Jun-19)
 - Due to popular demand the JoinAssertThatStatements inspection will now add line breaks on joining statements.
   The amount of statements joined without causing line breaks can be configured but defaults to 1 (always).

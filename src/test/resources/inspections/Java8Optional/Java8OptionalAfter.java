@@ -30,8 +30,14 @@ public class Java8Optional {
         assertThat(opt).isPresent();
         assertThat(opt).isPresent();
 
+        String possibleNullString = System.getProperty("username");
+        String notNullString = "Narf";
+
         assertThat(opt).as("foo").contains("foo");
         assertThat(opt).contains("foo");
+        assertThat(opt).isEqualTo(Optional.ofNullable(null));
+        assertThat(opt).isEqualTo(Optional.ofNullable(possibleNullString));
+        assertThat(opt).isEqualTo(Optional.ofNullable(notNullString));
         assertThat(opt).isNotEqualTo(Optional.of("foo"));
         assertThat(opt).isNotEqualTo(Optional.ofNullable("foo"));
 

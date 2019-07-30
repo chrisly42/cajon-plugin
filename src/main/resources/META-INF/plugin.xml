@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.platon42.cajon</id>
     <name>Concise AssertJ Optimizing Nitpicker (Cajon)</name>
-    <vendor email="chrisly@platon42.de" url="https://github.com/chrisly42/cajon-plugin">Platon42</vendor>
+    <vendor email="chrisly@platon42.de" url="https://github.com/chrisly42/cajon-plugin">Chris 'platon42' Hodges</vendor>
 
     <description><![CDATA[
     Cajon is an IntelliJ IDEA Plugin for shortening and optimizing AssertJ assertions.

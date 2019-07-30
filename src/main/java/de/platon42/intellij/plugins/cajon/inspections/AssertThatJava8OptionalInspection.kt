@@ -60,6 +60,9 @@ class AssertThatJava8OptionalInspection : AbstractAssertJInspection() {
                 if (IS_EQUAL_TO_OBJECT.test(expression)) {
                     val innerExpectedCall = expression.firstArg as? PsiMethodCallExpression ?: return
                     if (CallMatcher.anyOf(OPTIONAL_OF, OPTIONAL_OF_NULLABLE).test(innerExpectedCall)) {
+                        if (OPTIONAL_OF_NULLABLE.test(innerExpectedCall)) {
+                            innerExpectedCall.firstArg.calculateConstantValue() ?: return
+                        }
                         registerRemoveExpectedOutmostMethod(holder, expression, expression, MethodNames.CONTAINS, ::UnwrapExpectedStaticMethodCallQuickFix)
                     } else if (OPTIONAL_EMPTY.test(innerExpectedCall)) {
                         registerSimplifyMethod(holder, expression, MethodNames.IS_NOT_PRESENT)

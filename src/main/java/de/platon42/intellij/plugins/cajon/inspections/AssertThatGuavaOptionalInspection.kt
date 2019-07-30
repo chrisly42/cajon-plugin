@@ -70,6 +70,9 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
                 if (IS_EQUAL_TO_OBJECT.test(expression)) {
                     val innerExpectedCall = expression.firstArg as? PsiMethodCallExpression ?: return
                     if (CallMatcher.anyOf(GUAVA_OPTIONAL_OF, GUAVA_OPTIONAL_FROM_NULLABLE).test(innerExpectedCall)) {
+                        if (GUAVA_OPTIONAL_FROM_NULLABLE.test(innerExpectedCall)) {
+                            innerExpectedCall.firstArg.calculateConstantValue() ?: return
+                        }
                         registerRemoveExpectedOutmostMethod(holder, expression, expression, MethodNames.CONTAINS) { desc, method ->
                             QuickFixWithPostfixDelegate(
                                 UnwrapExpectedStaticMethodCallQuickFix(desc, method),

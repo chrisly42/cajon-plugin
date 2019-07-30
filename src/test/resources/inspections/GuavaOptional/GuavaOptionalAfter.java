@@ -31,8 +31,14 @@ public class GuavaOptional {
         assertThat(opt).isPresent();
         assertThat(opt).isPresent();
 
+        String possibleNullString = System.getProperty("username");
+        String notNullString = "Narf";
+
         assertThat(opt).as("foo").contains("foo");
         assertThat(opt).contains("foo");
+        assertThat(opt).isEqualTo(Optional.fromNullable(null));
+        assertThat(opt).isEqualTo(Optional.fromNullable(possibleNullString));
+        assertThat(opt).isEqualTo(Optional.fromNullable(notNullString));
         assertThat(opt).isNotEqualTo(Optional.of("foo"));
         assertThat(opt).isNotEqualTo(Optional.fromNullable("foo"));
 
