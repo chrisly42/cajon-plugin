@@ -29,7 +29,7 @@ class ImplicitAssertionInspection : AbstractAssertJInspection() {
 
         private val OBJECT_ENUMERABLE_ANY_CONTENT_ASSERTIONS = CallMatcher.instanceCall(
             AssertJClassNames.OBJECT_ENUMERABLE_ASSERT_INTERFACE,
-            MethodNames.CONTAINS, "containsOnly", "containsOnlyNulls", "containsOnlyOnce",
+            MethodNames.CONTAINS, "containsOnly", "containsOnlyNulls", MethodNames.CONTAINS_ONLY_ONCE,
             "containsExactly", "containsExactlyInAnyOrder", "containsExactlyInAnyOrderElementsOf",
             "containsAll", "containsAnyOf",
             "containsAnyElementsOf", "containsExactlyElementsOf", "containsOnlyElementsOf",

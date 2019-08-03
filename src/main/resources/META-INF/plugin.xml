@@ -48,6 +48,8 @@
 
         <localInspection groupPath="Java" shortName="JoinAssertThatStatements" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.JoinAssertThatStatementsInspection"/>
+        <localInspection groupPath="Java" shortName="JoinVarArgsContains" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.JoinVarArgsContainsInspection"/>
         <localInspection groupPath="Java" shortName="AssumeThatInsteadOfReturn" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssumeThatInsteadOfReturnInspection"/>
 

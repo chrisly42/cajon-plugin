@@ -1,0 +1,11 @@
+<html>
+<body>
+Finds assertions where multiple .contains(), .containsOnlyOnce() or .doesNotContain() are
+used in a single statement that could be joined together.
+<!-- tooltip end -->
+Only works when variadic arguments are possible and will not be performed on more complex
+statements with .extracting() or .as() to avoid changing semantics.
+<br>
+Note that the quickfix does not handle comments very well and might remove them during the operation.
+</body>
+</html>

@@ -92,6 +92,23 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   The behavior regarding the insertion of line breaks between the expressions can be configured in the
   inspection settings.
 
+- JoinVarArgsContains
+
+  Looks for ```.contains()```, ```.doesNotContain()```, and .```containsOnlyOnce()``` calls for iterables 
+  within the same statement. The available quickfix can join the arguments to variadic version of the call
+  and remove the surplus one.
+  
+  ```
+  from: assertThat(expected).contains("foo").doesNotContain("bar").contains("etc").doesNotContain("huh");
+    to: assertThat(expected).contains("foo", "etc").doesNotContain("bar", "huh");
+  ```
+  Will not be performed on more complex statements with ```.extracting()``` or ```.as()``` to avoid
+  changing semantics or losing descriptions.
+
+  Note that the quickfix does not handle comments very well and might remove them during the operation.
+  
+  You may need to perform some manual reformatting, if the line gets too long after applying the fix.
+
 - AssertThatObjectIsNullOrNotNull
 
   Uses ```isNull()``` and ```isNotNull()``` instead.
@@ -343,7 +360,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(opt).isPresent();
      
   from: assertThat(opt).isEqualTo(Optional.of("foo"));
-  from: assertThat(opt).isEqualTo(Optional.ofNullable("foo"));
+  from: assertThat(opt).isEqualTo(Optional.ofNullable("foo")); // only for constant "foo"
     to: assertThat(opt).contains("foo"); 
 
   from: assertThat(opt).isEqualTo(Optional.empty());
@@ -380,7 +397,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(opt).isPresent();
      
   from: assertThat(opt).isEqualTo(Optional.of("foo"));
-  from: assertThat(opt).isEqualTo(Optional.fromNullable("foo"));
+  from: assertThat(opt).isEqualTo(Optional.fromNullable("foo")); // only for constant "foo"
     to: assertThat(opt).contains("foo"); 
 
   from: assertThat(opt).isEqualTo(Optional.absent());
@@ -509,7 +526,7 @@ The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and
 Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for your projects (with attribution).
 
 ## Planned features
-- Joining ```.contains()``` expressions
+- More Optional fixes such as opt1.get() == opt2.get() etc.
 - Converting ```foo.compareTo(bar) == 0``` to ```isEqualTo()``` (yes, I've *really* seen code like that)
 - Extraction with property names to lambda with Java 8
 
@@ -520,7 +537,9 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-#### V1.3 (02-Aug-19)
+#### V1.3 (03-Aug-19)
+- New JoinVarArgsContains inspection that will detect multiple ```.contains()```, ```.doesNotContain()```,
+  and ```.containsOnlyOnce()``` calls within the same statement that could be joined together using variadic arguments.
 - AssertJ 3.13.0 broke some inspections due to new ```AbstractStringAssert::isEqualTo()``` method.
 - AssertThatJava8Optional and AssertThatGuavaOptional inspections do not longer try to fix
   ```assertThat(optional).isEqualTo(Optional.fromNullable(expression))``` to ```contains()```

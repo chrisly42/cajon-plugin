@@ -30,6 +30,13 @@ public class Java8Optional {
         assertThat(opt.orElse(null)).isNotEqualTo(null);
         assertThat(opt.orElse(null)).isNotNull();
 
+        //assertThat(opt.get()).isEqualTo(opt.get()); // there's a better version than contains(opt.get())
+        assertThat(opt.orElse(null)).isEqualTo(opt.get());
+        //assertThat(opt.get()).isEqualTo(opt.orElse(null)); // there's a better version than contains(opt.orElse(null))
+
+        assertThat(opt).contains(opt.get());
+        assertThat(opt).contains(opt.orElse(null));
+
         String possibleNullString = System.getProperty("username");
         String notNullString = "Narf";
 

@@ -36,12 +36,16 @@ val MORE_EXTENSION_POINTS = CallMatcher.instanceCall(
     "hasOnlyOneElementSatisfying", "anyMatch", "noneMatch", "anySatisfy", "noneSatisfy"
 )!!
 
-val NOT_ACTUAL_ASSERTIONS = CallMatcher.anyOf(
-    ALL_ASSERT_THAT_MATCHERS,
+val COMPLEX_CALLS_THAT_MAKES_STUFF_TRICKY = CallMatcher.anyOf(
     DESCRIBED_AS,
     WITH_REPRESENTATION_AND_SUCH,
     USING_COMPARATOR,
     IN_HEXADECIMAL_OR_BINARY
+)!!
+
+val NOT_ACTUAL_ASSERTIONS = CallMatcher.anyOf(
+    ALL_ASSERT_THAT_MATCHERS,
+    COMPLEX_CALLS_THAT_MAKES_STUFF_TRICKY
 )!!
 
 val KNOWN_METHODS_WITH_SIDE_EFFECTS = CallMatcher.anyOf(

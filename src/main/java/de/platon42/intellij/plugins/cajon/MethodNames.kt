@@ -86,6 +86,8 @@ class MethodNames {
         @NonNls
         const val CONTAINS = "contains"
         @NonNls
+        const val CONTAINS_ONLY_ONCE = "containsOnlyOnce"
+        @NonNls
         const val DOES_NOT_CONTAIN = "doesNotContain"
         @NonNls
         const val CONTAINS_EXACTLY = "containsExactly"

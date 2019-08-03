@@ -43,8 +43,10 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.3 (02-Aug-19)</h4>
+  <h4>V1.3 (03-Aug-19)</h4>
     <ul>
+      <li>New JoinVarArgsContains inspection that will detect multiple .contains(), .doesNotContain(), and .containsOnlyOnce()
+          calls within the same statement that could be joined together using variadic arguments.
       <li>AssertJ 3.13.0 broke some inspections due to new AbstractStringAssert::isEqualTo() method.
       <li>AssertThatJava8Optional and AssertThatGuavaOptional inspections do not longer try to fix
           assertThat(optional).isEqualTo(Optional.fromNullable(expression)) to contains()
