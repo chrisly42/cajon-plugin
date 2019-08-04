@@ -265,7 +265,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(array).hasSameSizeAs(anotherArray);
   ```
 
-  and additionally with AssertJ 13.2.0 or later
+  and additionally with AssertJ 3.12.0 or later
 
   ```
   from: assertThat(array.length).isLessThanOrEqualTo(expression);
@@ -607,7 +607,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 #### V0.3 (07-Apr-19)
 - New inspection AssertThatBinaryExpressionIsTrueOrFalse that will find and fix common binary expressions and ```equals()``` statements (more than 150 combinations) inside ```assertThat()```.
 - Merged AssertThatObjectIsNull and AssertThatObjectIsNotNull to AssertThatObjectIsNullOrNotNull.
-- Support for ```hasSizeLessThan()```, ```hasSizeLessThanOrEqualTo()```, ```hasSizeGreaterThanOrEqualTo()```, and ```hasSizeGreaterThan()``` for AssertThatSizeInspection (with AssertJ >=13.2.0).
+- Support for ```hasSizeLessThan()```, ```hasSizeLessThanOrEqualTo()```, ```hasSizeGreaterThanOrEqualTo()```, and ```hasSizeGreaterThan()``` for AssertThatSizeInspection (with AssertJ >=3.12.0).
 - Really fixed highlighting for JUnit conversion. Sorry.
 
 #### V0.2 (01-Apr-19)

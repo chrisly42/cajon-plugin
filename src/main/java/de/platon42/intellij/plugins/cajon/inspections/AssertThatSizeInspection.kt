@@ -59,7 +59,7 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                     val replacementMethod = isTestForEmpty.map(MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY)
                     return Match(expression, replacementMethod, noExpectedExpression = true)
                 } else if (hasAssertJMethod(expression, ABSTRACT_ITERABLE_ASSERT_CLASSNAME, MethodNames.HAS_SIZE_LESS_THAN)) {
-                    // new stuff in AssertJ 13.2.0
+                    // new stuff in AssertJ 3.12.0
                     val replacementMethod = BONUS_EXPRESSIONS_CALL_MATCHER_MAP.find { it.first.test(expression) }?.second ?: return null
                     return Match(expression, replacementMethod)
                 }
