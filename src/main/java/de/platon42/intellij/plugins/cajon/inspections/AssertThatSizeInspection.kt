@@ -11,7 +11,7 @@ import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSizeMethodCallQuickF
 class AssertThatSizeInspection : AbstractAssertJInspection() {
 
     companion object {
-        private const val DISPLAY_NAME = "Asserting the size of an collection, array or string"
+        private const val DISPLAY_NAME = "Asserting the size of an collection, map, array or string"
         private const val REMOVE_SIZE_DESCRIPTION_TEMPLATE = "Remove size determination of expected expression and replace %s() with %s()"
         private const val REMOVE_ALL_MESSAGE = "Try to operate on the iterable itself rather than its size"
 
@@ -26,13 +26,15 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
 
         private fun isCollectionSize(expression: PsiExpression) = (expression is PsiMethodCallExpression) && COLLECTION_SIZE.test(expression)
 
+        private fun isMapSize(expression: PsiExpression) = (expression is PsiMethodCallExpression) && MAP_SIZE.test(expression)
+
         private fun isArrayLength(expression: PsiExpression): Boolean {
             val psiReferenceExpression = expression as? PsiReferenceExpression ?: return false
             return ((psiReferenceExpression.qualifierExpression?.type is PsiArrayType)
                     && ((psiReferenceExpression.resolve() as? PsiField)?.name == "length"))
         }
 
-        fun getMatch(expression: PsiMethodCallExpression, isForArrayOrCollection: Boolean, isForString: Boolean): Match? {
+        fun getMatch(expression: PsiMethodCallExpression, isForArrayCollectionOrMap: Boolean, isForString: Boolean): Match? {
             val isLastExpression = expression.parent is PsiStatement
             val constValue = expression.calculateConstantParameterValue(0)
             if (IS_EQUAL_TO_INT.test(expression)) {
@@ -40,8 +42,10 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                     Match(expression, MethodNames.IS_EMPTY, noExpectedExpression = true)
                 } else {
                     val equalToExpression = expression.firstArg
-                    if (isForArrayOrCollection && (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression)) ||
-                        isForString && (isCollectionSize(equalToExpression) || isArrayLength(equalToExpression) || isCharSequenceLength(equalToExpression))
+                    val equalsArrayCollectionOrMapSize = isArrayLength(equalToExpression) ||
+                            isCollectionSize(equalToExpression) || isMapSize(equalToExpression)
+                    if (isForArrayCollectionOrMap && equalsArrayCollectionOrMapSize ||
+                        isForString && (equalsArrayCollectionOrMapSize || isCharSequenceLength(equalToExpression))
                     ) {
                         Match(expression, MethodNames.HAS_SAME_SIZE_AS, expectedIsCollection = true)
                     } else {
@@ -79,12 +83,12 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                 if (!ASSERT_THAT_INT.test(staticMethodCall)) return
 
                 val actualExpression = staticMethodCall.firstArg
-                val isForArrayOrCollection = isArrayLength(actualExpression) || isCollectionSize(actualExpression)
+                val isForArrayCollectionOrMap = isArrayLength(actualExpression) || isCollectionSize(actualExpression) || isMapSize(actualExpression)
                 val isForString = isCharSequenceLength(actualExpression)
-                if (!(isForArrayOrCollection || isForString)) return
+                if (!(isForArrayCollectionOrMap || isForString)) return
 
                 val matches = staticMethodCall.collectMethodCallsUpToStatement()
-                    .mapNotNull { getMatch(it, isForArrayOrCollection, isForString) }
+                    .mapNotNull { getMatch(it, isForArrayCollectionOrMap, isForString) }
                     .toList()
                 if (matches.isNotEmpty()) {
                     if (matches.size == 1) {
@@ -112,9 +116,9 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
                 if (!HAS_SIZE.test(expression)) return
                 val actualExpression = expression.firstArg
 
-                val isForArrayOrCollection = isArrayLength(actualExpression) || isCollectionSize(actualExpression)
+                val isForArrayCollectionOrMap = isArrayLength(actualExpression) || isCollectionSize(actualExpression) || isMapSize(actualExpression)
                 val isForString = isCharSequenceLength(actualExpression)
-                if (!(isForArrayOrCollection
+                if (!(isForArrayCollectionOrMap
                             || (isForString && checkAssertedType(expression, ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME)))
                 ) return
 

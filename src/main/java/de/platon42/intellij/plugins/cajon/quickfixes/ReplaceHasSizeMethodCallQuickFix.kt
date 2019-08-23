@@ -15,7 +15,7 @@ class ReplaceHasSizeMethodCallQuickFix(description: String, private val replacem
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val methodCallExpression = descriptor.startElement as? PsiMethodCallExpression ?: return
 
-        replaceCollectionSizeOrArrayLength(methodCallExpression.firstArg)
+        replaceCollectionAndMapSizeOrArrayLength(methodCallExpression.firstArg)
 
         val expectedExpression = createExpectedMethodCall(methodCallExpression, replacementMethod, methodCallExpression.firstArg)
 
@@ -23,7 +23,7 @@ class ReplaceHasSizeMethodCallQuickFix(description: String, private val replacem
         methodCallExpression.replace(expectedExpression)
     }
 
-    private fun replaceCollectionSizeOrArrayLength(assertExpression: PsiExpression) {
+    private fun replaceCollectionAndMapSizeOrArrayLength(assertExpression: PsiExpression) {
         assertExpression.replace(
             when (assertExpression) {
                 is PsiReferenceExpression -> assertExpression.qualifierExpression!!

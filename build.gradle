@@ -46,6 +46,7 @@ patchPluginXml {
   <h4>V1.4 (unreleased)</h4>
     <ul>
       <li>Minor fix for highlighting of JoinVarArgsContains inspection.
+      <li>Extended AssertThatSize inspection to Maps, too.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

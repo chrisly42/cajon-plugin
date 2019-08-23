@@ -26,10 +26,10 @@ class ReplaceSizeMethodCallQuickFix(
         val outmostCallExpression = descriptor.startElement as? PsiMethodCallExpression ?: return
         val assertThatMethodCall = outmostCallExpression.findStaticMethodCall() ?: return
         val assertExpression = assertThatMethodCall.firstArg
-        replaceCollectionSizeOrArrayLength(assertExpression)
+        replaceCollectionAndMapSizeOrArrayLength(assertExpression)
 
         if (expectedIsCollection) {
-            replaceCollectionSizeOrArrayLength(outmostCallExpression.firstArg)
+            replaceCollectionAndMapSizeOrArrayLength(outmostCallExpression.firstArg)
         }
 
         val args = if (noExpectedExpression) emptyArray() else arrayOf(outmostCallExpression.firstArg)
@@ -39,7 +39,7 @@ class ReplaceSizeMethodCallQuickFix(
         outmostCallExpression.replace(expectedExpression)
     }
 
-    private fun replaceCollectionSizeOrArrayLength(assertExpression: PsiExpression) {
+    private fun replaceCollectionAndMapSizeOrArrayLength(assertExpression: PsiExpression) {
         assertExpression.replace(
             when (assertExpression) {
                 is PsiReferenceExpression -> assertExpression.qualifierExpression!!

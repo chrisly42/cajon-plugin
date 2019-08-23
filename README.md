@@ -243,7 +243,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatSize
 
-  Makes assertions on sizes of arrays, collections, strings, 
+  Makes assertions on sizes of arrays, collections, maps, strings, 
   or ```CharSequence```s more concise.
 
   ```
@@ -280,14 +280,14 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(array.length).isGreaterThanOrEqualTo(expression);
     to: assertThat(array).hasSizeGreaterThanOrEqualTo(expression);
   ```
-  and analogously for collections, strings and CharSequences, e.g:
+  and analogously for collections, maps, strings and CharSequences, e.g:
 
   ```
   from: assertThat("string".length()).isLessThan(1);
     to: assertThat("string").isEmpty();
 
-  from: assertThat("string".length()).isEqualTo(collection.size())
-    to: assertThat("string").hasSameSizeAs(collection);
+  from: assertThat("string".length()).isEqualTo(map.size())
+    to: assertThat("string").hasSameSizeAs(map);
     
   from: assertThat("string".length()).hasSize("strong".length())
     to: assertThat("string").hasSameSizeAs("strong");
@@ -539,6 +539,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 #### V1.4 (unreleased)
 - Minor fix for highlighting of JoinVarArgsContains inspection.
+- Extended AssertThatSize inspection to Maps, too.
 
 #### V1.3 (03-Aug-19)
 - New JoinVarArgsContains inspection that will detect multiple ```.contains()```, ```.doesNotContain()```,

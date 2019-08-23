@@ -12,25 +12,25 @@ internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
 
     @Test
     @TestDataSubPath("inspections/Size")
-    internal fun assertThat_size_of_array_or_collection_can_be_simplified(@MyFixture myFixture: JavaCodeInsightTestFixture) {
+    internal fun assertThat_size_of_array_collection_or_map_can_be_simplified(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         myFixture.enableInspections(AssertThatSizeInspection::class.java)
         myFixture.configureByFile("SizeBefore.java")
         assertThat(myFixture.doHighlighting()).extrakting { it.description }.containsOnlyOnce("Try to operate on the iterable itself rather than its size")
 
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isEmpty()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isZero() with isEmpty()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotZero() with isNotEmpty()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThan() with isNotEmpty()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThanOrEqualTo() with isNotEmpty()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThan() with isEmpty()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThanOrEqualTo() with isEmpty()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with hasSameSizeAs()"), 12)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with hasSize()"), 8)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThan() with hasSizeGreaterThan()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThanOrEqualTo() with hasSizeGreaterThanOrEqualTo()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThan() with hasSizeLessThan()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThanOrEqualTo() with hasSizeLessThanOrEqualTo()"), 4)
-        executeQuickFixes(myFixture, Regex.fromLiteral("Remove size determination of expected expression and replace hasSize() with hasSameSizeAs()"), 14)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isEmpty()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isZero() with isEmpty()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isNotZero() with isNotEmpty()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThan() with isNotEmpty()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThanOrEqualTo() with isNotEmpty()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThan() with isEmpty()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThanOrEqualTo() with isEmpty()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with hasSameSizeAs()"), 19)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with hasSize()"), 11)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThan() with hasSizeGreaterThan()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isGreaterThanOrEqualTo() with hasSizeGreaterThanOrEqualTo()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThan() with hasSizeLessThan()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Replace isLessThanOrEqualTo() with hasSizeLessThanOrEqualTo()"), 5)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove size determination of expected expression and replace hasSize() with hasSameSizeAs()"), 21)
         myFixture.checkResultByFile("SizeAfter.java")
     }
 }

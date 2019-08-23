@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -12,6 +14,8 @@ public class Size {
         long[] otherArray = new long[4];
         String string = "string";
         StringBuilder stringBuilder = new StringBuilder();
+        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> otherMap = new HashMap<>();
 
         assertThat(list).isEmpty();
         assertThat(list).isEmpty();
@@ -24,6 +28,7 @@ public class Size {
         assertThat(list).hasSameSizeAs(array);
         assertThat(list).hasSize(string.length());
         assertThat(list).hasSize(stringBuilder.length());
+        assertThat(list).hasSameSizeAs(map);
         assertThat(list).hasSize(1);
         assertThat(list).hasSizeGreaterThan(otherList.size() * 2);
         assertThat(list).hasSizeGreaterThanOrEqualTo(otherList.size() * 2);
@@ -33,6 +38,7 @@ public class Size {
         assertThat(list).hasSameSizeAs(array);
         assertThat(list).hasSize(string.length());
         assertThat(list).hasSize(stringBuilder.length());
+        assertThat(list).hasSameSizeAs(map);
 
         assertThat(array).isEmpty();
         assertThat(array).isEmpty();
@@ -45,6 +51,7 @@ public class Size {
         assertThat(array).hasSameSizeAs(otherArray);
         assertThat(array).hasSize(string.length());
         assertThat(array).hasSize(stringBuilder.length());
+        assertThat(array).hasSameSizeAs(map);
         assertThat(array).hasSize(1);
         assertThat(array).hasSizeGreaterThan(otherArray.length - 1);
         assertThat(array).hasSizeGreaterThanOrEqualTo(otherArray.length + 1);
@@ -54,6 +61,7 @@ public class Size {
         assertThat(array).hasSameSizeAs(otherArray);
         assertThat(array).hasSize(string.length());
         assertThat(array).hasSize(stringBuilder.length());
+        assertThat(array).hasSameSizeAs(map);
 
         assertThat(string).isEmpty();
         assertThat(string).isEmpty();
@@ -63,18 +71,20 @@ public class Size {
         assertThat(string).isEmpty();
         assertThat(string).isEmpty();
         assertThat(string).hasSameSizeAs(list);
-        assertThat(string).hasSameSizeAs(otherArray);
-        assertThat(string).hasSameSizeAs(string);
-        assertThat(string).hasSameSizeAs(stringBuilder);
-        assertThat(string).hasSize(1);
-        assertThat(string).hasSizeGreaterThan(otherArray.length - 1);
-        assertThat(string).hasSizeGreaterThanOrEqualTo(otherArray.length + 1);
-        assertThat(string).hasSizeLessThan(otherArray.length - 3);
-        assertThat(string).hasSizeLessThanOrEqualTo(1 - otherArray.length);
-        assertThat(string).hasSameSizeAs(otherList);
         assertThat(string).hasSameSizeAs(array);
         assertThat(string).hasSameSizeAs(string);
         assertThat(string).hasSameSizeAs(stringBuilder);
+        assertThat(string).hasSameSizeAs(map);
+        assertThat(string).hasSize(1);
+        assertThat(string).hasSizeGreaterThan(array.length - 1);
+        assertThat(string).hasSizeGreaterThanOrEqualTo(array.length + 1);
+        assertThat(string).hasSizeLessThan(array.length - 3);
+        assertThat(string).hasSizeLessThanOrEqualTo(1 - array.length);
+        assertThat(string).hasSameSizeAs(list);
+        assertThat(string).hasSameSizeAs(array);
+        assertThat(string).hasSameSizeAs(string);
+        assertThat(string).hasSameSizeAs(stringBuilder);
+        assertThat(string).hasSameSizeAs(map);
 
         assertThat(stringBuilder).isEmpty();
         assertThat(stringBuilder).isEmpty();
@@ -84,18 +94,43 @@ public class Size {
         assertThat(stringBuilder).isEmpty();
         assertThat(stringBuilder).isEmpty();
         assertThat(stringBuilder).hasSameSizeAs(list);
-        assertThat(stringBuilder).hasSameSizeAs(otherArray);
-        assertThat(stringBuilder).hasSameSizeAs(string);
-        assertThat(stringBuilder).hasSameSizeAs(stringBuilder);
-        assertThat(stringBuilder).hasSize(1);
-        assertThat(stringBuilder).hasSizeGreaterThan(otherArray.length - 1);
-        assertThat(stringBuilder).hasSizeGreaterThanOrEqualTo(otherArray.length + 1);
-        assertThat(stringBuilder).hasSizeLessThan(otherArray.length - 3);
-        assertThat(stringBuilder).hasSizeLessThanOrEqualTo(1 - otherArray.length);
-        assertThat(stringBuilder).hasSameSizeAs(otherList);
         assertThat(stringBuilder).hasSameSizeAs(array);
         assertThat(stringBuilder).hasSameSizeAs(string);
         assertThat(stringBuilder).hasSameSizeAs(stringBuilder);
+        assertThat(stringBuilder).hasSameSizeAs(map);
+        assertThat(stringBuilder).hasSize(1);
+        assertThat(stringBuilder).hasSizeGreaterThan(array.length - 1);
+        assertThat(stringBuilder).hasSizeGreaterThanOrEqualTo(array.length + 1);
+        assertThat(stringBuilder).hasSizeLessThan(array.length - 3);
+        assertThat(stringBuilder).hasSizeLessThanOrEqualTo(1 - array.length);
+        assertThat(stringBuilder).hasSameSizeAs(list);
+        assertThat(stringBuilder).hasSameSizeAs(array);
+        assertThat(stringBuilder).hasSameSizeAs(string);
+        assertThat(stringBuilder).hasSameSizeAs(stringBuilder);
+        assertThat(stringBuilder).hasSameSizeAs(map);
+
+        assertThat(map).isEmpty();
+        assertThat(map).isEmpty();
+        assertThat(map).isNotEmpty();
+        assertThat(map).as("hi").isNotEmpty();
+        assertThat(map).isNotEmpty();
+        assertThat(map).isEmpty();
+        assertThat(map).isEmpty();
+        assertThat(map).hasSameSizeAs(list);
+        assertThat(map).hasSameSizeAs(array);
+        assertThat(map).hasSize(string.length());
+        assertThat(map).hasSize(stringBuilder.length());
+        assertThat(map).hasSameSizeAs(otherMap);
+        assertThat(map).hasSize(1);
+        assertThat(map).hasSizeGreaterThan(array.length - 1);
+        assertThat(map).hasSizeGreaterThanOrEqualTo(array.length + 1);
+        assertThat(map).hasSizeLessThan(array.length - 3);
+        assertThat(map).hasSizeLessThanOrEqualTo(1 - array.length);
+        assertThat(map).hasSameSizeAs(list);
+        assertThat(map).hasSameSizeAs(array);
+        assertThat(map).hasSize(string.length());
+        assertThat(map).hasSize(stringBuilder.length());
+        assertThat(map).hasSameSizeAs(otherMap);
 
         assertThat(stringBuilder.length()).as("foo").isEqualTo(0).isZero().as("bar").isNotZero().isEqualTo(10);
 

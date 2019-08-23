@@ -130,6 +130,8 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
 
         val COLLECTION_SIZE = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, "size")
             .parameterCount(0)!!
+        val MAP_SIZE = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, "size")
+            .parameterCount(0)!!
         val CHAR_SEQUENCE_LENGTH = CallMatcher.instanceCall("java.lang.CharSequence", "length")
             .parameterCount(0)!!
         val OBJECT_EQUALS = CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_OBJECT, "equals")
