@@ -1,8 +1,10 @@
 <html>
 <body>
-Turns assertThat(collectionOrMap.someMethod(arg)).isTrue/isFalse() into assertThat(collectionOrMap).someMethod(arg).
+Turns assertThat(collectionOrMap.someMethod(arg)).isTrue/isFalse() into assertThat(collectionOrMap).someMethod(arg) and
+assertThat(map.get(key)).isEqualTo/isNotEqualTo(value) into assertThat(map).containsEntry(key, value).
 <!-- tooltip end -->
 <br>someMethod() can be isEmpty(), contains(), and containsAll() for collections and
 isEmpty(), containsKey(), and containsValue() for maps.
+get() may be transformed into containsKey(), doesNotContainKey(), containsEntry() or doesNotContainEntry().
 </body>
 </html>

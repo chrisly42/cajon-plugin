@@ -232,6 +232,22 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
   Analogously with ```isFalse()``` (except for ```containsAll()```).
 
+  Additional transformations for maps:
+
+  ```
+  from: assertThat(map.get(key)).isEqualTo(value);
+    to: assertThat(map).containsEntry(key, value);
+
+  from: assertThat(map.get(key)).isNotEqualTo(value);
+    to: assertThat(map).doesNotContainEntry(key, value);
+
+  from: assertThat(map.get(key)).isNotNull();
+    to: assertThat(map).containsKey(key);
+    
+  from: assertThat(map.get(key)).isNull();
+    to: assertThat(map).doesNotContainKey(key);
+  ```
+
 - AssertThatEnumerableIsEmpty
 
   Uses ```isEmpty()``` for ```hasSize(0)``` iterable assertions instead.
@@ -540,6 +556,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 #### V1.4 (unreleased)
 - Minor fix for highlighting of JoinVarArgsContains inspection.
 - Extended AssertThatSize inspection to Maps, too.
+- Extended AssertThatCollectionOrMap inspection for several ```assertThat(map.get())``` cases as suggested by Stefan H.
 
 #### V1.3 (03-Aug-19)
 - New JoinVarArgsContains inspection that will detect multiple ```.contains()```, ```.doesNotContain()```,

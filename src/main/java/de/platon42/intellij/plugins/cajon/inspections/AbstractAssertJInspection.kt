@@ -9,10 +9,12 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTypesUtil
 import com.siyeh.ig.callMatcher.CallMatcher
-import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_BOOLEAN_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_COMPARABLE_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_DOUBLE_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_FLOAT_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_INTEGER_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_LONG_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_STRING_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERTIONS_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERT_INTERFACE
@@ -84,13 +86,30 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
         val IS_EQUAL_TO_STRING = CallMatcher.instanceCall(ABSTRACT_STRING_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_STRING)!!
-        val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_EQUAL_TO)
-            .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
+        val IS_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
+            .parameterTypes("int")!!
+        val IS_EQUAL_TO_LONG = CallMatcher.instanceCall(ABSTRACT_LONG_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
+            .parameterTypes("long")!!
+        val IS_EQUAL_TO_FLOAT = CallMatcher.instanceCall(ABSTRACT_FLOAT_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
+            .parameterTypes("float")!!
+        val IS_EQUAL_TO_DOUBLE = CallMatcher.instanceCall(ABSTRACT_DOUBLE_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
+            .parameterTypes("double")!!
         val IS_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes("boolean")!!
-        val IS_NOT_EQUAL_TO_BOOLEAN =
-            CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
-                .parameterTypes("boolean")!!
+
+        val IS_NOT_EQUAL_TO_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_EQUAL_TO)
+            .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
+        val IS_NOT_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
+            .parameterTypes("boolean")!!
+        val IS_NOT_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
+            .parameterTypes("int")!!
+        val IS_NOT_EQUAL_TO_LONG = CallMatcher.instanceCall(ABSTRACT_LONG_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
+            .parameterTypes("long")!!
+        val IS_NOT_EQUAL_TO_FLOAT = CallMatcher.instanceCall(ABSTRACT_FLOAT_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
+            .parameterTypes("float")!!
+        val IS_NOT_EQUAL_TO_DOUBLE = CallMatcher.instanceCall(ABSTRACT_DOUBLE_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
+            .parameterTypes("double")!!
+
         val IS_SAME_AS_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_SAME_AS)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
         val IS_NOT_SAME_AS_OBJECT = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_SAME_AS)
@@ -106,8 +125,6 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         val HAS_SIZE = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.HAS_SIZE)
             .parameterTypes("int")!!
 
-        val IS_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
-            .parameterTypes("int")!!
         val IS_GREATER_THAN_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_GREATER_THAN)
             .parameterTypes("int")!!
         val IS_GREATER_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_GREATER_THAN_OR_EQUAL_TO)

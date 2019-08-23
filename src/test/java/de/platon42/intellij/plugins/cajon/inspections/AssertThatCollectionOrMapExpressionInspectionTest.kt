@@ -22,6 +22,10 @@ internal class AssertThatCollectionOrMapExpressionInspectionTest : AbstractCajon
         executeQuickFixes(myFixture, Regex.fromLiteral("Remove contains() of actual expression and use assertThat().doesNotContain() instead"), 2)
         executeQuickFixes(myFixture, Regex.fromLiteral("Remove containsKey() of actual expression and use assertThat().doesNotContainKey() instead"), 2)
         executeQuickFixes(myFixture, Regex.fromLiteral("Remove containsValue() of actual expression and use assertThat().doesNotContainValue() instead"), 2)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().containsEntry() instead"), 2)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().doesNotContainEntry() instead"), 2)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().containsKey() instead"), 4)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().doesNotContainKey() instead"), 4)
         myFixture.checkResultByFile("CollectionMapExpressionAfter.java")
     }
 }

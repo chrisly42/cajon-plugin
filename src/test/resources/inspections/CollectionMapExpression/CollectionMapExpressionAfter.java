@@ -38,6 +38,21 @@ public class CollectionMapExpression {
         assertThat(keyValueMap).doesNotContainValue(2);
         assertThat(keyValueMap).doesNotContainValue(2);
 
+        assertThat(keyValueMap).containsEntry("foo", 2);
+        assertThat(keyValueMap).doesNotContainEntry("foo", 3);
+        assertThat(keyValueMap).doesNotContainKey("foo");
+        assertThat(keyValueMap).doesNotContainKey("foo");
+        assertThat(keyValueMap).containsKey("foo");
+        assertThat(keyValueMap).containsKey("foo");
+
+        Map<String, String> stringStringMap = new HashMap<>();
+        assertThat(stringStringMap).containsEntry("foo", "bar");
+        assertThat(stringStringMap).doesNotContainEntry("foo", "bar");
+        assertThat(stringStringMap).doesNotContainKey("foo");
+        assertThat(stringStringMap).doesNotContainKey("foo");
+        assertThat(stringStringMap).containsKey("foo");
+        assertThat(stringStringMap).containsKey("foo");
+
         assertThat(stringList).as("foo").isNotEmpty().as("bar").isNotEmpty();
         assertThat(stringList.isEmpty()).as("foo").isEqualTo(false).as("bar").isTrue();
         assertThat(stringList.isEmpty()).as("foo").satisfies(it -> it.booleanValue()).as("bar").isFalse();

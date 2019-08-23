@@ -9,7 +9,8 @@ class MoveOutMethodCallExpressionQuickFix(
     description: String,
     private val replacementMethod: String,
     private val useNullNonNull: Boolean = false,
-    private val noExpectedExpression: Boolean = false
+    private val noExpectedExpression: Boolean = false,
+    private val keepExpectedAsSecondArgument: Boolean = false
 ) :
     AbstractCommonQuickFix(description) {
 
@@ -27,17 +28,28 @@ class MoveOutMethodCallExpressionQuickFix(
         val assertExpression = assertThatMethodCall.firstArg as? PsiMethodCallExpression ?: return
         val assertExpressionArg = if (noExpectedExpression) null else assertExpression.getArgOrNull(0)?.copy()
 
-        val methodsToFix = assertThatMethodCall.collectMethodCallsUpToStatement()
-            .filter { (if (useNullNonNull) it.getExpectedNullNonNullResult() else it.getExpectedBooleanResult()) != null }
-            .toList()
+        if (keepExpectedAsSecondArgument) {
+            assertExpressionArg ?: return
+            val secondArg = outmostCallExpression.getArgOrNull(0)?.copy() ?: return
 
-        assertExpression.replace(assertExpression.qualifierExpression)
+            assertExpression.replace(assertExpression.qualifierExpression)
 
-        methodsToFix
-            .forEach {
-                val expectedExpression = createExpectedMethodCall(it, replacementMethod, *listOfNotNull(assertExpressionArg).toTypedArray())
-                expectedExpression.replaceQualifierFromMethodCall(it)
-                it.replace(expectedExpression)
-            }
+            val expectedExpression = createExpectedMethodCall(outmostCallExpression, replacementMethod, assertExpressionArg, secondArg)
+            expectedExpression.replaceQualifierFromMethodCall(outmostCallExpression)
+            outmostCallExpression.replace(expectedExpression)
+        } else {
+            val methodsToFix = assertThatMethodCall.collectMethodCallsUpToStatement()
+                .filter { (if (useNullNonNull) it.getExpectedNullNonNullResult() else it.getExpectedBooleanResult()) != null }
+                .toList()
+
+            assertExpression.replace(assertExpression.qualifierExpression)
+
+            methodsToFix
+                .forEach {
+                    val expectedExpression = createExpectedMethodCall(it, replacementMethod, *listOfNotNull(assertExpressionArg).toTypedArray())
+                    expectedExpression.replaceQualifierFromMethodCall(it)
+                    it.replace(expectedExpression)
+                }
+        }
     }
 }

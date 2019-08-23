@@ -30,6 +30,12 @@ class AssertJClassNames {
         @NonNls
         const val ABSTRACT_INTEGER_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIntegerAssert"
         @NonNls
+        const val ABSTRACT_LONG_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractLongAssert"
+        @NonNls
+        const val ABSTRACT_FLOAT_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractFloatAssert"
+        @NonNls
+        const val ABSTRACT_DOUBLE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractDoubleAssert"
+        @NonNls
         const val ABSTRACT_COMPARABLE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractComparableAssert"
         @NonNls
         const val ABSTRACT_STRING_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractStringAssert"
