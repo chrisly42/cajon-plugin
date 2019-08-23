@@ -14,7 +14,7 @@ import de.platon42.intellij.plugins.cajon.quickfixes.JoinVarArgsContainsQuickFix
 class JoinVarArgsContainsInspection : AbstractAssertJInspection() {
 
     companion object {
-        private const val DISPLAY_NAME = "Join variadic arguments of contains()/containsOnlyOnce()/doesNotContain()"
+        private const val DISPLAY_NAME = "Join arguments to variadic for contains()/containsOnlyOnce()/doesNotContain()"
         private const val JOIN_VARARGS_MESSAGE = "Calls to same methods may be joined to variadic version"
 
         private val MATCHERS = listOf(MethodNames.CONTAINS, MethodNames.CONTAINS_ONLY_ONCE, MethodNames.DOES_NOT_CONTAIN)
@@ -42,7 +42,7 @@ class JoinVarArgsContainsInspection : AbstractAssertJInspection() {
                     if (onlyAssertionCalls.count(methodMatcher::test) > 1) {
                         val outmostMethodCall = statement.findOutmostMethodCall() ?: return
                         val quickFix = JoinVarArgsContainsQuickFix(MATCHERS)
-                        val textRange = TextRange(outmostMethodCall.qualifierExpression.textLength, outmostMethodCall.textLength)
+                        val textRange = TextRange(assertThatCall.textLength, outmostMethodCall.textLength)
                         holder.registerProblem(outmostMethodCall, textRange, JOIN_VARARGS_MESSAGE, quickFix)
                         return
                     }

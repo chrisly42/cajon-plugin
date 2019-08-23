@@ -537,6 +537,9 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.4 (unreleased)
+- Minor fix for highlighting of JoinVarArgsContains inspection.
+
 #### V1.3 (03-Aug-19)
 - New JoinVarArgsContains inspection that will detect multiple ```.contains()```, ```.doesNotContain()```,
   and ```.containsOnlyOnce()``` calls within the same statement that could be joined together using variadic arguments.
