@@ -543,6 +543,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Planned features
 - More Optional fixes such as opt1.get() == opt2.get() etc.
+- More moving out of methods for File, Path, LocalDate/Time etc.
 - Converting ```foo.compareTo(bar) == 0``` to ```isEqualTo()``` (yes, I've *really* seen code like that)
 - Extraction with property names to lambda with Java 8
 
@@ -553,7 +554,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-#### V1.4 (unreleased)
+#### V1.4 (25-Aug-19)
 - Minor fix for highlighting of JoinVarArgsContains inspection.
 - Extended AssertThatSize inspection to Maps, too.
 - Extended AssertThatCollectionOrMap inspection for several ```assertThat(map.get())``` cases as suggested by Stefan H.

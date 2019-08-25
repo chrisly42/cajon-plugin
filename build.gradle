@@ -43,7 +43,7 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.4 (unreleased)</h4>
+  <h4>V1.4 (25-Aug-19)</h4>
     <ul>
       <li>Minor fix for highlighting of JoinVarArgsContains inspection.
       <li>Extended AssertThatSize inspection to Maps, too.
