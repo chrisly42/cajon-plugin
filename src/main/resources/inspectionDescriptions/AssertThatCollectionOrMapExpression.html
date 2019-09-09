@@ -6,5 +6,13 @@ assertThat(map.get(key)).isEqualTo/isNotEqualTo(value) into assertThat(map).cont
 <br>someMethod() can be isEmpty(), contains(), and containsAll() for collections and
 isEmpty(), containsKey(), and containsValue() for maps.
 get() may be transformed into containsKey(), doesNotContainKey(), containsEntry() or doesNotContainEntry().
+<br>
+If you are using degenerated maps in your project that may contain null values (i.e.
+map.contains(key) == true AND map.get(key) == null
+is valid for some entries in your map), the default behavior of the quickfix
+assertThat(map.get(key)).isNull() turning into assertThat(map).doesNotContainKey(key)
+is not an equivalent transformation. The settings below can change this behavior to instead transform it into
+assertThat(map).containsEntry(key, null) for those cases, create both quickfix choices or simply ignore this
+case altogether (if in doubt).
 </body>
 </html>

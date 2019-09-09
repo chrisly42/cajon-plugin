@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '1.4'
+version '1.5'
 
 repositories {
     mavenCentral()
@@ -22,8 +22,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testCompile "org.assertj:assertj-core:3.13.2"
     testCompile "org.assertj:assertj-guava:3.2.1"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testImplementation "org.jetbrains.kotlin:kotlin-test"
 //    testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
 }
@@ -35,7 +35,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.2.1'
+    version '2019.2.2'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
     plugins = ['java']
@@ -43,11 +43,12 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.4 (25-Aug-19)</h4>
+  <h4>V1.5 (unreleased)</h4>
     <ul>
-      <li>Minor fix for highlighting of JoinVarArgsContains inspection.
-      <li>Extended AssertThatSize inspection to Maps, too.
-      <li>Extended AssertThatCollectionOrMap inspection for several assertThat(map.get()) cases as suggested by Stefan H.
+      <li>Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.
+      <li>Added an settings option for AssertThatCollectionOrMap inspection respecting the degenerated case of maps with null values.
+          It is now possible to change the behavior for map.get(key) == null, so it can offer either .doesNotContainKey() (default)
+          or .containsEntry(key, null), or even both.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

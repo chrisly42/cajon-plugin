@@ -102,6 +102,10 @@ class MethodNames {
         @NonNls
         const val DOES_NOT_CONTAIN_VALUE = "doesNotContainValue"
         @NonNls
+        const val CONTAINS_ENTRY = "containsEntry"
+        @NonNls
+        const val DOES_NOT_CONTAIN_ENTRY = "doesNotContainEntry"
+        @NonNls
         const val IS_EQUAL_TO_IC = "isEqualToIgnoringCase"
         @NonNls
         const val IS_NOT_EQUAL_TO_IC = "isNotEqualToIgnoringCase"

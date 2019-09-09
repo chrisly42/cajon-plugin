@@ -247,6 +247,16 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(map.get(key)).isNull();
     to: assertThat(map).doesNotContainKey(key);
   ```
+  
+  The last transformation is the default, but may not be 100% equivalent depending whether the map
+  is a degenerated case with ```null``` values, where ```map.get(key)``` returns ```null```,
+  but ```containsKey(key)``` is ```true```.
+  For that special case (which usually is the result of a bad design decision!)
+  the quickfix should rather generate ```assertThat(map).containsEntry(key, null)```.
+  Therefore, the behavior can be configured in the settings for this inspection to either
+  create the default case (```doesNotContainKey```), the degenerated case (```containsEntry```),
+  choosing between both fixes (does not work well for batch processing), or ignore this edge case
+  altogether (just to be sure to not break any code).
 
 - AssertThatEnumerableIsEmpty
 
@@ -554,10 +564,16 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.5 (unreleased)
+- Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.
+- Added an settings option for AssertThatCollectionOrMap inspection respecting the degenerated case of maps with ```null``` values.
+  It is now possible to change the behavior for ```map.get(key) == null```, so it can offer either ```.doesNotContainKey()``` (default)
+  or ```.containsEntry(key, null)```, or even both.
+
 #### V1.4 (25-Aug-19)
 - Minor fix for highlighting of JoinVarArgsContains inspection.
 - Extended AssertThatSize inspection to Maps, too.
-- Extended AssertThatCollectionOrMap inspection for several ```assertThat(map.get())``` cases as suggested by Stefan H.
+- Extended AssertThatCollectionOrMap inspection for several ```assertThat(map.get())``` cases as suggested by Georgij G.
 
 #### V1.3 (03-Aug-19)
 - New JoinVarArgsContains inspection that will detect multiple ```.contains()```, ```.doesNotContain()```,

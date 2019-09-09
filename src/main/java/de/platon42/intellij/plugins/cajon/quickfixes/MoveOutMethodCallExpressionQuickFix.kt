@@ -2,6 +2,7 @@ package de.platon42.intellij.plugins.cajon.quickfixes
 
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
+import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiMethodCallExpression
 import de.platon42.intellij.plugins.cajon.*
 
@@ -30,7 +31,8 @@ class MoveOutMethodCallExpressionQuickFix(
 
         if (keepExpectedAsSecondArgument) {
             assertExpressionArg ?: return
-            val secondArg = outmostCallExpression.getArgOrNull(0)?.copy() ?: return
+            val secondArg =
+                if (useNullNonNull) JavaPsiFacade.getElementFactory(project).createExpressionFromText("null", null) else outmostCallExpression.getArgOrNull(0)?.copy() ?: return
 
             assertExpression.replace(assertExpression.qualifierExpression)
 

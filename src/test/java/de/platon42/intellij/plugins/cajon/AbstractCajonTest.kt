@@ -1,5 +1,6 @@
 package de.platon42.intellij.plugins.cajon
 
+import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import de.platon42.intellij.jupiter.AddLocalJarToModule
@@ -21,10 +22,20 @@ import java.lang.reflect.Method
 abstract class AbstractCajonTest {
 
     protected fun executeQuickFixes(myFixture: JavaCodeInsightTestFixture, regex: Regex, expectedFixes: Int) {
+        val quickfixes = getQuickFixes(myFixture, regex, expectedFixes)
+        assertThat(quickfixes.groupBy { it.familyName }).hasSize(1)
+        quickfixes.forEach(myFixture::launchAction)
+    }
+
+    protected fun executeQuickFixesNoFamilyNameCheck(myFixture: JavaCodeInsightTestFixture, regex: Regex, expectedFixes: Int) {
+        val quickfixes = getQuickFixes(myFixture, regex, expectedFixes)
+        quickfixes.forEach(myFixture::launchAction)
+    }
+
+    protected fun getQuickFixes(myFixture: JavaCodeInsightTestFixture, regex: Regex, expectedFixes: Int): List<IntentionAction> {
         val quickfixes = myFixture.getAllQuickFixes().filter { it.text.matches(regex) }
         assertThat(quickfixes).`as`("Fixes matched by $regex: ${myFixture.getAllQuickFixes().map { it.text }}").hasSize(expectedFixes)
-        quickfixes.forEach { it.familyName }
-        quickfixes.forEach(myFixture::launchAction)
+        return quickfixes
     }
 
     class CutOffFixtureDisplayNameGenerator : DisplayNameGenerator.ReplaceUnderscores() {

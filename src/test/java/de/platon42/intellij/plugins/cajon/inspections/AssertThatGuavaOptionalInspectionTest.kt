@@ -31,8 +31,8 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
     internal fun adds_missing_Guava_import_any_order(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
         myFixture.configureByFile("WithoutPriorGuavaImportBefore.java")
-        executeQuickFixes(myFixture, Regex(".*eplace .* with .*"), 4)
-        executeQuickFixes(myFixture, Regex("Remove .*"), 3)
+        executeQuickFixesNoFamilyNameCheck(myFixture, Regex(".*eplace .* with .*"), 4)
+        executeQuickFixesNoFamilyNameCheck(myFixture, Regex("Remove .*"), 3)
         myFixture.checkResultByFile("WithoutPriorGuavaImportAfter.java")
     }
 
@@ -41,8 +41,8 @@ internal class AssertThatGuavaOptionalInspectionTest : AbstractCajonTest() {
         myFixture.enableInspections(AssertThatGuavaOptionalInspection::class.java)
         myFixture.configureByFile("WithoutPriorGuavaImportBefore.java")
         executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with Guava assertThat().isAbsent()"), 1)
-        executeQuickFixes(myFixture, Regex(".*eplace .* with .*"), 3)
-        executeQuickFixes(myFixture, Regex("Remove .*"), 3)
+        executeQuickFixesNoFamilyNameCheck(myFixture, Regex(".*eplace .* with .*"), 3)
+        executeQuickFixesNoFamilyNameCheck(myFixture, Regex("Remove .*"), 3)
         myFixture.checkResultByFile("WithoutPriorGuavaImportAfter.java")
     }
 }

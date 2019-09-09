@@ -16,9 +16,9 @@ internal class ImplicitAssertionInspectionTest : AbstractCajonTest() {
     internal fun implicit_assertions_can_be_removed(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         myFixture.enableInspections(ImplicitAssertionInspection::class.java)
         myFixture.configureByFile("ImplicitAssertionBefore.java")
-        executeQuickFixes(myFixture, Regex("Delete implicit isNotNull\\(\\) covered by .*"), 101)
-        executeQuickFixes(myFixture, Regex("Delete implicit isNotEmpty\\(\\) covered by .*"), 17)
-        executeQuickFixes(myFixture, Regex("Delete implicit isPresent\\(\\) covered by .*"), 8)
+        executeQuickFixesNoFamilyNameCheck(myFixture, Regex("Delete implicit isNotNull\\(\\) covered by .*"), 101)
+        executeQuickFixesNoFamilyNameCheck(myFixture, Regex("Delete implicit isNotEmpty\\(\\) covered by .*"), 17)
+        executeQuickFixesNoFamilyNameCheck(myFixture, Regex("Delete implicit isPresent\\(\\) covered by .*"), 8)
         myFixture.checkResultByFile("ImplicitAssertionAfter.java")
     }
 }

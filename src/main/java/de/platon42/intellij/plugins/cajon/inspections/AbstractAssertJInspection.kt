@@ -227,6 +227,20 @@ open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
         holder.registerProblem(expression, message, quickfix)
     }
 
+    protected fun registerMoveOutMethod(
+        holder: ProblemsHolder,
+        expression: PsiMethodCallExpression,
+        oldActualExpression: PsiMethodCallExpression,
+        replacementMethod: String,
+        quickFixSupplier: (String) -> List<LocalQuickFix>
+    ) {
+        val originalMethod = getOriginalMethodName(oldActualExpression) ?: return
+        val description = MOVE_ACTUAL_EXPRESSION_DESCRIPTION_TEMPLATE.format(originalMethod, replacementMethod)
+        val message = MOVING_OUT_MESSAGE_TEMPLATE.format(originalMethod)
+        val quickfixes = quickFixSupplier(description)
+        holder.registerProblem(expression, message, *quickfixes.toTypedArray())
+    }
+
     protected fun registerReplaceMethod(
         holder: ProblemsHolder,
         expression: PsiMethodCallExpression,
