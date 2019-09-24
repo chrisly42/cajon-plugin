@@ -16,7 +16,7 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
 
     companion object {
         private const val DISPLAY_NAME = "Asserting a collection or map specific expression"
-        private const val DEFAULT_MAP_VALUES_NEVER_NULL = 1
+        private const val DEFAULT_MAP_VALUES_NEVER_NULL = 2
 
         private val MAP_GET_MATCHER = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, "get").parameterCount(1)
 
@@ -87,15 +87,22 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
                         }
                     } else if (nullOrNotNull == false) {
                         when (behaviorForMapValueEqualsNull) {
-                            1 -> // as doesNotContainKey(key)
+                            1 -> // warning only
+                                registerMoveOutMethod(
+                                    holder,
+                                    expectedCallExpression,
+                                    assertThatArgument,
+                                    ""
+                                ) { _ -> emptyList() }
+                            2 -> // as doesNotContainKey(key)
                                 registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, MethodNames.DOES_NOT_CONTAIN_KEY) { desc, method ->
                                     MoveOutMethodCallExpressionQuickFix(desc, method, useNullNonNull = true)
                                 }
-                            2 -> // as containsEntry(key, null)
+                            3 -> // as containsEntry(key, null)
                                 registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, MethodNames.CONTAINS_ENTRY) { desc, method ->
                                     MoveOutMethodCallExpressionQuickFix(desc, method, keepExpectedAsSecondArgument = true, useNullNonNull = true)
                                 }
-                            3 -> // both
+                            4 -> // both
                                 registerMoveOutMethod(
                                     holder,
                                     expectedCallExpression,
@@ -145,7 +152,7 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
 
     override fun createOptionsPanel(): JComponent {
         val comboBox = ComboBox(
-            arrayOf("ignore", "as doesNotContainKey(key)", "as containsEntry(key, null)", "both choices")
+            arrayOf("ignore", "warning only, no fixes", "as doesNotContainKey(key)", "as containsEntry(key, null)", "both choices")
         )
         comboBox.selectedIndex = behaviorForMapValueEqualsNull
         comboBox.addActionListener { behaviorForMapValueEqualsNull = comboBox.selectedIndex }

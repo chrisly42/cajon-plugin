@@ -566,6 +566,8 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 #### V1.5 (unreleased)
 - Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.
+- AssertThatGuavaOptional inspections will now avoid conversions from ```.get()``` to ```.contains()```
+  for array types (currently not correctly supported by ```contains()``` in AssertJ-Guava).
 - Added an settings option for AssertThatCollectionOrMap inspection respecting the degenerated case of maps with ```null``` values.
   It is now possible to change the behavior for ```map.get(key) == null```, so it can offer either ```.doesNotContainKey()``` (default)
   or ```.containsEntry(key, null)```, or even both.

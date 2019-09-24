@@ -4,6 +4,7 @@ import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import de.platon42.intellij.jupiter.MyFixture
 import de.platon42.intellij.jupiter.TestDataSubPath
 import de.platon42.intellij.plugins.cajon.AbstractCajonTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 @TestDataSubPath("inspections/CollectionMapExpression")
@@ -32,7 +33,7 @@ internal class AssertThatCollectionOrMapExpressionInspectionTest : AbstractCajon
     @Test
     internal fun assertThat_with_certain_Collection_and_Map_methods_with_Null_values(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         val inspection = AssertThatCollectionOrMapExpressionInspection()
-        inspection.behaviorForMapValueEqualsNull = 2
+        inspection.behaviorForMapValueEqualsNull = 3
         myFixture.enableInspections(inspection)
         myFixture.configureByFile("CollectionMapExpressionBefore.java")
         executeQuickFixes(myFixture, Regex.fromLiteral("Remove isEmpty() of actual expression and use assertThat().isEmpty() instead"), 4)
@@ -65,9 +66,31 @@ internal class AssertThatCollectionOrMapExpressionInspectionTest : AbstractCajon
     }
 
     @Test
+    internal fun assertThat_with_certain_Collection_and_Map_methods_with_only_warnings_for_get_equals_null(@MyFixture myFixture: JavaCodeInsightTestFixture) {
+        val inspection = AssertThatCollectionOrMapExpressionInspection()
+        inspection.behaviorForMapValueEqualsNull = 1
+
+        myFixture.enableInspections(inspection)
+        myFixture.configureByFile("CollectionMapExpressionBefore.java")
+        val highlights = myFixture.doHighlighting()
+            .asSequence()
+            .filter { it.description == "Moving get() expression out of assertThat() would be more concise" }
+            .filter {
+                it.quickFixActionRanges?.any { innerit -> innerit.first.action.text.contains("Inspection 'Asserting a collection or map specific expression") } ?: true
+            }
+            .toList()
+        assertThat(highlights).hasSize(4)
+
+        getQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().containsEntry() instead"), 2)
+        getQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().doesNotContainEntry() instead"), 2)
+        getQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().containsKey() instead"), 4)
+        getQuickFixes(myFixture, Regex.fromLiteral("Remove get() of actual expression and use assertThat().doesNotContainKey() instead"), 0)
+    }
+
+    @Test
     internal fun assertThat_with_certain_Collection_and_Map_methods_with_both_quickfixes_for_get_equals_null(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         val inspection = AssertThatCollectionOrMapExpressionInspection()
-        inspection.behaviorForMapValueEqualsNull = 3
+        inspection.behaviorForMapValueEqualsNull = 4
 
         myFixture.enableInspections(inspection)
         myFixture.configureByFile("CollectionMapExpressionBefore.java")

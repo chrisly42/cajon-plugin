@@ -29,6 +29,7 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
                 val actualExpression = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
                 val outmostMethodCall = statement.findOutmostMethodCall() ?: return
                 if (GUAVA_OPTIONAL_GET.test(actualExpression)) {
+                    if (actualExpression.resolveMethod()?.returnType is PsiArrayType) return
                     val expectedCallExpression = staticMethodCall.gatherAssertionCalls().singleOrNull() ?: return
                     if (CallMatcher.anyOf(IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_STRING).test(expectedCallExpression)) {
                         registerMoveOutMethod(holder, outmostMethodCall, actualExpression, MethodNames.CONTAINS) { desc, method ->
