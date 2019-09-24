@@ -35,7 +35,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.2.2'
+    version '2019.2.3'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
     plugins = ['java']
@@ -43,7 +43,7 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.5 (unreleased)</h4>
+  <h4>V1.5 (24-Sep-19)</h4>
     <ul>
       <li>Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.
       <li>AssertThatGuavaOptional inspections will now avoid conversions from .get() to .contains()
@@ -51,6 +51,8 @@ patchPluginXml {
       <li>Added an settings option for AssertThatCollectionOrMap inspection respecting the degenerated case of maps with null values.
           It is now possible to change the behavior for map.get(key) == null, so it can offer either .doesNotContainKey() (default)
           or .containsEntry(key, null), or even both.
+      <li>Fixes to AssertThatSize inspection after extending it for Maps in previous release as not all
+          combinations for .hasSameSizeAs() are supported.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

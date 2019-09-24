@@ -312,8 +312,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat("string".length()).isLessThan(1);
     to: assertThat("string").isEmpty();
 
-  from: assertThat("string".length()).isEqualTo(map.size())
-    to: assertThat("string").hasSameSizeAs(map);
+  from: assertThat(map.size()).isEqualTo(anotherMap.size())
+    to: assertThat(map).hasSameSizeAs(anotherMap);
     
   from: assertThat("string".length()).hasSize("strong".length())
     to: assertThat("string").hasSameSizeAs("strong");
@@ -564,13 +564,15 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-#### V1.5 (unreleased)
+#### V1.5 (24-Sep-19)
 - Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.
 - AssertThatGuavaOptional inspections will now avoid conversions from ```.get()``` to ```.contains()```
   for array types (currently not correctly supported by ```contains()``` in AssertJ-Guava).
 - Added an settings option for AssertThatCollectionOrMap inspection respecting the degenerated case of maps with ```null``` values.
   It is now possible to change the behavior for ```map.get(key) == null```, so it can offer either ```.doesNotContainKey()``` (default)
   or ```.containsEntry(key, null)```, or even both.
+- Fixes to AssertThatSize inspection after extending it for Maps in previous release as not all
+  combinations for ```.hasSameSizeAs()``` are supported.
 
 #### V1.4 (25-Aug-19)
 - Minor fix for highlighting of JoinVarArgsContains inspection.
