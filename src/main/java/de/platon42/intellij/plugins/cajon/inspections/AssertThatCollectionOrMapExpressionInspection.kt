@@ -108,7 +108,7 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
                                     expectedCallExpression,
                                     assertThatArgument,
                                     MethodNames.DOES_NOT_CONTAIN_KEY + "/" + MethodNames.CONTAINS_ENTRY
-                                ) { desc ->
+                                ) { _ ->
                                     listOf(
                                         MoveOutMethodCallExpressionQuickFix(
                                             "Remove get() of actual expression and use assertThat().doesNotContainKey() instead (regular map)",

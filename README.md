@@ -564,6 +564,10 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.6 (unreleased)
+- Really fixed AssertThatGuavaOptional inspections to avoid conversions from ```.get()``` to ```.contains()```
+  for array types. Sigh. Shouldn't be working >12h a day and then do some more stuff at home.
+
 #### V1.5 (24-Sep-19)
 - Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.
 - AssertThatGuavaOptional inspections will now avoid conversions from ```.get()``` to ```.contains()```

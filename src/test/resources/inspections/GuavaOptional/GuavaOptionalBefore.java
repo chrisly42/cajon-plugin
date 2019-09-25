@@ -73,6 +73,8 @@ public class GuavaOptional {
 
         assertThat(opt.orNull()).as("foo").isEqualTo(null).isNotNull();
 
+        assertThat(Optional.of(new byte[] { 2, 3 }).get()).isEqualTo(new byte[] { 2, 3 }); // not working with assertj-guava 3.2.1
+
         org.junit.Assert.assertThat(opt, null);
         fail("oh no!");
     }
