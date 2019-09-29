@@ -38,7 +38,13 @@ class AssertThatBinaryExpressionInspection : AbstractAssertJInspection() {
 
                 if (isLeftNull && isRightNull) return
                 if (isLeftNull || isRightNull) {
-                    val replacementMethod = expectedResult.map(MethodNames.IS_NULL, MethodNames.IS_NOT_NULL)
+                    val expectedResultOnOp =
+                        when (binaryExpression.operationTokenType) {
+                            JavaTokenType.EQEQ -> expectedResult
+                            JavaTokenType.NE -> !expectedResult
+                            else -> return
+                        }
+                    val replacementMethod = expectedResultOnOp.map(MethodNames.IS_NULL, MethodNames.IS_NOT_NULL)
                     registerSplitMethod(holder, expectedCallExpression, replacementMethod) { desc, method ->
                         SplitBinaryExpressionMethodCallQuickFix(desc, method, pickRightOperand = isLeftNull, noExpectedExpression = true)
                     }

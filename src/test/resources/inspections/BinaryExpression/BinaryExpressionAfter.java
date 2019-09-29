@@ -189,6 +189,20 @@ public class BinaryExpression {
         assertThat(stringAct).isNotNull();
         assertThat(stringAct).isNotNull();
 
+        assertThat(stringAct).as("doh!").isNotNull();
+        assertThat(stringAct).isNotNull();
+        assertThat(stringAct).isNotNull();
+        assertThat(stringAct).isNull();
+        assertThat(stringAct).isNull();
+        assertThat(stringAct).isNull();
+
+        assertThat(stringAct).as("doh!").isNotNull();
+        assertThat(stringAct).isNotNull();
+        assertThat(stringAct).isNotNull();
+        assertThat(stringAct).isNull();
+        assertThat(stringAct).isNull();
+        assertThat(stringAct).isNull();
+
         assertThat(null == null).isTrue();
         assertThat(!false).isTrue();
 

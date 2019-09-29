@@ -47,6 +47,8 @@ patchPluginXml {
     <ul>
       <li>Really fixed AssertThatGuavaOptional inspections to avoid conversions from .get() to .contains()
           for array types. Sigh. Shouldn't be working &gt;12h a day and then do some more stuff at home.
+      <li>Fixed a bug in AssertThatBinaryExpression inspection for assertThat(null != expression) and related
+          that would not correctly invert the condition on transformation.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

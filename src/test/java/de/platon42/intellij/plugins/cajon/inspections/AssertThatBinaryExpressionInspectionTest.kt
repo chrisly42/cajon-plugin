@@ -13,7 +13,7 @@ internal class AssertThatBinaryExpressionInspectionTest : AbstractCajonTest() {
     internal fun assertThat_of_binary_expression_can_be_moved_out(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         myFixture.enableInspections(AssertThatBinaryExpressionInspection::class.java)
         myFixture.configureByFile("BinaryExpressionBefore.java")
-        executeQuickFixes(myFixture, Regex.fromLiteral("Split binary expression out of assertThat()"), 149)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Split binary expression out of assertThat()"), 161)
         myFixture.checkResultByFile("BinaryExpressionAfter.java")
     }
 }
