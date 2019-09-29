@@ -4,6 +4,7 @@ import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiMethodCallExpression
+import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
 
 class MoveOutMethodCallExpressionQuickFix(
@@ -11,7 +12,8 @@ class MoveOutMethodCallExpressionQuickFix(
     private val replacementMethod: String,
     private val useNullNonNull: Boolean = false,
     private val noExpectedExpression: Boolean = false,
-    private val keepExpectedAsSecondArgument: Boolean = false
+    private val keepExpectedAsSecondArgument: Boolean = false,
+    private val replaceOnlyThisMethod: CallMatcher? = null
 ) :
     AbstractCommonQuickFix(description) {
 
@@ -29,29 +31,46 @@ class MoveOutMethodCallExpressionQuickFix(
         val assertExpression = assertThatMethodCall.firstArg as? PsiMethodCallExpression ?: return
         val assertExpressionArg = if (noExpectedExpression) null else assertExpression.getArgOrNull(0)?.copy()
 
-        if (keepExpectedAsSecondArgument) {
-            assertExpressionArg ?: return
-            val secondArg =
-                if (useNullNonNull) JavaPsiFacade.getElementFactory(project).createExpressionFromText("null", null) else outmostCallExpression.getArgOrNull(0)?.copy() ?: return
+        when {
+            replaceOnlyThisMethod != null -> {
+                val methodsToFix = assertThatMethodCall.collectMethodCallsUpToStatement()
+                    .filter(replaceOnlyThisMethod::test)
+                    .toList()
 
-            assertExpression.replace(assertExpression.qualifierExpression)
+                assertExpression.replace(assertExpression.qualifierExpression)
 
-            val expectedExpression = createExpectedMethodCall(outmostCallExpression, replacementMethod, assertExpressionArg, secondArg)
-            expectedExpression.replaceQualifierFromMethodCall(outmostCallExpression)
-            outmostCallExpression.replace(expectedExpression)
-        } else {
-            val methodsToFix = assertThatMethodCall.collectMethodCallsUpToStatement()
-                .filter { (if (useNullNonNull) it.getExpectedNullNonNullResult() else it.getExpectedBooleanResult()) != null }
-                .toList()
+                methodsToFix
+                    .forEach {
+                        val expectedExpression = createExpectedMethodCall(it, replacementMethod, *it.argumentList.expressions)
+                        expectedExpression.replaceQualifierFromMethodCall(it)
+                        it.replace(expectedExpression)
+                    }
+            }
+            keepExpectedAsSecondArgument -> {
+                assertExpressionArg ?: return
+                val secondArg =
+                    if (useNullNonNull) JavaPsiFacade.getElementFactory(project).createExpressionFromText("null", null) else outmostCallExpression.getArgOrNull(0)?.copy() ?: return
 
-            assertExpression.replace(assertExpression.qualifierExpression)
+                assertExpression.replace(assertExpression.qualifierExpression)
 
-            methodsToFix
-                .forEach {
-                    val expectedExpression = createExpectedMethodCall(it, replacementMethod, *listOfNotNull(assertExpressionArg).toTypedArray())
-                    expectedExpression.replaceQualifierFromMethodCall(it)
-                    it.replace(expectedExpression)
-                }
+                val expectedExpression = createExpectedMethodCall(outmostCallExpression, replacementMethod, assertExpressionArg, secondArg)
+                expectedExpression.replaceQualifierFromMethodCall(outmostCallExpression)
+                outmostCallExpression.replace(expectedExpression)
+            }
+            else -> {
+                val methodsToFix = assertThatMethodCall.collectMethodCallsUpToStatement()
+                    .filter { (if (useNullNonNull) it.getExpectedNullNonNullResult() else it.getExpectedBooleanResult()) != null }
+                    .toList()
+
+                assertExpression.replace(assertExpression.qualifierExpression)
+
+                methodsToFix
+                    .forEach {
+                        val expectedExpression = createExpectedMethodCall(it, replacementMethod, *listOfNotNull(assertExpressionArg).toTypedArray())
+                        expectedExpression.replaceQualifierFromMethodCall(it)
+                        it.replace(expectedExpression)
+                    }
+            }
         }
     }
 }

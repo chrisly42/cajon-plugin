@@ -258,6 +258,54 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   choosing between both fixes (does not work well for batch processing), or ignore this edge case
   altogether (just to be sure to not break any code).
 
+- AssertThatFileExpression
+
+  Moves File method calls inside ```assertThat()``` out.
+
+  ```
+  from: assertThat(file.canRead()).isTrue();
+    to: assertThat(file).canRead();
+
+  from: assertThat(file.canWrite()).isTrue();
+    to: assertThat(file).canWrite();
+
+  from: assertThat(file.exists()).isTrue();
+    to: assertThat(file).exists();
+
+  from: assertThat(file.exists()).isFalse();
+    to: assertThat(file).doesNotExist();
+
+  from: assertThat(file.isAbsolute()).isTrue();
+    to: assertThat(file).isAbsolute();
+
+  from: assertThat(file.isAbsolute()).isFalse();
+    to: assertThat(file).isRelative();
+
+  from: assertThat(file.isDirectory()).isTrue();
+    to: assertThat(file).isDirectory();
+
+  from: assertThat(file.isFile()).isTrue();
+    to: assertThat(file).isFile();
+
+  from: assertThat(file.getName()).isEqualTo(filename);
+    to: assertThat(file).hasName(filename);
+
+  from: assertThat(file.getParent()).isEqualTo(pathname);
+    to: assertThat(file).hasParent(pathname);
+
+  from: assertThat(file.getParent()).isNull();
+  from: assertThat(file.getParentFile()).isNull();
+    to: assertThat(file).hasNoParent();
+
+  from: assertThat(file.list()).isEmpty();
+  from: assertThat(file.listFiles()).isEmpty();
+    to: assertThat(file).isEmptyDirectory();
+
+  from: assertThat(file.list()).isNotEmpty();
+  from: assertThat(file.listFiles()).isNotEmpty();
+    to: assertThat(file).isNotEmptyDirectory();
+  ```
+
 - AssertThatEnumerableIsEmpty
 
   Uses ```isEmpty()``` for ```hasSize(0)``` iterable assertions instead.
@@ -552,10 +600,10 @@ The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and
 Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for your projects (with attribution).
 
 ## Planned features
-- More Optional fixes such as opt1.get() == opt2.get() etc.
-- More moving out of methods for File, Path, LocalDate/Time etc.
+- More Optional fixes such as ```opt1.get() == opt2.get()``` etc.
+- More moving out of methods for Path, LocalDate/Time etc.
 - Converting ```foo.compareTo(bar) == 0``` to ```isEqualTo()``` (yes, I've *really* seen code like that)
-- Extraction with property names to lambda with Java 8
+- Extraction with property names to lambda/method reference with Java 8
 
   ```
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
@@ -569,6 +617,8 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
   for array types. Sigh. Shouldn't be working >12h a day and then do some more stuff at home.
 - Fixed a bug in AssertThatBinaryExpression inspection for ```assertThat(null != expression)``` and related
   that would not correctly invert the condition on transformation.
+- Added new AssertThatFileExpression to move out many common methods from inside the
+  ```assertThat()``` expression (```exists(), getName(), getParent()```, and many more).
 
 #### V1.5 (24-Sep-19)
 - Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.

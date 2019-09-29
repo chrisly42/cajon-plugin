@@ -45,6 +45,8 @@
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatStringExpressionInspection"/>
         <localInspection groupPath="Java" shortName="AssertThatCollectionOrMapExpression" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatCollectionOrMapExpressionInspection"/>
+        <localInspection groupPath="Java" shortName="AssertThatFileExpression" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.AssertThatFileExpressionInspection"/>
 
         <localInspection groupPath="Java" shortName="JoinAssertThatStatements" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.JoinAssertThatStatementsInspection"/>
