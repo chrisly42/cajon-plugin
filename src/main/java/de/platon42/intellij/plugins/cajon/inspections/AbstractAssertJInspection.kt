@@ -25,7 +25,7 @@ import de.platon42.intellij.plugins.cajon.MethodNames
 import de.platon42.intellij.plugins.cajon.qualifierExpression
 import de.platon42.intellij.plugins.cajon.quickfixes.ReplaceSimpleMethodCallQuickFix
 
-open class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
+abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool() {
 
     companion object {
         const val SIMPLIFY_MESSAGE_TEMPLATE = "%s() can be simplified to %s()"

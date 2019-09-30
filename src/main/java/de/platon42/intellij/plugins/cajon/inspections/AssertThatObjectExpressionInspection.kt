@@ -5,10 +5,8 @@ import com.intellij.psi.*
 import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.quickfixes.HasHashCodeQuickFix
-import de.platon42.intellij.plugins.cajon.quickfixes.MoveOutMethodCallExpressionQuickFix
-import de.platon42.intellij.plugins.cajon.quickfixes.RemoveActualOutmostMethodCallQuickFix
 
-class AssertThatObjectExpressionInspection : AbstractAssertJInspection() {
+class AssertThatObjectExpressionInspection : AbstractMoveOutInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting equals(), toString(), or hashCode()"
@@ -16,6 +14,17 @@ class AssertThatObjectExpressionInspection : AbstractAssertJInspection() {
 
         private val OBJECT_TO_STRING = CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_OBJECT, "toString").parameterCount(0)
         private val OBJECT_HASHCODE = CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_OBJECT, "hashCode").parameterCount(0)
+
+        private val MAPPINGS = listOf(
+            MoveOutMapping(
+                OBJECT_EQUALS,
+                MethodNames.IS_EQUAL_TO, MethodNames.IS_NOT_EQUAL_TO, expectBoolean = true
+            ),
+            MoveOutMapping(
+                OBJECT_TO_STRING,
+                MethodNames.HAS_TO_STRING, expectedMatcher = CallMatcher.anyOf(IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_STRING)
+            )
+        )
     }
 
     override fun getDisplayName() = DISPLAY_NAME
@@ -25,31 +34,18 @@ class AssertThatObjectExpressionInspection : AbstractAssertJInspection() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
                 if (!statement.hasAssertThat()) return
+                
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
-
                 val assertThatArgument = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
-                val expectedCallExpression = statement.findOutmostMethodCall() ?: return
-                when {
-                    OBJECT_EQUALS.test(assertThatArgument) -> {
-                        val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return
-                        val replacementMethod = expectedResult.map(MethodNames.IS_EQUAL_TO, MethodNames.IS_NOT_EQUAL_TO)
-                        registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, replacementMethod) { desc, method ->
-                            MoveOutMethodCallExpressionQuickFix(desc, method)
-                        }
+                if (OBJECT_HASHCODE.test(assertThatArgument)) {
+                    val expectedCallExpression = statement.findOutmostMethodCall() ?: return
+                    val isEqualTo = staticMethodCall.findFluentCallTo(IS_EQUAL_TO_INT) ?: return
+                    val expectedExpression = isEqualTo.firstArg as? PsiMethodCallExpression ?: return
+                    if (OBJECT_HASHCODE.test(expectedExpression)) {
+                        holder.registerProblem(expectedCallExpression, HASHCODE_MESSAGE_TEMPLATE, HasHashCodeQuickFix())
                     }
-                    OBJECT_TO_STRING.test(assertThatArgument) -> {
-                        staticMethodCall.findFluentCallTo(IS_EQUAL_TO_OBJECT) ?: staticMethodCall.findFluentCallTo(IS_EQUAL_TO_STRING) ?: return
-                        registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, MethodNames.HAS_TO_STRING) { desc, method ->
-                            RemoveActualOutmostMethodCallQuickFix(desc, method)
-                        }
-                    }
-                    OBJECT_HASHCODE.test(assertThatArgument) -> {
-                        val isEqualTo = staticMethodCall.findFluentCallTo(IS_EQUAL_TO_INT) ?: return
-                        val expectedExpression = isEqualTo.firstArg as? PsiMethodCallExpression ?: return
-                        if (OBJECT_HASHCODE.test(expectedExpression)) {
-                            holder.registerProblem(expectedCallExpression, HASHCODE_MESSAGE_TEMPLATE, HasHashCodeQuickFix())
-                        }
-                    }
+                } else {
+                    createInspectionsForMappings(statement, holder, MAPPINGS)
                 }
             }
         }

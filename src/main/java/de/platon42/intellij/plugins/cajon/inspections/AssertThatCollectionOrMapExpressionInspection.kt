@@ -12,7 +12,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 
-class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection() {
+class AssertThatCollectionOrMapExpressionInspection : AbstractMoveOutInspection() {
 
     companion object {
         private const val DISPLAY_NAME = "Asserting a collection or map specific expression"
@@ -39,28 +39,28 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
         )
 
         private val MAPPINGS = listOf(
-            Mapping(
+            MoveOutMapping(
                 CallMatcher.anyOf(
                     CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, MethodNames.IS_EMPTY).parameterCount(0),
                     CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, MethodNames.IS_EMPTY).parameterCount(0)
                 ),
-                MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY
+                MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY, expectBoolean = true
             ),
-            Mapping(
+            MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, MethodNames.CONTAINS).parameterCount(1),
-                MethodNames.CONTAINS, MethodNames.DOES_NOT_CONTAIN
+                MethodNames.CONTAINS, MethodNames.DOES_NOT_CONTAIN, expectBoolean = true
             ),
-            Mapping(
+            MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_COLLECTION, MethodNames.CONTAINS_ALL).parameterCount(1),
-                MethodNames.CONTAINS_ALL, null
+                MethodNames.CONTAINS_ALL, expectBoolean = true
             ),
-            Mapping(
+            MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, MethodNames.CONTAINS_KEY).parameterCount(1),
-                MethodNames.CONTAINS_KEY, MethodNames.DOES_NOT_CONTAIN_KEY
+                MethodNames.CONTAINS_KEY, MethodNames.DOES_NOT_CONTAIN_KEY, expectBoolean = true
             ),
-            Mapping(
+            MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_MAP, MethodNames.CONTAINS_VALUE).parameterCount(1),
-                MethodNames.CONTAINS_VALUE, MethodNames.DOES_NOT_CONTAIN_VALUE
+                MethodNames.CONTAINS_VALUE, MethodNames.DOES_NOT_CONTAIN_VALUE, expectBoolean = true
             )
         )
     }
@@ -78,8 +78,8 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
 
                 val assertThatArgument = staticMethodCall.getArgOrNull(0) as? PsiMethodCallExpression ?: return
-                val expectedCallExpression = statement.findOutmostMethodCall() ?: return
                 if (MAP_GET_MATCHER.test(assertThatArgument)) {
+                    val expectedCallExpression = statement.findOutmostMethodCall() ?: return
                     val nullOrNotNull = expectedCallExpression.getAllTheSameNullNotNullConstants()
                     if (nullOrNotNull == true) {
                         registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, MethodNames.CONTAINS_KEY) { desc, method ->
@@ -136,15 +136,7 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
                         }
                     }
                 } else {
-                    if (!ASSERT_THAT_BOOLEAN.test(staticMethodCall)) return
-                    val mapping = MAPPINGS.firstOrNull { it.callMatcher.test(assertThatArgument) } ?: return
-
-                    val expectedResult = expectedCallExpression.getAllTheSameExpectedBooleanConstants() ?: return
-
-                    val replacementMethod = if (expectedResult) mapping.replacementForTrue else mapping.replacementForFalse ?: return
-                    registerMoveOutMethod(holder, expectedCallExpression, assertThatArgument, replacementMethod) { desc, method ->
-                        MoveOutMethodCallExpressionQuickFix(desc, method)
-                    }
+                    createInspectionsForMappings(statement, holder, MAPPINGS)
                 }
             }
         }
@@ -163,10 +155,4 @@ class AssertThatCollectionOrMapExpressionInspection : AbstractAssertJInspection(
         )
         return panel
     }
-
-    private class Mapping(
-        val callMatcher: CallMatcher,
-        val replacementForTrue: String,
-        val replacementForFalse: String?
-    )
 }
