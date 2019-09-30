@@ -51,6 +51,8 @@ patchPluginXml {
           that would not correctly invert the condition on transformation.
       <li>Added new AssertThatFileExpression to move out many common methods from inside the
           assertThat() expression (exists(), getName(), getParent() and many more).
+      <li>Added several transformations to AssertThatStringExpression inspection.
+          Specifically, uses of matches(), compareToIgnoreCase(), indexOf(), and trim().
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

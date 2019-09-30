@@ -189,8 +189,35 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   from: assertThat(stringActual.endsWith(stringExpected)).isTrue();
     to: assertThat(stringActual).endsWith(stringExpected);
+
+  from: assertThat(stringActual.matches(stringExpected)).isTrue();
+    to: assertThat(stringActual).matches(stringExpected);
   ```
   Analogously with ```isFalse()```.
+  
+  More funny stuff (excerpt):
+
+  ```
+  from: assertThat(stringActual.compareToIgnoreCase(stringExpected)).isEqualTo(0);
+    to: assertThat(stringActual).isEqualToIgnoringCase(stringExpected);
+
+  from: assertThat(stringActual.indexOf(stringExpected)).isEqualTo(0);
+  from: assertThat(stringActual.indexOf(stringExpected)).isZero();
+    to: assertThat(stringActual).startsWith(stringExpected);
+
+  from: assertThat(stringActual.indexOf(stringExpected)).isNotZero();
+    to: assertThat(stringActual).doesNotStartWith(stringExpected);
+
+  from: assertThat(stringActual.indexOf(stringExpected)).isEqualTo(-1);
+  from: assertThat(stringActual.indexOf(stringExpected)).isNegative();
+    to: assertThat(stringActual).doesNotContain(stringExpected);
+
+  from: assertThat(stringActual.indexOf(stringExpected)).isGreaterThanOrEqualTo(0);
+    to: assertThat(stringActual).contains(stringExpected);
+
+  from: assertThat(stringActual.trim()).isNotEmpty();
+    to: assertThat(stringActual).isNotBlank();
+  ```
 
 - AssertThatObjectExpression
 
@@ -619,6 +646,8 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
   that would not correctly invert the condition on transformation.
 - Added new AssertThatFileExpression to move out many common methods from inside the
   ```assertThat()``` expression (```exists(), getName(), getParent()```, and many more).
+- Added several transformations to AssertThatStringExpression inspection.
+  Specifically, uses of ```matches()```, ```compareToIgnoreCase()```, ```indexOf()```, and ```trim()```.
 
 #### V1.5 (24-Sep-19)
 - Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.

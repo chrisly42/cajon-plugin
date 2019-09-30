@@ -3,6 +3,7 @@ package de.platon42.intellij.plugins.cajon.quickfixes
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiExpression
 import com.intellij.psi.PsiMethodCallExpression
 import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
@@ -13,7 +14,8 @@ class MoveOutMethodCallExpressionQuickFix(
     private val useNullNonNull: Boolean = false,
     private val noExpectedExpression: Boolean = false,
     private val keepExpectedAsSecondArgument: Boolean = false,
-    private val replaceOnlyThisMethod: CallMatcher? = null
+    private val replaceOnlyThisMethod: CallMatcher? = null,
+    private val replaceFromOriginalMethod: Boolean = false
 ) :
     AbstractCommonQuickFix(description) {
 
@@ -29,7 +31,7 @@ class MoveOutMethodCallExpressionQuickFix(
         val outmostCallExpression = descriptor.startElement as? PsiMethodCallExpression ?: return
         val assertThatMethodCall = outmostCallExpression.findStaticMethodCall() ?: return
         val assertExpression = assertThatMethodCall.firstArg as? PsiMethodCallExpression ?: return
-        val assertExpressionArg = if (noExpectedExpression) null else assertExpression.getArgOrNull(0)?.copy()
+        val assertExpressionArg = if (noExpectedExpression) null else assertExpression.getArgOrNull(0)?.copy() as PsiExpression?
 
         when {
             replaceOnlyThisMethod != null -> {
@@ -41,7 +43,11 @@ class MoveOutMethodCallExpressionQuickFix(
 
                 methodsToFix
                     .forEach {
-                        val expectedExpression = createExpectedMethodCall(it, replacementMethod, *it.argumentList.expressions)
+                        val expectedExpression = createExpectedMethodCall(
+                            it,
+                            replacementMethod,
+                            *if (replaceFromOriginalMethod) arrayOf(assertExpressionArg!!) else it.argumentList.expressions
+                        )
                         expectedExpression.replaceQualifierFromMethodCall(it)
                         it.replace(expectedExpression)
                     }

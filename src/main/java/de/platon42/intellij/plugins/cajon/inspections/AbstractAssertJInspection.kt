@@ -120,6 +120,8 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
         val IS_NOT_NULL = CallMatcher.instanceCall(ASSERT_INTERFACE, MethodNames.IS_NOT_NULL)
             .parameterCount(0)!!
 
+        val IS_EMPTY = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.IS_EMPTY)
+            .parameterCount(0)!!
         val IS_NOT_EMPTY = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.IS_NOT_EMPTY)
             .parameterCount(0)!!
         val HAS_SIZE = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.HAS_SIZE)
@@ -138,6 +140,14 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
         val IS_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_ZERO)
             .parameterCount(0)!!
         val IS_NOT_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_NOT_ZERO)
+            .parameterCount(0)!!
+        val IS_NEGATIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNegative")
+            .parameterCount(0)!!
+        val IS_NOT_NEGATIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNotNegative")
+            .parameterCount(0)!!
+        val IS_POSITIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isPositive")
+            .parameterCount(0)!!
+        val IS_NOT_POSITIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNotPositive")
             .parameterCount(0)!!
 
         val IS_TRUE = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_TRUE)

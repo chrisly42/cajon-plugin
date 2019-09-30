@@ -26,6 +26,8 @@ public class StringExpression {
         assertThat(string.startsWith("foo")).isTrue();
         assertThat(string.endsWith("foo")).isEqualTo(true);
         assertThat(string.endsWith("foo")).isTrue();
+        assertThat(string.matches("foo")).isEqualTo(true);
+        assertThat(string.matches("foo")).isTrue();
 
         assertThat(string.isEmpty()).as("foo").isEqualTo(false);
         assertThat(string.isEmpty()).isNotEqualTo(true);
@@ -46,10 +48,42 @@ public class StringExpression {
         assertThat(string.startsWith("foo")).isFalse();
         assertThat(string.endsWith("foo")).isEqualTo(false);
         assertThat(string.endsWith("foo")).isFalse();
+        assertThat(string.matches("foo")).isEqualTo(false);
+        assertThat(string.matches("foo")).isFalse();
 
         assertThat(string.endsWith("foo")).as("foo").isEqualTo(false).as("bar").isFalse();
         assertThat(string.endsWith("foo")).as("foo").isEqualTo(false).as("bar").isTrue();
         assertThat(string.endsWith("foo")).as("foo").satisfies(it -> it.booleanValue()).as("bar").isFalse();
+
+        assertThat(string.compareToIgnoreCase("foo")).isEqualTo(0);
+        assertThat(string.compareToIgnoreCase("foo")).isZero();
+        assertThat(string.compareToIgnoreCase("foo")).isEqualTo(1);
+        assertThat(string.compareToIgnoreCase("foo")).isLessThan(0);
+
+        assertThat(string.compareToIgnoreCase("foo")).isNotEqualTo(0);
+        assertThat(string.compareToIgnoreCase("foo")).isNotZero();
+        assertThat(string.compareToIgnoreCase("foo")).isNotEqualTo(1);
+        assertThat(string.compareToIgnoreCase("foo")).isGreaterThan(0);
+
+        assertThat(string.indexOf("foo")).isZero();
+        assertThat(string.indexOf("foo")).isNotZero();
+        assertThat(string.indexOf("foo")).isEqualTo(0);
+        assertThat(string.indexOf("foo")).isEqualTo(1);
+        assertThat(string.indexOf("foo")).isEqualTo(-1);
+        assertThat(string.indexOf("foo")).isNotEqualTo(0);
+        assertThat(string.indexOf("foo")).isNotEqualTo(1);
+        assertThat(string.indexOf("foo")).isNotEqualTo(-1);
+        assertThat(string.indexOf("foo")).isLessThan(0);
+        assertThat(string.indexOf("foo")).isLessThanOrEqualTo(-1);
+        assertThat(string.indexOf("foo")).isGreaterThan(-1);
+        assertThat(string.indexOf("foo")).isGreaterThanOrEqualTo(0);
+        assertThat(string.indexOf("foo")).isNegative();
+        assertThat(string.indexOf("foo")).isPositive();
+        assertThat(string.indexOf("foo")).isNotNegative();
+        assertThat(string.indexOf("foo")).isNotPositive();
+
+        assertThat(string.trim()).isEmpty(); // would turn into isJavaBlank(), which is deprecated. Should be isNotNull().isBlank() then...
+        assertThat(string.trim()).isNotEmpty();
 
         org.junit.Assert.assertThat(string, null);
         fail("oh no!");
