@@ -221,7 +221,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatObjectExpression
 
-  Handles equals(), toString() and hashCode() inside an expected expression.
+  Handles ```equals()```, ```toString()``` and ```hashCode()``` inside an expected expression.
   
   ```
   from: assertThat(objActual.equals(objExpected)).isTrue();
@@ -236,7 +236,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatCollectionOrMapExpression
 
-  Moves collection and map operations inside ```assertThat()``` out.
+  Moves ```Collection``` and ```Map``` operations inside ```assertThat()``` out.
 
   ```
   from: assertThat(collection.isEmpty()).isTrue();
@@ -259,7 +259,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
   Analogously with ```isFalse()``` (except for ```containsAll()```).
 
-  Additional transformations for maps:
+  Additional transformations for ```Map``` instances:
 
   ```
   from: assertThat(map.get(key)).isEqualTo(value);
@@ -287,7 +287,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatFileExpression
 
-  Moves File method calls inside ```assertThat()``` out.
+  Moves ```File``` method calls inside ```assertThat()``` out.
 
   ```
   from: assertThat(file.canRead()).isTrue();
@@ -344,8 +344,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatSize
 
-  Makes assertions on sizes of arrays, collections, maps, strings, 
-  or ```CharSequence```s more concise.
+  Makes assertions on sizes on ```Array```, ```Collection```,
+  ```Map```, ```String```, or ```CharSequence``` instances more concise.
 
   ```
   from: assertThat(array.length).isEqualTo(0);
@@ -381,7 +381,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(array.length).isGreaterThanOrEqualTo(expression);
     to: assertThat(array).hasSizeGreaterThanOrEqualTo(expression);
   ```
-  and analogously for collections, maps, strings and CharSequences, e.g:
+  and analogously for ```Collection```, ```Map```, ```String``` and
+  ```CharSequence``` objects, e.g:
 
   ```
   from: assertThat("string".length()).isLessThan(1);
@@ -508,7 +509,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(opt).isPresent();
   ```
 
-  AssertJ for Guava needs to be available in the classpath.
+  AssertJ for Guava needs to be available in the classpath for this inspection to work.
 
 - AssumeThatInsteadOfReturn
 
@@ -601,6 +602,8 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 ### Implemented referencing
 
+  You can ctrl-click on references inside .extracting() method parameters to go the
+  referencing method definition.
   ```
   .extracting("field")
   .extracting("outerField.fieldInsideObjectTypeOfOuterField.andSoOn")
@@ -614,7 +617,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   .flatExtracting(Extractors.byName("fieldOrPropertyOrBareMethod.orAPathLikeAbove")
   .flatExtracting(Extractors.resultOf("bareMethod")
   ```
-  Works on both POJOs and ```Iterable```s/```Array```s. 
+  This works on both POJOs and ```Iterable```s/```Array```s. 
   Implementation is very basic though and does not work with fancy cascaded ```.extracting()``` sequences.
   If there's demand, I could add it.
 
@@ -639,7 +642,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-#### V1.6 (unreleased)
+#### V1.6 (30-Sep-19)
 - Really fixed AssertThatGuavaOptional inspections to avoid conversions from ```.get()``` to ```.contains()```
   for array types. Sigh. Shouldn't be working >12h a day and then do some more stuff at home.
 - Fixed a bug in AssertThatBinaryExpression inspection for ```assertThat(null != expression)``` and related

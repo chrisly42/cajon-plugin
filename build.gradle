@@ -43,7 +43,7 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.6 (unreleased)</h4>
+  <h4>V1.6 (30-Sep-19)</h4>
     <ul>
       <li>Really fixed AssertThatGuavaOptional inspections to avoid conversions from .get() to .contains()
           for array types. Sigh. Shouldn't be working &gt;12h a day and then do some more stuff at home.
