@@ -17,56 +17,56 @@ class AssertThatFileExpressionInspection : AbstractMoveOutInspection() {
 
         private val MAPPINGS = listOf(
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "canRead"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "canRead").parameterCount(0),
                 "canRead", expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "canWrite"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "canWrite").parameterCount(0),
                 "canWrite", expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "exists"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "exists").parameterCount(0),
                 "exists", "doesNotExist", expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "isAbsolute"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "isAbsolute").parameterCount(0),
                 "isAbsolute", "isRelative", expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "isDirectory"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "isDirectory").parameterCount(0),
                 "isDirectory", expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "isFile"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "isFile").parameterCount(0),
                 "isFile", expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "getName"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "getName").parameterCount(0),
                 "hasName",
                 expectedMatcher = CallMatcher.anyOf(IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_STRING)
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "getParent", "getParentFile"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "getParent", "getParentFile").parameterCount(0),
                 "hasNoParent", expectNullNonNull = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "getParent"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "getParent").parameterCount(0),
                 "hasParent",
                 expectedMatcher = CallMatcher.anyOf(IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_STRING)
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "getParentFile"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "getParentFile").parameterCount(0),
                 "hasParent",
                 expectedMatcher = IS_EQUAL_TO_OBJECT
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "list", "listFiles"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "list", "listFiles").parameterCount(0),
                 "isEmptyDirectory",
                 expectedMatcher = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_OBJECT_ARRAY_ASSERT_CLASSNAME, MethodNames.IS_EMPTY)
                     .parameterCount(0)!!
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "list", "listFiles"),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "list", "listFiles").parameterCount(0),
                 "isNotEmptyDirectory",
                 expectedMatcher = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_OBJECT_ARRAY_ASSERT_CLASSNAME, MethodNames.IS_NOT_EMPTY)
                     .parameterCount(0)!!

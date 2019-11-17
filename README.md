@@ -642,6 +642,9 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.7 (unreleased)
+- Fixed a lapsuus in AssertThatFileExpression also transforming ```.listFiles()``` with a filter argument.
+
 #### V1.6 (30-Sep-19)
 - Really fixed AssertThatGuavaOptional inspections to avoid conversions from ```.get()``` to ```.contains()```
   for array types. Sigh. Shouldn't be working >12h a day and then do some more stuff at home.

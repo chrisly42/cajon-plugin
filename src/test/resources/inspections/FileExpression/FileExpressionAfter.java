@@ -80,6 +80,11 @@ public class FileExpression {
         assertThat(file).isEmptyDirectory();
         assertThat(file).isNotEmptyDirectory();
 
+        assertThat(file.listFiles(f -> f.canExecute())).isNull();
+        assertThat(file.listFiles(f -> f.canExecute())).isNullOrEmpty();
+        assertThat(file.listFiles(f -> f.canExecute())).isEmpty();
+        assertThat(file.listFiles(f -> f.canExecute())).isNotEmpty();
+
         assertThat(file.list()).isNull();
         assertThat(file.list()).isNullOrEmpty();
         assertThat(file).isEmptyDirectory();

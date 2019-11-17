@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '1.6'
+version '1.7'
 
 repositories {
     mavenCentral()
@@ -35,7 +35,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.2.3'
+    version '2019.2.4'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
     plugins = ['java']
@@ -43,16 +43,9 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.6 (30-Sep-19)</h4>
+  <h4>V1.7 (unreleased)</h4>
     <ul>
-      <li>Really fixed AssertThatGuavaOptional inspections to avoid conversions from .get() to .contains()
-          for array types. Sigh. Shouldn't be working &gt;12h a day and then do some more stuff at home.
-      <li>Fixed a bug in AssertThatBinaryExpression inspection for assertThat(null != expression) and related
-          that would not correctly invert the condition on transformation.
-      <li>Added new AssertThatFileExpression to move out many common methods from inside the
-          assertThat() expression (exists(), getName(), getParent() and many more).
-      <li>Added several transformations to AssertThatStringExpression inspection.
-          Specifically, uses of matches(), compareToIgnoreCase(), indexOf(), and trim().
+      <li>Fixed a lapsuus in AssertThatFileExpression also transforming listFiles() with a filter argument.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """
