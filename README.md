@@ -333,6 +333,32 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(file).isNotEmptyDirectory();
   ```
 
+- AssertThatPathExpression
+
+  Moves ```Path``` method calls inside ```assertThat()``` out.
+  Note: Uses hasParentRaw() instead of hasParent() for quickfixes, because it is semantically
+  equivalent. For most cases though, hasParent() will show identical behavior.
+
+  ```
+  from: assertThat(path.isAbsolute()).isTrue();
+    to: assertThat(path).isAbsolute();
+
+  from: assertThat(path.isAbsolute()).isFalse();
+    to: assertThat(path).isRelative();
+
+  from: assertThat(path.getParent()).isEqualTo(pathname);
+    to: assertThat(path).hasParentRaw(pathname);
+
+  from: assertThat(path.getParent()).isNull();
+    to: assertThat(path).hasNoParentRaw();
+
+  from: assertThat(path.startsWith(otherPath)).isTrue();
+    to: assertThat(path).startsWithRaw(otherPath);
+
+  from: assertThat(path.endsWith(otherPath)).isTrue();
+    to: assertThat(path).endsWithRaw(otherPath);
+  ```
+
 - AssertThatEnumerableIsEmpty
 
   Uses ```isEmpty()``` for ```hasSize(0)``` iterable assertions instead.
@@ -644,6 +670,8 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 #### V1.7 (unreleased)
 - Fixed a lapsuus in AssertThatFileExpression also transforming ```.listFiles()``` with a filter argument.
+- Added first version of AssertThatPathExpression for a limited number transformations (more stuff is possible,
+  but requires detection and transformation of static ```Files```-methods).
 
 #### V1.6 (30-Sep-19)
 - Really fixed AssertThatGuavaOptional inspections to avoid conversions from ```.get()``` to ```.contains()```

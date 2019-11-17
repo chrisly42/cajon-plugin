@@ -46,6 +46,8 @@ patchPluginXml {
   <h4>V1.7 (unreleased)</h4>
     <ul>
       <li>Fixed a lapsuus in AssertThatFileExpression also transforming listFiles() with a filter argument.
+      <li>Added first version of AssertThatPathExpression for a limited number transformations (more stuff is possible,
+          but requires detection and transformation of static Files-methods).
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """
