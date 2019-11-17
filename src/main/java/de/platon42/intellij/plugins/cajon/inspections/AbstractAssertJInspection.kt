@@ -141,6 +141,8 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
             .parameterCount(0)!!
         val IS_NOT_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_NOT_ZERO)
             .parameterCount(0)!!
+        val IS_ONE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isOne")
+            .parameterCount(0)!!
         val IS_NEGATIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNegative")
             .parameterCount(0)!!
         val IS_NOT_NEGATIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNotNegative")

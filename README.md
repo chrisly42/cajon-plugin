@@ -234,6 +234,35 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(objActual).hasSameHashCodeAs(objExpected);
   ```
 
+- AssertThatComparableExpression
+
+  Handles ```compareTo()``` inside an expected expression.
+  
+  ```
+  from: assertThat(obj1.compareTo(obj2)).isEqualTo(0);
+    to: assertThat(obj1).isEqualByComparingTo(obj2);
+
+  from: assertThat(obj1.compareTo(obj2)).isNotZero();
+    to: assertThat(obj1).isNotEqualByComparingTo(obj2);
+
+  from: assertThat(obj1.compareTo(obj2)).isNotEqualTo(-1);
+  from: assertThat(obj1.compareTo(obj2)).isGreaterThanOrEqualTo(0);
+  from: assertThat(obj1.compareTo(obj2)).isGreaterThan(-1);
+  from: assertThat(obj1.compareTo(obj2)).isNotNegative();
+    to: assertThat(obj1).isGreaterThanOrEqualTo(obj2);
+
+  from: assertThat(obj1.compareTo(obj2)).isOne();
+    to: assertThat(obj1).isGreaterThan(obj2);
+
+  from: assertThat(obj1.compareTo(obj2)).isNotPositive();
+    to: assertThat(obj1).isLessThanOrEqualTo(obj2);
+  
+  from: assertThat(obj1.compareTo(obj2)).isLessThan(0);
+    to: assertThat(obj1).isLessThan(obj2);
+  ```
+
+  Several more combinations omitted...
+
 - AssertThatCollectionOrMapExpression
 
   Moves ```Collection``` and ```Map``` operations inside ```assertThat()``` out.
@@ -657,8 +686,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Planned features
 - More Optional fixes such as ```opt1.get() == opt2.get()``` etc.
-- More moving out of methods for Path, LocalDate/Time etc.
-- Converting ```foo.compareTo(bar) == 0``` to ```isEqualTo()``` (yes, I've *really* seen code like that)
+- More moving out of methods for LocalDate/Time etc.
 - Extraction with property names to lambda/method reference with Java 8
 
   ```
@@ -672,6 +700,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 - Fixed a lapsuus in AssertThatFileExpression also transforming ```.listFiles()``` with a filter argument.
 - Added first version of AssertThatPathExpression for a limited number transformations (more stuff is possible,
   but requires detection and transformation of static ```Files```-methods).
+- Added AssertThatComparableExpression for funny ```compareTo()``` uses.
 
 #### V1.6 (30-Sep-19)
 - Really fixed AssertThatGuavaOptional inspections to avoid conversions from ```.get()``` to ```.contains()```
