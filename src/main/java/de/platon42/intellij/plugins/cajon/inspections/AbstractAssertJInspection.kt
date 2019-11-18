@@ -137,9 +137,13 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
         val IS_LESS_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_LESS_THAN_OR_EQUAL_TO)
             .parameterTypes("int")!!
 
-        val IS_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_ZERO)
+        val IS_ZERO_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_ZERO)
             .parameterCount(0)!!
-        val IS_NOT_ZERO = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_NOT_ZERO)
+        val IS_NOT_ZERO_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_NOT_ZERO)
+            .parameterCount(0)!!
+        val IS_ZERO_LONG = CallMatcher.instanceCall(ABSTRACT_LONG_ASSERT_CLASSNAME, MethodNames.IS_ZERO)
+            .parameterCount(0)!!
+        val IS_NOT_ZERO_LONG = CallMatcher.instanceCall(ABSTRACT_LONG_ASSERT_CLASSNAME, MethodNames.IS_NOT_ZERO)
             .parameterCount(0)!!
         val IS_ONE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isOne")
             .parameterCount(0)!!

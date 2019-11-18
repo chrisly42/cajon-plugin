@@ -30,6 +30,9 @@ internal class AssertThatFileExpressionInspectionTest : AbstractCajonTest() {
         executeQuickFixes(myFixture, Regex.fromLiteral("Remove listFiles() of actual expression and use assertThat().isNotEmptyDirectory() instead"), 1)
         executeQuickFixes(myFixture, Regex.fromLiteral("Remove list() of actual expression and use assertThat().isEmptyDirectory() instead"), 1)
         executeQuickFixes(myFixture, Regex.fromLiteral("Remove list() of actual expression and use assertThat().isNotEmptyDirectory() instead"), 1)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove length() of actual expression and use assertThat().isEmpty() instead"), 2)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove length() of actual expression and use assertThat().isNotEmpty() instead"), 2)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Remove length() of actual expression and use assertThat().hasSize() instead"), 1)
         myFixture.checkResultByFile("FileExpressionAfter.java")
     }
 }

@@ -60,7 +60,7 @@ class AssertThatStringExpressionInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 STRING_COMPARE_TO_IGNORE_CASE,
-                MethodNames.IS_EQUAL_TO_IC, expectedMatcher = IS_ZERO, replaceFromOriginalMethod = true
+                MethodNames.IS_EQUAL_TO_IC, expectedMatcher = IS_ZERO_INT, replaceFromOriginalMethod = true
             ),
             MoveOutMapping(
                 STRING_COMPARE_TO_IGNORE_CASE,
@@ -69,7 +69,7 @@ class AssertThatStringExpressionInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 STRING_COMPARE_TO_IGNORE_CASE,
-                MethodNames.IS_NOT_EQUAL_TO_IC, expectedMatcher = IS_NOT_ZERO, replaceFromOriginalMethod = true
+                MethodNames.IS_NOT_EQUAL_TO_IC, expectedMatcher = IS_NOT_ZERO_INT, replaceFromOriginalMethod = true
             ),
 
             MoveOutMapping(
@@ -79,7 +79,7 @@ class AssertThatStringExpressionInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 STRING_INDEX_OF,
-                MethodNames.STARTS_WITH, expectedMatcher = IS_ZERO, replaceFromOriginalMethod = true
+                MethodNames.STARTS_WITH, expectedMatcher = IS_ZERO_INT, replaceFromOriginalMethod = true
             ),
 
             MoveOutMapping(
@@ -89,7 +89,7 @@ class AssertThatStringExpressionInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 STRING_INDEX_OF,
-                MethodNames.DOES_NOT_START_WITH, expectedMatcher = IS_NOT_ZERO, replaceFromOriginalMethod = true
+                MethodNames.DOES_NOT_START_WITH, expectedMatcher = IS_NOT_ZERO_INT, replaceFromOriginalMethod = true
             ),
 
             MoveOutMapping(

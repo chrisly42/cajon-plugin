@@ -362,6 +362,21 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(file).isNotEmptyDirectory();
   ```
 
+  and additionally with AssertJ 3.14.0 or later
+
+  ```
+  from: assertThat(file.length()).isEqualTo(0);
+  from: assertThat(file.length()).isZero();
+    to: assertThat(file).isEmpty();
+
+  from: assertThat(file.length()).isNotEqualTo(0);
+  from: assertThat(file.length()).isNotZero();
+    to: assertThat(file).isNotEmpty();
+
+  from: assertThat(file.length()).isEqualTo(len);
+    to: assertThat(file).hasSize(len);
+  ```
+
 - AssertThatPathExpression
 
   Moves ```Path``` method calls inside ```assertThat()``` out.
@@ -701,6 +716,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 - Added first version of AssertThatPathExpression for a limited number transformations (more stuff is possible,
   but requires detection and transformation of static ```Files```-methods).
 - Added AssertThatComparableExpression for funny ```compareTo()``` uses.
+- Added ```hasSize(), isEmpty()``` and ```isNotEmpty()``` for AssertThatFileExpression when using AssertJ >= 3.14.0.
 
 #### V1.6 (30-Sep-19)
 - Really fixed AssertThatGuavaOptional inspections to avoid conversions from ```.get()``` to ```.contains()```

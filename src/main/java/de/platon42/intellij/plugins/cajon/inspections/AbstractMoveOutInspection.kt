@@ -42,7 +42,8 @@ abstract class AbstractMoveOutInspection : AbstractAssertJInspection() {
                     MoveOutMethodCallExpressionQuickFix(
                         desc, method,
                         replaceOnlyThisMethod = mapping.expectedMatcher,
-                        replaceFromOriginalMethod = mapping.replaceFromOriginalMethod
+                        replaceFromOriginalMethod = mapping.replaceFromOriginalMethod,
+                        noExpectedExpression = mapping.noExpectedExpression
                     )
                 }
             }
@@ -57,6 +58,7 @@ abstract class AbstractMoveOutInspection : AbstractAssertJInspection() {
         val expectNullNonNull: Boolean? = null,
         val expectedMatcher: CallMatcher? = null,
         val replaceFromOriginalMethod: Boolean = false,
+        val noExpectedExpression: Boolean = false,
         val additionalCondition: ((PsiExpressionStatement, PsiMethodCallExpression) -> Boolean)? = null
     )
 }

@@ -46,7 +46,7 @@ class MoveOutMethodCallExpressionQuickFix(
                         val expectedExpression = createExpectedMethodCall(
                             it,
                             replacementMethod,
-                            *if (replaceFromOriginalMethod) arrayOf(assertExpressionArg!!) else it.argumentList.expressions
+                            *if (replaceFromOriginalMethod || noExpectedExpression) listOfNotNull(assertExpressionArg).toTypedArray() else it.argumentList.expressions
                         )
                         expectedExpression.replaceQualifierFromMethodCall(it)
                         it.replace(expectedExpression)

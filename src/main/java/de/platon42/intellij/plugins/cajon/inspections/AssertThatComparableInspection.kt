@@ -27,7 +27,7 @@ class AssertThatComparableInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 COMPARABLE_COMPARE_TO,
-                "isEqualByComparingTo", expectedMatcher = IS_ZERO, replaceFromOriginalMethod = true
+                "isEqualByComparingTo", expectedMatcher = IS_ZERO_INT, replaceFromOriginalMethod = true
             ),
 
             MoveOutMapping(
@@ -37,7 +37,7 @@ class AssertThatComparableInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 COMPARABLE_COMPARE_TO,
-                "isNotEqualByComparingTo", expectedMatcher = IS_NOT_ZERO, replaceFromOriginalMethod = true
+                "isNotEqualByComparingTo", expectedMatcher = IS_NOT_ZERO_INT, replaceFromOriginalMethod = true
             ),
 
             MoveOutMapping(

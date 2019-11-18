@@ -57,10 +57,10 @@ class AssertThatSizeInspection : AbstractAssertJInspection() {
             } else {
                 val isTestForEmpty = ((IS_LESS_THAN_OR_EQUAL_TO_INT.test(expression) && (constValue == 0))
                         || (IS_LESS_THAN_INT.test(expression) && (constValue == 1))
-                        || IS_ZERO.test(expression))
+                        || IS_ZERO_INT.test(expression))
                 val isTestForNotEmpty = ((IS_GREATER_THAN_INT.test(expression) && (constValue == 0))
                         || (IS_GREATER_THAN_OR_EQUAL_TO_INT.test(expression) && (constValue == 1))
-                        || IS_NOT_ZERO.test(expression))
+                        || IS_NOT_ZERO_INT.test(expression))
                 if ((isTestForEmpty && isLastExpression) || isTestForNotEmpty) {
                     val replacementMethod = isTestForEmpty.map(MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY)
                     return Match(expression, replacementMethod, noExpectedExpression = true)

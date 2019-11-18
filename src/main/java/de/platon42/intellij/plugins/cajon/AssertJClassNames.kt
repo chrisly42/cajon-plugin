@@ -48,6 +48,8 @@ class AssertJClassNames {
         @NonNls
         const val ABSTRACT_ITERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIterableAssert"
         @NonNls
+        const val ABSTRACT_FILE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractFileAssert"
+        @NonNls
         const val ABSTRACT_OPTIONAL_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractOptionalAssert"
         @NonNls
         const val EXTRACTORS_CLASSNAME = "org.assertj.core.extractor.Extractors"

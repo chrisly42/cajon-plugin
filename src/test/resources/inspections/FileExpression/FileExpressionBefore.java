@@ -75,6 +75,12 @@ public class FileExpression {
         assertThat(file.getParentFile()).isNotEqualTo(null);
         assertThat(file.getParentFile()).isNotNull();
 
+        assertThat(file.length()).isEqualTo(0);
+        assertThat(file.length()).isZero();
+        assertThat(file.length()).isNotEqualTo(0);
+        assertThat(file.length()).isNotZero();
+        assertThat(file.length()).isEqualTo(2);
+
         assertThat(file.listFiles()).isNull();
         assertThat(file.listFiles()).isNullOrEmpty();
         assertThat(file.listFiles()).isEmpty();
