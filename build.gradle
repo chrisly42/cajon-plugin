@@ -43,7 +43,7 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.7 (unreleased)</h4>
+  <h4>V1.7 (19-Nov-19)</h4>
     <ul>
       <li>Fixed a lapsuus in AssertThatFileExpression also transforming listFiles() with a filter argument.
       <li>Added first version of AssertThatPathExpression for a limited number transformations (more stuff is possible,
