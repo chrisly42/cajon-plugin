@@ -1,6 +1,5 @@
 package de.platon42.intellij.plugins.cajon
 
-import com.intellij.lang.jvm.JvmModifier
 import com.intellij.psi.*
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
@@ -33,7 +32,7 @@ fun PsiElement.findOutmostMethodCall(): PsiMethodCallExpression? {
 fun PsiElement.findStaticMethodCall(): PsiMethodCallExpression? {
     var elem: PsiElement? = this
     while (elem != null) {
-        if ((elem is PsiMethodCallExpression) && (elem.resolveMethod()?.hasModifier(JvmModifier.STATIC) == true)) {
+        if ((elem is PsiMethodCallExpression) && (elem.resolveMethod()?.hasModifierProperty(PsiModifier.STATIC) == true)) {
             return elem
         }
         elem = elem.firstChild

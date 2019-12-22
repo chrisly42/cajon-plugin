@@ -1,13 +1,13 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.13'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.60'
+    id 'org.jetbrains.intellij' version '0.4.16'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
     id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.8.4'
+    id 'com.github.kt3k.coveralls' version '2.9.0'
 }
 
 group 'de.platon42'
-version '1.7'
+version '1.8'
 
 repositories {
     mavenCentral()
@@ -20,10 +20,10 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testCompile "org.assertj:assertj-core:3.14.0"
+    testCompile "org.assertj:assertj-core:3.15.0"
     testCompile "org.assertj:assertj-guava:3.3.0"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
     testImplementation "org.jetbrains.kotlin:kotlin-test"
 //    testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
 }
@@ -35,7 +35,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.2.4'
+    version '2019.2.4' // Upgrading to 2019.3.x breaks build/tests due to dependency with assertj-core 13.3.2
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
     plugins = ['java']
@@ -43,13 +43,9 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.7 (19-Nov-19)</h4>
+  <h4>V1.8 (unreleased)</h4>
     <ul>
-      <li>Fixed a lapsuus in AssertThatFileExpression also transforming listFiles() with a filter argument.
-      <li>Added first version of AssertThatPathExpression for a limited number transformations (more stuff is possible,
-          but requires detection and transformation of static Files-methods).
-      <li>Added AssertThatComparableExpression for funny compareTo() uses.
-      <li>Added hasSize(), isEmpty() and isNotEmpty() for AssertThatFileExpression when using AssertJ >= 3.14.0.
+      <li>Maintenance. Removed experimental API use. Updated dependencies.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

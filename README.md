@@ -711,6 +711,8 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.8 (unreleased)
+
 #### V1.7 (19-Nov-19)
 - Fixed a lapsuus in AssertThatFileExpression also transforming ```.listFiles()``` with a filter argument.
 - Added first version of AssertThatPathExpression for a limited number transformations (more stuff is possible,

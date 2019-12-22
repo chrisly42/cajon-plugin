@@ -1,6 +1,5 @@
 package de.platon42.intellij.plugins.cajon.references
 
-import com.intellij.lang.jvm.JvmModifier
 import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
@@ -30,7 +29,7 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
             val matchedGetter = PropertyUtilBase.findPropertyGetter(containingClass, partName, false, true)
             val fieldResult = PropertyUtilBase.findPropertyField(containingClass, partName, false)
             val textRange = TextRange(startOffset + 1, nextOffset)
-            val matchedBareMethod = containingClass.allMethods.find { (it.name == partName) && !it.hasModifier(JvmModifier.STATIC) }
+            val matchedBareMethod = containingClass.allMethods.find { (it.name == partName) && !it.hasModifierProperty(PsiModifier.STATIC) }
             val targets = listOfNotNull<PsiElement>(fieldResult, matchedGetter, matchedBareMethod)
             if (targets.isNotEmpty()) {
                 val results = listOf(textRange to targets)
@@ -44,7 +43,7 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
         }
 
         private fun lookupMethod(containingClass: PsiClass, methodName: String): List<Pair<TextRange, List<PsiElement>>>? {
-            val matchedMethod = containingClass.allMethods.find { (it.name == methodName) && !it.hasModifier(JvmModifier.STATIC) } ?: return null
+            val matchedMethod = containingClass.allMethods.find { (it.name == methodName) && !it.hasModifierProperty(PsiModifier.STATIC) } ?: return null
             val textRange = TextRange(1, methodName.length + 1)
             return listOf(textRange to listOf(matchedMethod))
         }

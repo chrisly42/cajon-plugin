@@ -92,9 +92,7 @@ class AssertThatGuavaOptionalInspection : AbstractAssertJInspection() {
             }
 
             private fun checkPreconditions(staticMethodCall: PsiMethodCallExpression): Boolean {
-                val assertThatGuava = GUAVA_ASSERT_THAT_ANY.test(staticMethodCall)
-
-                if (ASSERT_THAT_ANY.test(staticMethodCall) || assertThatGuava) {
+                if (CallMatcher.anyOf(ASSERT_THAT_ANY, GUAVA_ASSERT_THAT_ANY).test(staticMethodCall)) {
                     JavaPsiFacade.getInstance(staticMethodCall.project)
                         .findClass(AssertJClassNames.GUAVA_ASSERTIONS_CLASSNAME, GlobalSearchScope.allScope(staticMethodCall.project)) ?: return false
                     return true

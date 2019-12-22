@@ -34,9 +34,9 @@ class AssertThatObjectExpressionInspection : AbstractMoveOutInspection() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
                 super.visitExpressionStatement(statement)
                 if (!statement.hasAssertThat()) return
-                
+
                 val staticMethodCall = statement.findStaticMethodCall() ?: return
-                val assertThatArgument = staticMethodCall.firstArg as? PsiMethodCallExpression ?: return
+                val assertThatArgument = staticMethodCall.getArgOrNull(0) as? PsiMethodCallExpression ?: return
                 if (OBJECT_HASHCODE.test(assertThatArgument)) {
                     val expectedCallExpression = statement.findOutmostMethodCall() ?: return
                     val isEqualTo = staticMethodCall.findFluentCallTo(IS_EQUAL_TO_INT) ?: return
