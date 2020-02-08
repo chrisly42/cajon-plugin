@@ -35,7 +35,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.2.4' // Upgrading to 2019.3.x breaks build/tests due to dependency with assertj-core 13.3.2
+    version '2019.3.2'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
     plugins = ['java']

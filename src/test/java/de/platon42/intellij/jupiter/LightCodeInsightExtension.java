@@ -1,10 +1,17 @@
 package de.platon42.intellij.jupiter;
 
+import com.intellij.jarRepository.JarRepositoryManager;
+import com.intellij.jarRepository.RemoteRepositoryDescription;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.ContentEntry;
+import com.intellij.openapi.roots.DependencyScope;
+import com.intellij.openapi.roots.LibraryOrderEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.libraries.Library;
+import com.intellij.openapi.roots.libraries.LibraryTable;
+import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -13,6 +20,7 @@ import com.intellij.testFramework.fixtures.IdeaTestExecutionPolicy;
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.idea.maven.utils.library.RepositoryLibraryProperties;
 import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
@@ -23,7 +31,11 @@ import java.lang.reflect.Parameter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LightCodeInsightExtension implements ParameterResolver, AfterTestExecutionCallback, InvocationInterceptor {
@@ -150,10 +162,12 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
                 @Override
                 public void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
                     super.configureModule(module, model, contentEntry);
-                    AddLocalJarToModule methodOrClassAnnotation = getMethodOrClassAnnotation(AddLocalJarToModule.class);
-                    if (methodOrClassAnnotation != null) {
-                        Stream.of(methodOrClassAnnotation.value()).forEach(it -> addJarContaining(model, it));
+                    AddLocalJarToModule localJars = getMethodOrClassAnnotation(AddLocalJarToModule.class);
+                    if (localJars != null) {
+                        Stream.of(localJars.value()).forEach(it -> addJarContaining(model, it));
                     }
+                    List<AddMavenDependencyToModule> mavenDependencies = getMethodOrClassAnnotations(AddMavenDependencyToModule.class);
+                    mavenDependencies.forEach(it -> addFromMaven(model, it.value(), it.includeTransitiveDependencies, it.scope));
                 }
             };
         }
@@ -173,6 +187,33 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
             } catch (URISyntaxException e) {
                 throw new IllegalArgumentException("Class URL malformed", e);
             }
+        }
+
+        void addFromMaven(ModifiableRootModel model, String mavenCoordinates,
+                          boolean includeTransitiveDependencies, DependencyScope dependencyScope) {
+            List<RemoteRepositoryDescription> remoteRepositoryDescriptions = RemoteRepositoryDescription.DEFAULT_REPOSITORIES;
+            RepositoryLibraryProperties libraryProperties = new RepositoryLibraryProperties(mavenCoordinates, includeTransitiveDependencies);
+            Collection<OrderRoot> roots =
+                    JarRepositoryManager.loadDependenciesModal(model.getProject(), libraryProperties, false, false, null, remoteRepositoryDescriptions);
+            LibraryTable.ModifiableModel tableModel = model.getModuleLibraryTable().getModifiableModel();
+            Library library = tableModel.createLibrary(mavenCoordinates);
+            Library.ModifiableModel libraryModel = library.getModifiableModel();
+            if (roots.isEmpty()) {
+                throw new IllegalStateException(String.format("No roots for '%s'", mavenCoordinates));
+            }
+
+            for (OrderRoot root : roots) {
+                libraryModel.addRoot(root.getFile(), root.getType());
+            }
+
+            LibraryOrderEntry libraryOrderEntry = model.findLibraryOrderEntry(library);
+            if (libraryOrderEntry == null) {
+                throw new IllegalStateException("Unable to find registered library " + mavenCoordinates);
+            }
+            libraryOrderEntry.setScope(dependencyScope);
+
+            libraryModel.commit();
+            tableModel.commit();
         }
 
         @Override
@@ -198,6 +239,13 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
                 annotation = extensionContext.getRequiredTestClass().getAnnotation(clazz);
             }
             return annotation;
+        }
+
+        private <T extends Annotation> List<T> getMethodOrClassAnnotations(Class<T> clazz) {
+            return Stream.of(extensionContext.getRequiredTestMethod().getAnnotationsByType(clazz),
+                    extensionContext.getRequiredTestClass().getAnnotationsByType(clazz))
+                    .flatMap(Arrays::stream)
+                    .collect(Collectors.toList());
         }
     }
 }

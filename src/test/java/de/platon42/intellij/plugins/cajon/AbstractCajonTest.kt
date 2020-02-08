@@ -3,11 +3,10 @@ package de.platon42.intellij.plugins.cajon
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
-import de.platon42.intellij.jupiter.AddLocalJarToModule
+import de.platon42.intellij.jupiter.AddMavenDependencyToModule
 import de.platon42.intellij.jupiter.LightCodeInsightExtension
 import de.platon42.intellij.jupiter.TestDataPath
 import de.platon42.intellij.jupiter.TestJdk
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayNameGeneration
 import org.junit.jupiter.api.DisplayNameGenerator
@@ -17,7 +16,8 @@ import java.lang.reflect.Method
 @ExtendWith(LightCodeInsightExtension::class)
 @TestDataPath("src/test/resources")
 @TestJdk(LanguageLevel.JDK_1_8, annotations = true, useInternal = true)
-@AddLocalJarToModule(Assertions::class)
+//@AddLocalJarToModule(Assertions::class)
+@AddMavenDependencyToModule("org.assertj:assertj-core:3.15.0")
 @DisplayNameGeneration(AbstractCajonTest.CutOffFixtureDisplayNameGenerator::class)
 abstract class AbstractCajonTest {
 
