@@ -5,10 +5,11 @@
 
     <description><![CDATA[
     Cajon is an IntelliJ IDEA Plugin for shortening and optimizing AssertJ assertions.
-    It adds several inspections and quick fixes to fully use the fluent assertion methods
+    It adds several <b>inspections and quick fixes</b> to fully use the fluent assertion methods
     and thus makes the intention clear and concise, also generating better messages on test failures.
-    It can also be used to convert JUnit 4 assertions and assumptions to AssertJ.
-    It supports referencing inside extracting()-methods with strings, adding refactoring safety.
+    It can also be used to <b>convert JUnit 4 assertions and assumptions to AssertJ</b>.
+    It supports <b>referencing inside extracting</b>()-methods with strings, adding refactoring safety.
+    <b>Bogus or twisted assertions</b> are also reported.
     <p>
     <a href="https://github.com/chrisly42/cajon-plugin/blob/master/README.md">Full documentation here...</a>
     ]]></description>
@@ -66,6 +67,11 @@
 
         <localInspection groupPath="Java" shortName="ImplicitAssertion" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.ImplicitAssertionInspection"/>
+
+        <localInspection groupPath="Java" shortName="TwistedAssertion" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.TwistedAssertionInspection"/>
+        <localInspection groupPath="Java" shortName="BogusAssertion" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.platon42.intellij.plugins.cajon.inspections.BogusAssertionInspection"/>
 
         <localInspection groupPath="Java" shortName="JUnitAssertToAssertJ" enabledByDefault="true" level="WARNING"
                          implementationClass="de.platon42.intellij.plugins.cajon.inspections.JUnitAssertToAssertJInspection"/>

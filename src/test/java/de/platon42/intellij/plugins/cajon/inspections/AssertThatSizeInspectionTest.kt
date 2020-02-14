@@ -4,8 +4,6 @@ import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import de.platon42.intellij.jupiter.MyFixture
 import de.platon42.intellij.jupiter.TestDataSubPath
 import de.platon42.intellij.plugins.cajon.AbstractCajonTest
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.extrakting
 import org.junit.jupiter.api.Test
 
 internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
@@ -15,7 +13,7 @@ internal class AssertThatSizeInspectionTest : AbstractCajonTest() {
     internal fun assertThat_size_of_array_collection_or_map_can_be_simplified(@MyFixture myFixture: JavaCodeInsightTestFixture) {
         myFixture.enableInspections(AssertThatSizeInspection::class.java)
         myFixture.configureByFile("SizeBefore.java")
-        assertThat(myFixture.doHighlighting()).extrakting { it.description }.containsOnlyOnce("Try to operate on the iterable itself rather than its size")
+        assertHighlightings(myFixture, 1, "Try to operate on the iterable itself rather than its size")
 
         executeQuickFixes(myFixture, Regex.fromLiteral("Replace isEqualTo() with isEmpty()"), 5)
         executeQuickFixes(myFixture, Regex.fromLiteral("Replace isZero() with isEmpty()"), 5)

@@ -38,6 +38,14 @@ abstract class AbstractCajonTest {
         return quickfixes
     }
 
+    protected fun assertHighlightings(myFixture: JavaCodeInsightTestFixture, count: Int, snippet: String) {
+        val highlights = myFixture.doHighlighting()
+            .asSequence()
+            .filter { it.description?.contains(snippet) ?: false }
+            .toList()
+        assertThat(highlights).hasSize(count);
+    }
+
     class CutOffFixtureDisplayNameGenerator : DisplayNameGenerator.ReplaceUnderscores() {
         override fun generateDisplayNameForMethod(testClass: Class<*>?, testMethod: Method?): String {
             val nameForMethod = super.generateDisplayNameForMethod(testClass, testMethod)

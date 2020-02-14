@@ -26,7 +26,7 @@ class JoinVarArgsContainsInspection : AbstractAssertJInspection() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
             override fun visitExpressionStatement(statement: PsiExpressionStatement) {
-                super.visitStatement(statement)
+                super.visitExpressionStatement(statement)
                 if (!statement.hasAssertThat()) return
                 val assertThatCall = PsiTreeUtil.findChildrenOfType(statement, PsiMethodCallExpression::class.java).find { ALL_ASSERT_THAT_MATCHERS.test(it) } ?: return
 
@@ -35,7 +35,7 @@ class JoinVarArgsContainsInspection : AbstractAssertJInspection() {
                 if (allCalls.find(COMPLEX_CALLS_THAT_MAKES_STUFF_TRICKY::test) != null) return
 
                 val onlyAssertionCalls = allCalls
-                    .filterNot { NOT_ACTUAL_ASSERTIONS.test(it) }
+                    .filterNot(NOT_ACTUAL_ASSERTIONS::test)
                     .toList()
 
                 for (methodMatcher in MATCHERS) {

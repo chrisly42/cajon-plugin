@@ -44,6 +44,22 @@ class AssertJClassNames {
         @NonNls
         const val ABSTRACT_MAP_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractMapAssert"
         @NonNls
+        const val ABSTRACT_BOOLEAN_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractBooleanArrayAssert"
+        @NonNls
+        const val ABSTRACT_BYTE_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractByteArrayAssert"
+        @NonNls
+        const val ABSTRACT_SHORT_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractShortArrayAssert"
+        @NonNls
+        const val ABSTRACT_INT_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIntArrayAssert"
+        @NonNls
+        const val ABSTRACT_LONG_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractLongArrayAssert"
+        @NonNls
+        const val ABSTRACT_FLOAT_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractFloatArrayAssert"
+        @NonNls
+        const val ABSTRACT_DOUBLE_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractDoubleArrayAssert"
+        @NonNls
+        const val ABSTRACT_CHAR_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractCharArrayAssert"
+        @NonNls
         const val ABSTRACT_OBJECT_ARRAY_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractObjectArrayAssert"
         @NonNls
         const val ABSTRACT_ITERABLE_ASSERT_CLASSNAME = "org.assertj.core.api.AbstractIterableAssert"

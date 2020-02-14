@@ -35,7 +35,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.3.2'
+    version '2019.3.3'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
     plugins = ['java']
@@ -43,9 +43,12 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.8 (unreleased)</h4>
+  <h4>V1.8 (14-Feb-20) Valentine Edition</h4>
     <ul>
-      <li>Maintenance. Removed experimental API use. Updated dependencies.
+      <li>Maintenance. Removed experimental API use. Updated dependencies. Fixed testing problems introduced with IntelliJ IDEA 2019.3.x
+      <li>Added new TwistedAssertion inspection that will warn about assertions with the actual expression being a constant indicating
+          swapped use of actual and expected expressions.
+      <li>Added new BogusAssertion inspection that showing typical copy and paste errors where actual and expected expressions are the same.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

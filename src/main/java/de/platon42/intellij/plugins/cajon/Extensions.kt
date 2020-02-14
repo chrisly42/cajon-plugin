@@ -43,7 +43,7 @@ fun PsiElement.findStaticMethodCall(): PsiMethodCallExpression? {
 fun PsiElement.gatherAssertionCalls(): List<PsiMethodCallExpression> {
     val assertThatMethodCall = findStaticMethodCall() ?: return emptyList()
     return assertThatMethodCall.collectMethodCallsUpToStatement()
-        .filterNot { NOT_ACTUAL_ASSERTIONS.test(it) }
+        .filterNot(NOT_ACTUAL_ASSERTIONS::test)
         .toList()
 }
 

@@ -34,6 +34,10 @@ Then AssertJ would tell you the _actual contents_ of the collection on failure.
 
 The plugin also supports the conversion of the most common JUnit 4 assertions to AssertJ.
 
+## Wrong use of AssertJ
+
+Cajon also warns about bogus or incorrect uses of AssertJ.
+
 ## Lookup and refactoring of string-based extracting()
 
 AssertJ allows [extracting POJO fields/properties on iterables/arrays](http://joel-costigliola.github.io/assertj/assertj-core-features-highlight.html#extracted-properties-assertion).
@@ -484,6 +488,67 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
   ...and many, many more combinations (more than 150).
 
+- TwistedAssertion
+
+  Examines the actual expression for common mistakes such as mixing expected and actual expression.
+  For simple cases, a quick fix is offered to swap them. Otherwise, only a warning is issued.
+  
+  ```
+  from: assertThat(5).isEqualTo(variable);
+    to: assertThat(variable).isEqualTo(5);
+
+  from: assertThat(8.0).isGreaterThan(variable);
+    to: assertThat(variable).isLessOrEqualTo(8.0);
+  ```
+
+  There are, of course, more variations of the theme.
+
+- BogusAssertion
+
+  Sometimes programmers make copy and paste or logical errors writing down assertions
+  that will never fail due to the same actual and expected assertions.
+  This inspection will warn about obvious cases such as the following ones.
+
+  ```
+  assertThat(object).isEqualTo(object);
+  assertThat(object).isSameAs(object);
+  assertThat(object).hasSameClassAs(object);
+  assertThat(object).hasSameHashCodeAs(object);
+
+  assertThat(array).hasSameSizeAs(array);
+  assertThat(array).contains(array);
+  assertThat(array).containsAnyOf(array);
+  assertThat(array).containsExactly(array);
+  assertThat(array).containsExactlyInAnyOrder(array);
+  assertThat(array).containsExactlyInAnyOrder(array);
+  assertThat(array).containsOnly(array);
+  assertThat(array).containsSequence(array);
+  assertThat(array).containsSubsequence(array);
+  assertThat(array).startsWith(array);
+  assertThat(array).endsWith(array);
+  
+  assertThat(enumerable).hasSameSizeAs(enumerable);
+
+  assertThat(iterable).hasSameElementsAs(iterable);
+  assertThat(iterable).containsAll(iterable);
+  assertThat(iterable).containsAnyElementOf(iterable);
+  assertThat(iterable).containsOnlyElementsOf(iterable);
+  assertThat(iterable).containsExactlyElementsOf(iterable);
+  assertThat(iterable).containsSequence(iterable);
+  assertThat(iterable).containsSubsequence(iterable);
+
+  assertThat(charSeq).isEqualToIgnoringCase(charSeq);
+  assertThat(charSeq).startsWith(charSeq);
+  assertThat(charSeq).endsWith(charSeq);
+  assertThat(charSeq).containsSequence(charSeq);
+  assertThat(charSeq).containsSubsequence(charSeq);
+
+  assertThat(map).containsAllEntriesOf(map);
+  assertThat(map).containsExactlyEntriesOf(map);
+  assertThat(map).containsExactlyInAnyOrderEntriesOf(map);
+  assertThat(map).hasSameSizeAs(map);
+  ```
+
 - ImplicitAssertion
 
   Detects and removes implicit use of ```isNotNull()```, ```isNotEmpty()``` and
@@ -711,7 +776,11 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-#### V1.8 (unreleased)
+#### V1.8 (14-Feb-20) Valentine Edition
+- Maintenance. Removed experimental API use. Updated dependencies. Fixed testing problems introduced with IntelliJ IDEA 2019.3
+- Added new TwistedAssertion inspection that will warn about assertions with the actual expression being a constant indicating
+  swapped use of actual and expected expressions.
+- Added new BogusAssertion inspection that showing typical copy and paste errors where actual and expected expressions are the same.
 
 #### V1.7 (19-Nov-19)
 - Fixed a lapsuus in AssertThatFileExpression also transforming ```.listFiles()``` with a filter argument.
