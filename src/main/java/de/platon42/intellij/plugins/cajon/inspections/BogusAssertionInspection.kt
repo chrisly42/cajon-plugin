@@ -1,10 +1,8 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
+import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.JavaElementVisitor
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiExpressionStatement
-import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.siyeh.ig.callMatcher.CallMatcher
 import com.siyeh.ig.psiutils.EquivalenceChecker
@@ -15,6 +13,7 @@ class BogusAssertionInspection : AbstractAssertJInspection() {
     companion object {
         private const val DISPLAY_NAME = "Bogus assertion due to same actual and expected expressions"
         private const val ACTUAL_IS_EQUAL_TO_EXPECTED_MESSAGE = "Actual expression in assertThat() is the same as expected"
+        private const val WEAK_ACTUAL_IS_EQUAL_TO_EXPECTED_MESSAGE = "Same actual and expected expression, but may be testing equals() or hashCode()"
 
         private val SAME_OBJECT =
             CallMatcher.instanceCall(
@@ -56,6 +55,12 @@ class BogusAssertionInspection : AbstractAssertJInspection() {
             CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_CHAR_ARRAY_ASSERT_CLASSNAME, *ARRAY_METHODS).parameterCount(1)
         private val SAME_OBJECT_ARRAY_CONTENTS =
             CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_OBJECT_ARRAY_ASSERT_CLASSNAME, *ARRAY_METHODS).parameterCount(1)
+
+        private val HASHCODE_OR_IS_EQUAL_TO =
+            CallMatcher.instanceCall(
+                AssertJClassNames.ASSERT_INTERFACE,
+                MethodNames.IS_EQUAL_TO, "hasSameHashCodeAs"
+            ).parameterCount(1)
 
         private val SAME_ENUMERABLE_CONTENTS =
             CallMatcher.instanceCall(
@@ -130,8 +135,41 @@ class BogusAssertionInspection : AbstractAssertJInspection() {
                     .filter(SAME_ACTUAL_AND_EXPECTED_MATCHERS::test)
                     .any { equivalenceChecker.expressionsAreEquivalent(actualExpression, it.firstArg) }
                 if (isSameExpression) {
-                    holder.registerProblem(statement, ACTUAL_IS_EQUAL_TO_EXPECTED_MESSAGE)
+                    if (!hasExpressionWithSideEffects(actualExpression)) {
+                        if (allCalls.any(HASHCODE_OR_IS_EQUAL_TO::test)) {
+                            val method = PsiTreeUtil.getParentOfType(statement, PsiMethod::class.java, true)
+                            val methodName = method?.name
+                            if ((methodName != null)
+                                && ((methodName.contains("equal", ignoreCase = true) || methodName.contains("hashcode", ignoreCase = true)))
+                            ) {
+                                if (isOnTheFly) {
+                                    holder.registerProblem(statement, WEAK_ACTUAL_IS_EQUAL_TO_EXPECTED_MESSAGE, ProblemHighlightType.INFORMATION)
+                                }
+                                return
+                            }
+                        }
+                        holder.registerProblem(statement, ACTUAL_IS_EQUAL_TO_EXPECTED_MESSAGE)
+                    }
                 }
+            }
+
+            private fun hasExpressionWithSideEffects(actualExpression: PsiExpression): Boolean {
+                var result = false
+                PsiTreeUtil.processElements(actualExpression) { element ->
+                    val matched = when (element) {
+                        is PsiUnaryExpression -> (element.operationTokenType == JavaTokenType.PLUSPLUS)
+                                || (element.operationTokenType == JavaTokenType.MINUSMINUS)
+                        is PsiMethodCallExpression -> true
+                        else -> false
+                    }
+                    if (matched) {
+                        result = true
+                        false
+                    } else {
+                        true
+                    }
+                }
+                return result
             }
         }
     }

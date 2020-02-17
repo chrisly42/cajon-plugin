@@ -549,6 +549,14 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   assertThat(map).hasSameSizeAs(map);
   ```
 
+  Note that expressions with method calls will not cause a warning as the method call might have side effects
+  that result in the assertion not being bogus at all.
+
+  If the assertions is either ```isEqualTo()``` or ```hasSameHashCodeAs()``` it may be checking custom
+  ```equals()``` or ```hashCode()``` behavior. If the test method name containing the statement has a
+  name that contains 'equal' or 'hashcode' (case insensitive), the warning will be weakened to information
+  level.
+
 - ImplicitAssertion
 
   Detects and removes implicit use of ```isNotNull()```, ```isNotEmpty()``` and
@@ -775,6 +783,11 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
   ```
 
 ## Changelog
+
+#### V1.9 (unreleased)
+- BogusAssertion inspection will no longer warn if the expression contains method calls.
+  Moreover, for assertions of ```isEqualTo()``` and ```hasSameHashCodeAs()```, AND if the containing method name contains 'equal' or 'hashcode',
+  the warning will be reduced to information level as the assertion may be testing ```equals()``` or ```hashCode()``` for validity.
 
 #### V1.8 (14-Feb-20) Valentine Edition
 - Maintenance. Removed experimental API use. Updated dependencies. Fixed testing problems introduced with IntelliJ IDEA 2019.3

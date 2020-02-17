@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -190,7 +191,28 @@ public class BogusAssertions {
 
         assertThat(bar).isEqualTo(string);
 
+        assertThat(new Random().nextBoolean()).isEqualTo(new Random().nextBoolean());
+        assertThat(generateString()).isEqualTo(generateString());
+
+        int number = 4;
+        assertThat(number++).isEqualTo(number++);
+        assertThat(number++).isEqualTo(number++);
+
         org.junit.Assert.assertThat(list, null);
         fail("oh no!");
+    }
+
+    private void test_equals() {
+        assertThat("foo").isEqualTo("foo");
+        assertThat(new File("foo")).isEqualTo(new File("foo"));
+    }
+
+    private void test_HasHCode() {
+        assertThat("foo").hasSameHashCodeAs("foo");
+    }
+
+    private String generateString()
+    {
+        return "foo";
     }
 }

@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '1.8'
+version '1.9'
 
 repositories {
     mavenCentral()
@@ -43,6 +43,12 @@ intellij {
 
 patchPluginXml {
     changeNotes """
+  <h4>V1.9 (unreleased)</h4>
+    <ul>
+      <li>BogusAssertion inspection will no longer warn if the expression contains method calls.
+          Moreover, for assertions of isEqualTo() and hasSameHashCodeAs(), AND if the containing method name contains 'equal' or 'hashcode',
+          the warning will be reduced to information level as the assertion may be testing equals() or hashCode() for validity.
+    </ul>
   <h4>V1.8 (14-Feb-20) Valentine Edition</h4>
     <ul>
       <li>Maintenance. Removed experimental API use. Updated dependencies. Fixed testing problems introduced with IntelliJ IDEA 2019.3.x

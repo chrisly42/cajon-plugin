@@ -14,5 +14,6 @@ internal class BogusAssertionInspectionTest : AbstractCajonTest() {
         myFixture.enableInspections(BogusAssertionInspection::class.java)
         myFixture.configureByFile("BogusAssertionBefore.java")
         assertHighlightings(myFixture, 14 * 9 + 10 + 12 + 8, "Actual expression in assertThat() is the same as expected")
+        assertHighlightings(myFixture, 3, "Same actual and expected expression, but may be testing equals() or hashCode()")
     }
 }
