@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -31,6 +32,13 @@ public class TwistedAssertions {
 
         assertThat(4).isEqualTo(number).isNotEqualTo(number * 2);
         assertThat(4).usingComparator(Comparator.reverseOrder()).isGreaterThanOrEqualTo(number);
+
+        assertThat(String.class).isEqualTo(Class.forName("java.lang.String"));
+        assertThat("XX").matches(Pattern.compile(".."));
+        assertThat("XX").matches(".."));
+        assertThat("XX").doesNotMatch(Pattern.compile(".."));
+        assertThat("XX").doesNotMatch(".."));
+        assertThat(SOME_CONST).isEqualTo(10);
 
         org.junit.Assert.assertThat(list, null);
         fail("oh no!");

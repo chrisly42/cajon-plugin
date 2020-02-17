@@ -1,10 +1,9 @@
 package de.platon42.intellij.plugins.cajon.inspections
 
+import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.psi.JavaElementVisitor
-import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.PsiExpressionStatement
-import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.*
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.siyeh.ig.callMatcher.CallMatcher
 import de.platon42.intellij.plugins.cajon.*
@@ -31,6 +30,8 @@ class TwistedAssertionInspection : AbstractAssertJInspection() {
             CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_LESS_THAN_OR_EQUAL_TO).parameterCount(1)
 
         private val STRING_IS_EQUAL_TO_IC = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO_IC).parameterCount(1)
+
+        private val STRING_REGEX_MATCHING = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_CHAR_SEQUENCE_ASSERT_CLASSNAME, "matches", "doesNotMatch").parameterCount(1)
 
         private val CALL_MATCHER_TO_REPLACEMENT_MAP = mapOf(
             GENERIC_IS_EQUAL_TO to MethodNames.IS_EQUAL_TO,
@@ -60,31 +61,47 @@ class TwistedAssertionInspection : AbstractAssertJInspection() {
                 actualExpression.calculateConstantValue() ?: return
                 val allCalls = assertThatCall.collectMethodCallsUpToStatement().toList()
                 val tooComplex = allCalls.find(USING_COMPARATOR::test) != null
+                var severity = ProblemHighlightType.GENERIC_ERROR_OR_WARNING
+                if (actualExpression.type is PsiClassType) {
+                    val psiManager = PsiManager.getInstance(statement.project)
+                    val javaLangClass = PsiType.getJavaLangClass(psiManager, GlobalSearchScope.allScope(statement.project))
+                    if (actualExpression.type!!.isAssignableFrom(javaLangClass)) {
+                        return
+                    }
+                }
+
                 if (!tooComplex) {
                     val onlyAssertionCalls = allCalls
                         .filterNot(NOT_ACTUAL_ASSERTIONS::test)
                         .toList()
                     if (onlyAssertionCalls.size == 1) {
-                        val originalMethodCall = onlyAssertionCalls.first()
-                        val matchedMethod = CALL_MATCHER_TO_REPLACEMENT_MAP.asSequence().firstOrNull { it.key.test(originalMethodCall) }
-                        if (matchedMethod != null) {
-                            val originalMethodName = getOriginalMethodName(originalMethodCall)
-                            val replacementMethod = matchedMethod.value
-                            val description = if (originalMethodName == replacementMethod) {
-                                SWAP_ACTUAL_AND_EXPECTED_DESCRIPTION
-                            } else {
-                                SWAP_ACTUAL_AND_EXPECTED_AND_REPLACE_DESCRIPTION_TEMPLATE.format(originalMethodName, replacementMethod)
-                            }
-                            holder.registerProblem(
-                                statement,
-                                TWISTED_ACTUAL_AND_EXPECTED_MESSAGE,
-                                SwapActualAndExpectedExpressionMethodCallQuickFix(description, replacementMethod)
-                            )
+                        val expectedMethodCall = onlyAssertionCalls.first()
+                        if (STRING_REGEX_MATCHING.test(expectedMethodCall)) {
                             return
+                        }
+                        if (expectedMethodCall.getArgOrNull(0)?.calculateConstantValue() == null) {
+                            val matchedMethod = CALL_MATCHER_TO_REPLACEMENT_MAP.asSequence().firstOrNull { it.key.test(expectedMethodCall) }
+                            if (matchedMethod != null) {
+                                val originalMethodName = getOriginalMethodName(expectedMethodCall)
+                                val replacementMethod = matchedMethod.value
+                                val description = if (originalMethodName == replacementMethod) {
+                                    SWAP_ACTUAL_AND_EXPECTED_DESCRIPTION
+                                } else {
+                                    SWAP_ACTUAL_AND_EXPECTED_AND_REPLACE_DESCRIPTION_TEMPLATE.format(originalMethodName, replacementMethod)
+                                }
+                                holder.registerProblem(
+                                    statement,
+                                    TWISTED_ACTUAL_AND_EXPECTED_MESSAGE,
+                                    SwapActualAndExpectedExpressionMethodCallQuickFix(description, replacementMethod)
+                                )
+                                return
+                            }
+                        } else {
+                            severity = ProblemHighlightType.WEAK_WARNING
                         }
                     }
                 }
-                holder.registerProblem(statement, ACTUAL_IS_A_CONSTANT_MESSAGE)
+                holder.registerProblem(statement, ACTUAL_IS_A_CONSTANT_MESSAGE, severity)
             }
         }
     }

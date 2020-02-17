@@ -502,6 +502,15 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   ```
 
   There are, of course, more variations of the theme.
+  
+  If both sides of an assertion are constant expressions, the problem will only appear as
+  a weak warning without a quick fix.
+  
+  Constants used on the actual side of ```.matches()``` and ```doesNotMatch()``` will not be
+  reported for regular expression testing.
+  
+  Neither will a ```Class``` type be considered a constant in the classic sense, so
+  ```assertThat(SomeClass.class).isAssignableFrom(SomeOtherClass.class)``` will not be reported.
 
 - BogusAssertion
 
@@ -785,6 +794,11 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 ## Changelog
 
 #### V1.9 (unreleased)
+- TwistedAssertion inspection will no longer warn for ```.matches()``` and ```doesNotMatch()``` for regular expressions.
+  Apparently, ```assertThat("somestring").matches(regex)``` is a valid test if the regex is what needs to be tested.
+  If the actual expression is of ```Class``` type, this will no longer be reported.
+- If the expected expression in TwistedAssertion is also a constant, the warning will be weakened and
+  no quick fix will be available.
 - BogusAssertion inspection will no longer warn if the expression contains method calls.
   Moreover, for assertions of ```isEqualTo()``` and ```hasSameHashCodeAs()```, AND if the containing method name contains 'equal' or 'hashcode',
   the warning will be reduced to information level as the assertion may be testing ```equals()``` or ```hashCode()``` for validity.

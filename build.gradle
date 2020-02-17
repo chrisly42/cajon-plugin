@@ -45,6 +45,11 @@ patchPluginXml {
     changeNotes """
   <h4>V1.9 (unreleased)</h4>
     <ul>
+      <li>TwistedAssertion inspection will no longer warn for .matches() and doesNotMatch() for regular expressions.
+          Apparently, assertThat("somestring").matches(regex) is a valid test if the regex is what needs to be tested.
+          If the actual expression is of Class type, this will no longer be reported.
+      <li>If the expected expression in TwistedAssertion is also a constant, the warning will be weakened and
+          no quick fix will be available.
       <li>BogusAssertion inspection will no longer warn if the expression contains method calls.
           Moreover, for assertions of isEqualTo() and hasSameHashCodeAs(), AND if the containing method name contains 'equal' or 'hashcode',
           the warning will be reduced to information level as the assertion may be testing equals() or hashCode() for validity.
