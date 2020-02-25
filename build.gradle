@@ -43,7 +43,7 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.9 (unreleased)</h4>
+  <h4>V1.9 (25-Feb-20) Mardi Gras Edition</h4>
     <ul>
       <li>TwistedAssertion inspection will no longer warn for .matches() and doesNotMatch() for regular expressions.
           Apparently, assertThat("somestring").matches(regex) is a valid test if the regex is what needs to be tested.

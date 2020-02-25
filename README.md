@@ -793,7 +793,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-#### V1.9 (unreleased)
+#### V1.9 (25-Feb-20) Mardi Gras Edition
 - TwistedAssertion inspection will no longer warn for ```.matches()``` and ```doesNotMatch()``` for regular expressions.
   Apparently, ```assertThat("somestring").matches(regex)``` is a valid test if the regex is what needs to be tested.
   If the actual expression is of ```Class``` type, this will no longer be reported.
