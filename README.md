@@ -793,6 +793,9 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.10 (unreleased)
+- Updated libraries to the latest versions (including AssertJ 3.16.1 and Kotlin 1.40-rc).
+
 #### V1.9 (25-Feb-20) Mardi Gras Edition
 - TwistedAssertion inspection will no longer warn for ```.matches()``` and ```doesNotMatch()``` for regular expressions.
   Apparently, ```assertThat("somestring").matches(regex)``` is a valid test if the regex is what needs to be tested.

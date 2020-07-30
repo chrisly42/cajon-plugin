@@ -1,9 +1,9 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.16'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
+    id 'org.jetbrains.intellij' version '0.4.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.0-rc'
     id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.9.0'
+    id 'com.github.kt3k.coveralls' version '2.10.1'
 }
 
 group 'de.platon42'
@@ -20,10 +20,10 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testCompile "org.assertj:assertj-core:3.15.0"
-    testCompile "org.assertj:assertj-guava:3.3.0"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+    testImplementation "org.assertj:assertj-core:3.16.1"
+    testImplementation "org.assertj:assertj-guava:3.4.0"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
     testImplementation "org.jetbrains.kotlin:kotlin-test"
 //    testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
 }
@@ -35,7 +35,7 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.3.3'
+    version '2020.2'
 //    pluginName 'Concise AssertJ Optimizing Nitpicker (Cajon)'
     updateSinceUntilBuild false
     plugins = ['java']
@@ -43,23 +43,9 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.9 (25-Feb-20) Mardi Gras Edition</h4>
+  <h4>V1.10 (unreleased)</h4>
     <ul>
-      <li>TwistedAssertion inspection will no longer warn for .matches() and doesNotMatch() for regular expressions.
-          Apparently, assertThat("somestring").matches(regex) is a valid test if the regex is what needs to be tested.
-          If the actual expression is of Class type, this will no longer be reported.
-      <li>If the expected expression in TwistedAssertion is also a constant, the warning will be weakened and
-          no quick fix will be available.
-      <li>BogusAssertion inspection will no longer warn if the expression contains method calls.
-          Moreover, for assertions of isEqualTo() and hasSameHashCodeAs(), AND if the containing method name contains 'equal' or 'hashcode',
-          the warning will be reduced to information level as the assertion may be testing equals() or hashCode() for validity.
-    </ul>
-  <h4>V1.8 (14-Feb-20) Valentine Edition</h4>
-    <ul>
-      <li>Maintenance. Removed experimental API use. Updated dependencies. Fixed testing problems introduced with IntelliJ IDEA 2019.3.x
-      <li>Added new TwistedAssertion inspection that will warn about assertions with the actual expression being a constant indicating
-          swapped use of actual and expected expressions.
-      <li>Added new BogusAssertion inspection that showing typical copy and paste errors where actual and expected expressions are the same.
+      <li>Updated libraries to the latest versions (including AssertJ 3.16.1 and Kotlin 1.40-rc).
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """
