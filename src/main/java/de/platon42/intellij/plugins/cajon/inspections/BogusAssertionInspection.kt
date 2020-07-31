@@ -132,6 +132,7 @@ class BogusAssertionInspection : AbstractAssertJInspection() {
                 // Note: replace with TrackingEquivalenceChecker() for IDEA >= 2019.1
                 val equivalenceChecker = EquivalenceChecker.getCanonicalPsiEquivalence()!!
                 val isSameExpression = allCalls
+                    .filter { it.argumentList.expressions.size == 1 }
                     .filter(SAME_ACTUAL_AND_EXPECTED_MATCHERS::test)
                     .any { equivalenceChecker.expressionsAreEquivalent(actualExpression, it.firstArg) }
                 if (isSameExpression) {

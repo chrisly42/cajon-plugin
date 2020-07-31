@@ -124,6 +124,7 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
             if (!CallMatcher.anyOf(EXTRACTING_FROM_ITERABLE, FLAT_EXTRACTING_FROM_ITERABLE).test(methodCallExpression)) return null
 
             val iterableType = findActualType(methodCallExpression) ?: return null
+            if (iterableType.parameters.isEmpty()) return null
             val innerType = iterableType.resolveGenerics().substitutor.substitute(iterableType.parameters[0])
             val containingClass = PsiTypesUtil.getPsiClass(innerType) ?: return null
             return if (isResultOf) lookupMethod(containingClass, literal) else lookupFieldOrProperty(containingClass, literal, 0)

@@ -793,8 +793,9 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-#### V1.10 (unreleased)
+#### V1.10 (31-Jul-20) Friday the 31st Edition
 - Updated libraries to the latest versions (including AssertJ 3.16.1 and Kotlin 1.40-rc).
+- Fixed two possible index out of bounds exceptions in ExtractorReferenceContributor and BogusAssertionInspection.
 
 #### V1.9 (25-Feb-20) Mardi Gras Edition
 - TwistedAssertion inspection will no longer warn for ```.matches()``` and ```doesNotMatch()``` for regular expressions.

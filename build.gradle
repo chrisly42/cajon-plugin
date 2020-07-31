@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '1.9'
+version '1.10'
 
 repositories {
     mavenCentral()
@@ -43,9 +43,10 @@ intellij {
 
 patchPluginXml {
     changeNotes """
-  <h4>V1.10 (unreleased)</h4>
+  <h4>V1.10 (31-Jul-20) Friday the 31st Edition</h4>
     <ul>
       <li>Updated libraries to the latest versions (including AssertJ 3.16.1 and Kotlin 1.40-rc).
+      <li>Fixed two possible index out of bounds exceptions in ExtractorReferenceContributor and BogusAssertionInspection.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """
