@@ -14,6 +14,8 @@ internal class AssertThatInvertedBooleanConditionInspectionTest : AbstractCajonT
         myFixture.enableInspections(AssertThatInvertedBooleanConditionInspection::class.java)
         myFixture.configureByFile("InvertedBooleanConditionBefore.java")
         executeQuickFixes(myFixture, Regex.fromLiteral("Invert condition in assertThat()"), 25)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Invert condition in isEqualTo() and use isNotEqualTo() instead"), 4)
+        executeQuickFixes(myFixture, Regex.fromLiteral("Invert condition in isNotEqualTo() and use isEqualTo() instead"), 2)
         myFixture.checkResultByFile("InvertedBooleanConditionAfter.java")
     }
 }

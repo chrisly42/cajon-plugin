@@ -21,18 +21,19 @@ class AssertThatBooleanConditionInspection : AbstractAssertJInspection() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
                 if (!expression.hasAssertThat()) return
-                val matchingCalls = listOf(
-                    IS_EQUAL_TO_OBJECT, IS_EQUAL_TO_BOOLEAN,
-                    IS_NOT_EQUAL_TO_OBJECT, IS_NOT_EQUAL_TO_BOOLEAN
-                ).map { it.test(expression) }
-                if (matchingCalls.none { it }) return
+                val isEqualToObject = IS_EQUAL_TO_OBJECT.test(expression)
+                val isEqualToPrimitive = IS_EQUAL_TO_BOOLEAN.test(expression)
+                val isNotEqualToObject = IS_NOT_EQUAL_TO_OBJECT.test(expression)
+                val isNotEqualToPrimitive = IS_NOT_EQUAL_TO_BOOLEAN.test(expression)
+
+                if (!(isEqualToObject || isEqualToPrimitive || isNotEqualToObject || isNotEqualToPrimitive)) return
                 if (!checkAssertedType(expression, ABSTRACT_BOOLEAN_ASSERT_CLASSNAME)) return
 
                 val expectedExpression = expression.firstArg
                 if (!TypeConversionUtil.isBooleanType(expectedExpression.type)) return
 
                 val expectedResult = expression.calculateConstantParameterValue(0) as? Boolean ?: return
-                val flippedBooleanTest = matchingCalls.drop(2).any { it }
+                val flippedBooleanTest = isNotEqualToObject || isNotEqualToPrimitive
 
                 val replacementMethod = (expectedResult xor flippedBooleanTest).map(MethodNames.IS_TRUE, MethodNames.IS_FALSE)
                 registerSimplifyMethod(holder, expression, replacementMethod)

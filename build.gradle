@@ -50,10 +50,11 @@ patchPluginXml {
   <h4>V1.11 (03-Oct-20) Day of German Unity Edition</h4>
     <ul>
       <li>Now is being built with JDK 11 (with Java 8 target).
-      <li>Updated various dependencies and AssertJ 3.17.2.
-      <li>Fixed the ImplicitAssertionInspection that broke the plugin with IntelliJ 2020.3 EAP as reported by Frédéric Thomas. Thanks!
+      <li>Updated various dependencies (Kotlin 1.40.10) and AssertJ 3.17.2.
+      <li>Fixed the ImplicitAssertion inspection that broke the plugin with IntelliJ 2020.3 EAP as reported by Frédéric Thomas. Thanks!
       <li>Added new singleElement() from AssertJ >= 3.17.0 to ImplicitAssertionInspection.
       <li>Added several cases for hasSizeGreaterThan/LessThan/OrEqualTo() for EnumerablesEmpty inspection.
+      <li>Added inversion of boolean conditions inside isEqualTo() and isNotEqualTo() for InvertedBooleanCondition inspection.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """

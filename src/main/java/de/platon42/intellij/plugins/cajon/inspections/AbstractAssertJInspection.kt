@@ -72,6 +72,8 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
 
         val ASSERT_THAT_BOOLEAN = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
             .parameterTypes("boolean")!!
+        val ASSERT_THAT_BOOLEAN_OBJ = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
+            .parameterTypes(CommonClassNames.JAVA_LANG_BOOLEAN)!!
 
         val ASSERT_THAT_ANY = CallMatcher.staticCall(ASSERTIONS_CLASSNAME, MethodNames.ASSERT_THAT)
             .parameterCount(1)!!
