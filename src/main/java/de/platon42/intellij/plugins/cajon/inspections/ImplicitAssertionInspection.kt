@@ -39,11 +39,10 @@ class ImplicitAssertionInspection : AbstractAssertJInspection() {
             "startsWith", "endsWith", "containsNull", "doesNotContainNull",
             "are", "areNot", "have", "doNotHave", "areAtLeastOne", "areAtLeast", "areAtMost", "areExactly",
             "haveAtLeastOne", "haveAtLeast", "haveAtMost", "haveExactly",
-            "doesNotHave", "doesNotHaveSameClassAs",
             "hasAtLeastOneElementOfType", "hasOnlyElementsOfType", "hasOnlyElementsOfTypes",
             "doesNotHaveAnyElementsOfTypes",
             "has", "doesNotHave",
-            "hasOnlyOneElementSatisfying", "hasSameElementsAs",
+            "singleElement", "hasOnlyOneElementSatisfying", "hasSameElementsAs",
             "allMatch", "allSatisfy", "anyMatch", "anySatisfy", "noneMatch", "noneSatisfy"
         )!!
 

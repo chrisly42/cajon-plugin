@@ -33,7 +33,7 @@ val MORE_EXTENSION_POINTS = CallMatcher.instanceCall(
     "are", "areNot", "have", "doNotHave",
     "areAtLeast", "areAtLeastOne", "areAtMost", "areExactly",
     "haveAtLeastOne", "haveAtLeast", "haveAtMost", "haveExactly",
-    "hasOnlyOneElementSatisfying", "anyMatch", "noneMatch", "anySatisfy", "noneSatisfy"
+    "singleElement", "hasOnlyOneElementSatisfying", "anyMatch", "noneMatch", "anySatisfy", "noneSatisfy"
 )!!
 
 val COMPLEX_CALLS_THAT_MAKES_STUFF_TRICKY = CallMatcher.anyOf(

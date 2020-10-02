@@ -153,6 +153,7 @@ public class ImplicitAssertion {
         assertThat(list).isNotNull().areAtMost(1, stringCondition);
         assertThat(list).isNotNull().areExactly(1, stringCondition);
         assertThat(list).isNotNull().hasOnlyOneElementSatisfying(stringConsumer);
+        assertThat(list).isNotNull().singleElement(as(STRING)).isEqualTo(stringConsumer);
         assertThat(list).isNotNull().haveAtLeastOne(stringCondition);
         assertThat(list).isNotNull().haveAtLeast(1, stringCondition);
         assertThat(list).isNotNull().haveAtMost(1, stringCondition);
@@ -229,6 +230,7 @@ public class ImplicitAssertion {
         assertThat(list).isNotEmpty().areAtMost(1, stringCondition);
         assertThat(list).isNotEmpty().areExactly(1, stringCondition);
         assertThat(list).isNotEmpty().hasOnlyOneElementSatisfying(stringConsumer);
+        assertThat(list).isNotEmpty().singleElement(as(STRING)).isEqualTo(stringConsumer);
         assertThat(list).isNotEmpty().haveAtLeastOne(stringCondition);
         assertThat(list).isNotEmpty().haveAtLeast(1, stringCondition);
         assertThat(list).isNotEmpty().haveAtMost(1, stringCondition);

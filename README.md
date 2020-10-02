@@ -46,9 +46,9 @@ Using strings is not safe for refactoring (and before Java 8 Lambdas were availa
 creating extractor functions just for testing purpose was a bit too tedious).
 
 This plugin adds support for referencing these fields (so you can ctrl(/cmd)-click on the 
-string to go to the definition) and also allows safe refactoring on the 
+string to go to the definition) and allows safe refactoring on the 
 fields (refactoring a getter method without a corresponding field will not work 
-correctly right now).
+correctly right now) too.
 
 ## Usage
 
@@ -93,7 +93,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
                             .anotherCondition();
   ```
   Joining will work on actual expressions inside ```assertThat()``` that are equivalent expressions,
-  except for method calls with known side-effect methods such as ```Iterator.next()``` and
+  except for method calls with known side effect methods such as ```Iterator.next()``` and
   pre/post-increment/decrement operations -- please notify me about others.
 
   The comments of the statements will be preserved. When using ```extracting()``` or similar,
@@ -314,10 +314,10 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
     to: assertThat(map).doesNotContainKey(key);
   ```
   
-  The last transformation is the default, but may not be 100% equivalent depending whether the map
-  is a degenerated case with ```null``` values, where ```map.get(key)``` returns ```null```,
+  The last transformation is the default, but may not be 100% equivalent depending upon the map
+  being a degenerated case with ```null``` values, where ```map.get(key)``` returns ```null```,
   but ```containsKey(key)``` is ```true```.
-  For that special case (which usually is the result of a bad design decision!)
+  For that special case (which is usually the result of a bad design decision!)
   the quickfix should rather generate ```assertThat(map).containsEntry(key, null)```.
   Therefore, the behavior can be configured in the settings for this inspection to either
   create the default case (```doesNotContainKey```), the degenerated case (```containsEntry```),
@@ -569,7 +569,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
   If the assertions is either ```isEqualTo()``` or ```hasSameHashCodeAs()``` it may be checking custom
   ```equals()``` or ```hashCode()``` behavior. If the test method name containing the statement has a
-  name that contains 'equal' or 'hashcode' (case insensitive), the warning will be weakened to information
+  name that contains 'equal' or 'hashcode' (case-insensitive), the warning will be weakened to information
   level.
 
 - ImplicitAssertion
@@ -783,13 +783,14 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 Cajon is written in Kotlin 1.3.
 
-Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one that I'm aware of ;) ).
-The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing and it took me quite a while to make it work with JUnit 5.
+Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one I'm aware of ;) ).
+The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing, and it took me quite a while to make it work with JUnit 5.
 Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for your projects (with attribution).
 
 ## Planned features
 - More Optional fixes such as ```opt1.get() == opt2.get()``` etc.
 - More moving out of methods for LocalDate/Time etc.
+- assertThat(foo.toLowerCase()/toUpperCase()).isEqualTo("foo") -> assertThat(foo).isEqualToIgnoringCase()
 - Extraction with property names to lambda/method reference with Java 8
 
   ```
@@ -799,9 +800,15 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+#### V1.11 (03-Oct-20) Day of German Unity Edition
+- Now is being built with JDK 11 (with Java 8 target).
+- Updated various dependencies and AssertJ 3.17.2.
+- Fixed the ImplicitAssertionInspection that broke the plugin with IntelliJ 2020.3 EAP as reported by Frédéric Thomas. Thanks!
+- Added new singleElement() from AssertJ >= 3.17.0 to ImplicitAssertionInspection.
+
 #### V1.10 (31-Jul-20) Friday the 31st Edition
 - Updated libraries to the latest versions (including AssertJ 3.16.1 and Kotlin 1.40-rc).
-- Fixed two possible index out of bounds exceptions in ExtractorReferenceContributor and BogusAssertionInspection.
+- Fixed two possible index out-of-bounds exceptions in ExtractorReferenceContributor and BogusAssertionInspection.
 
 #### V1.9 (25-Feb-20) Mardi Gras Edition
 - TwistedAssertion inspection will no longer warn for ```.matches()``` and ```doesNotMatch()``` for regular expressions.
@@ -837,10 +844,10 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
   Specifically, uses of ```matches()```, ```compareToIgnoreCase()```, ```indexOf()```, and ```trim()```.
 
 #### V1.5 (24-Sep-19)
-- Fix for AssertThatCollectionOrMap inspection sometimes causing an index out of bounds exception.
+- Fix for AssertThatCollectionOrMap inspection sometimes causing an index out-of-bounds exception.
 - AssertThatGuavaOptional inspections will now avoid conversions from ```.get()``` to ```.contains()```
   for array types (currently not correctly supported by ```contains()``` in AssertJ-Guava).
-- Added an settings option for AssertThatCollectionOrMap inspection respecting the degenerated case of maps with ```null``` values.
+- Added a settings option for AssertThatCollectionOrMap inspection respecting the degenerated case of maps with ```null``` values.
   It is now possible to change the behavior for ```map.get(key) == null```, so it can offer either ```.doesNotContainKey()``` (default)
   or ```.containsEntry(key, null)```, or even both.
 - Fixes to AssertThatSize inspection after extending it for Maps in previous release as not all
@@ -926,7 +933,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 #### V0.2 (01-Apr-19)
 - Fixed descriptions and quick fix texts.
-- Fixed highlighting of found problems and also 'Run inspection by Name' returning nothing.
+- Fixed highlighting of found problems and 'Run inspection by Name' returning nothing, too.
 
 #### V0.1 (31-Mar-19)
 - Initial release.
