@@ -126,6 +126,14 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
             .parameterCount(0)!!
         val HAS_SIZE = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.HAS_SIZE)
             .parameterTypes("int")!!
+        val HAS_SIZE_GREATER_THAN_INT = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.HAS_SIZE_GREATER_THAN)
+            .parameterTypes("int")!!
+        val HAS_SIZE_GREATER_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.HAS_SIZE_GREATER_THAN_OR_EQUAL_TO)
+            .parameterTypes("int")!!
+        val HAS_SIZE_LESS_THAN_INT = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.HAS_SIZE_LESS_THAN)
+            .parameterTypes("int")!!
+        val HAS_SIZE_LESS_THAN_OR_EQUAL_TO_INT = CallMatcher.instanceCall(ENUMERABLE_ASSERT_INTERFACE, MethodNames.HAS_SIZE_LESS_THAN_OR_EQUAL_TO)
+            .parameterTypes("int")!!
 
         val IS_GREATER_THAN_INT = CallMatcher.instanceCall(ABSTRACT_COMPARABLE_ASSERT_CLASSNAME, MethodNames.IS_GREATER_THAN)
             .parameterTypes("int")!!

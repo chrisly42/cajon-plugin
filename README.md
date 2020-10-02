@@ -415,11 +415,21 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - AssertThatEnumerableIsEmpty
 
-  Uses ```isEmpty()``` for ```hasSize(0)``` iterable assertions instead.
+  Uses ```isEmpty()``` for ```hasSize(0)```, ```hasSizeLessThanOrEqualTo(0)```, and
+  ```hasSizeLessThan(1)``` iterable (enumerable) assertions instead.
+  
+  Also suggests ```isNotEmpty()``` for ```hasSizeGreaterThan(0)``` and 
+  ```hasSizeGreaterThanOrEqualTo(1)```.
   
   ```
   from: assertThat(enumerable).hasSize(0);
+  from: assertThat(enumerable).hasSizeLessThanOrEqualTo(0);
+  from: assertThat(enumerable).hasSizeLessThan(1);
     to: assertThat(enumerable).isEmpty();
+
+  from: assertThat(enumerable).hasSizeGreaterThan(0);
+  from: assertThat(enumerable).hasSizeGreaterThanOrEqualTo(1);
+    to: assertThat(enumerable).isNotEmpty();
   ```
 
 - AssertThatSize
@@ -805,6 +815,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 - Updated various dependencies and AssertJ 3.17.2.
 - Fixed the ImplicitAssertionInspection that broke the plugin with IntelliJ 2020.3 EAP as reported by Frédéric Thomas. Thanks!
 - Added new singleElement() from AssertJ >= 3.17.0 to ImplicitAssertionInspection.
+- Added several cases for ```hasSizeGreaterThan/LessThan/OrEqualTo()``` for EnumerablesEmpty inspection.
 
 #### V1.10 (31-Jul-20) Friday the 31st Edition
 - Updated libraries to the latest versions (including AssertJ 3.16.1 and Kotlin 1.40-rc).
