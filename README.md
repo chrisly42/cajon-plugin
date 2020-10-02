@@ -798,7 +798,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 ## Development notice
 
-Cajon is written in Kotlin 1.3.
+Cajon is written in Kotlin 1.4.
 
 Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one I'm aware of ;) ).
 The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing, and it took me quite a while to make it work with JUnit 5.
