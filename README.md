@@ -52,6 +52,12 @@ correctly right now).
 
 ## Usage
 
+Cajon (though written in Kotlin) *only works with Java projects*.
+There does not seem too much demand for AssertJ within Kotlin projects
+and although possible, it would require a complete rewrite as the PSI
+stuff in IntelliJ is very Java focused. Almost zero feedback is also not helping.
+Enough bickering.
+
 The plugin will report inspections in your opened editor file as warnings.
 You can then quick-fix these with your quick-fix hotkey (usually Alt-Return or Opt-Return).
 
