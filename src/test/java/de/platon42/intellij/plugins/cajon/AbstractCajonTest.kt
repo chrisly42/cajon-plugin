@@ -43,7 +43,7 @@ abstract class AbstractCajonTest {
             .asSequence()
             .filter { it.description?.contains(snippet) ?: false }
             .toList()
-        assertThat(highlights).hasSize(count);
+        assertThat(highlights).hasSize(count)
     }
 
     class CutOffFixtureDisplayNameGenerator : DisplayNameGenerator.ReplaceUnderscores() {

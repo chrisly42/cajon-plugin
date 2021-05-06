@@ -22,12 +22,12 @@ class AssertThatStringExpressionInspection : AbstractMoveOutInspection() {
 
         private val MAPPINGS = listOf(
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "isEmpty").parameterCount(0),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, MethodNames.IS_EMPTY).parameterCount(0),
                 MethodNames.IS_EMPTY, MethodNames.IS_NOT_EMPTY, expectBoolean = true
             ),
             MoveOutMapping(
                 CallMatcher.anyOf(
-                    CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "equals").parameterCount(1),
+                    CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, MethodNames.EQUALS).parameterCount(1),
                     CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "contentEquals").parameterCount(1)
                 ),
                 MethodNames.IS_EQUAL_TO, MethodNames.IS_NOT_EQUAL_TO, expectBoolean = true
@@ -37,15 +37,15 @@ class AssertThatStringExpressionInspection : AbstractMoveOutInspection() {
                 MethodNames.IS_EQUAL_TO_IC, MethodNames.IS_NOT_EQUAL_TO_IC, expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "contains").parameterCount(1),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, MethodNames.CONTAINS).parameterCount(1),
                 MethodNames.CONTAINS, MethodNames.DOES_NOT_CONTAIN, expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "startsWith").parameterTypes(CommonClassNames.JAVA_LANG_STRING),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, MethodNames.STARTS_WITH).parameterTypes(CommonClassNames.JAVA_LANG_STRING),
                 MethodNames.STARTS_WITH, MethodNames.DOES_NOT_START_WITH, expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, "endsWith").parameterTypes(CommonClassNames.JAVA_LANG_STRING),
+                CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_STRING, MethodNames.ENDS_WITH).parameterTypes(CommonClassNames.JAVA_LANG_STRING),
                 MethodNames.ENDS_WITH, MethodNames.DOES_NOT_END_WITH, expectBoolean = true
             ),
             MoveOutMapping(

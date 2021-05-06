@@ -31,7 +31,11 @@ public class TwistedAssertions {
         assertThat(bar).isEqualTo(foo);
 
         assertThat(4).isEqualTo(number).isNotEqualTo(number * 2);
+        assertThat(4).usingDefaultComparator().isGreaterThanOrEqualTo(number);
+        assertThat(4).usingRecursiveComparison().isGreaterThanOrEqualTo(number);
         assertThat(4).usingComparator(Comparator.reverseOrder()).isGreaterThanOrEqualTo(number);
+        assertThat(4).usingComparatorForFields().isGreaterThanOrEqualTo(number);
+        assertThat(4).usingComparatorForType(Integer::compare).isGreaterThanOrEqualTo(number);
 
         assertThat(String.class).isEqualTo(Class.forName("java.lang.String"));
         assertThat("XX").matches(Pattern.compile(".."));

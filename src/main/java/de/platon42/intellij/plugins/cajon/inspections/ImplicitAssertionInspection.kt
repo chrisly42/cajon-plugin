@@ -30,13 +30,13 @@ class ImplicitAssertionInspection : AbstractAssertJInspection() {
         private val OBJECT_ENUMERABLE_ANY_CONTENT_ASSERTIONS = CallMatcher.instanceCall(
             AssertJClassNames.OBJECT_ENUMERABLE_ASSERT_INTERFACE,
             MethodNames.CONTAINS, "containsOnly", "containsOnlyNulls", MethodNames.CONTAINS_ONLY_ONCE,
-            "containsExactly", "containsExactlyInAnyOrder", "containsExactlyInAnyOrderElementsOf",
-            "containsAll", "containsAnyOf",
+            MethodNames.CONTAINS_EXACTLY, "containsExactlyInAnyOrder", "containsExactlyInAnyOrderElementsOf",
+            MethodNames.CONTAINS_ALL, "containsAnyOf",
             "containsAnyElementsOf", "containsExactlyElementsOf", "containsOnlyElementsOf",
             "isSubsetOf", "containsSequence", "containsSubsequence",
-            "doesNotContainSequence", "doesNotContainSubsequence", "doesNotContain",
+            "doesNotContainSequence", "doesNotContainSubsequence", MethodNames.DOES_NOT_CONTAIN,
             "doesNotContainAnyElementsOf", "doesNotHaveDuplicates",
-            "startsWith", "endsWith", "containsNull", "doesNotContainNull",
+            MethodNames.STARTS_WITH, MethodNames.ENDS_WITH, "containsNull", "doesNotContainNull",
             "are", "areNot", "have", "doNotHave", "areAtLeastOne", "areAtLeast", "areAtMost", "areExactly",
             "haveAtLeastOne", "haveAtLeast", "haveAtMost", "haveExactly",
             "hasAtLeastOneElementOfType", "hasOnlyElementsOfType", "hasOnlyElementsOfTypes",
@@ -49,7 +49,7 @@ class ImplicitAssertionInspection : AbstractAssertJInspection() {
         private val OBJECT_ENUMERABLE_AT_LEAST_ONE_CONTENT_ASSERTIONS = CallMatcher.instanceCall(
             AssertJClassNames.OBJECT_ENUMERABLE_ASSERT_INTERFACE,
             "containsOnlyNulls",
-            "startsWith", "endsWith", "containsNull",
+            MethodNames.STARTS_WITH, MethodNames.ENDS_WITH, "containsNull",
             "areAtLeastOne",
             "haveAtLeastOne",
             "hasAtLeastOneElementOfType",
@@ -72,10 +72,10 @@ class ImplicitAssertionInspection : AbstractAssertJInspection() {
 
         private val NON_NULL_CORE_ASSERTIONS = CallMatcher.instanceCall(
             AssertJClassNames.ASSERT_INTERFACE,
-            "isInstanceOf", "isInstanceOfSatisfying", "isInstanceOfAny", "isExactlyInstanceOf", "isOfAnyClassIn",
-            "isNotInstanceOf", "isNotInstanceOfAny", "isNotExactlyInstanceOf", "isNotOfAnyClassIn",
+            MethodNames.IS_INSTANCE_OF, "isInstanceOfSatisfying", "isInstanceOfAny", "isExactlyInstanceOf", "isOfAnyClassIn",
+            MethodNames.IS_NOT_INSTANCE_OF, "isNotInstanceOfAny", "isNotExactlyInstanceOf", "isNotOfAnyClassIn",
             "hasSameClassAs", "doesNotHaveSameClassAs",
-            "hasToString", "hasSameHashCodeAs"
+            MethodNames.HAS_TO_STRING, "hasSameHashCodeAs"
         )!!
 
         private val GUAVA_IS_PRESENT = CallMatcher.instanceCall(AssertJClassNames.GUAVA_OPTIONAL_ASSERTIONS_CLASSNAME, MethodNames.IS_PRESENT)

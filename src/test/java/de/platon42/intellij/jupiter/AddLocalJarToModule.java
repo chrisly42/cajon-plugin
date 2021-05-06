@@ -6,5 +6,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface AddLocalJarToModule {
-    Class[] value();
+    Class<?>[] value();
 }

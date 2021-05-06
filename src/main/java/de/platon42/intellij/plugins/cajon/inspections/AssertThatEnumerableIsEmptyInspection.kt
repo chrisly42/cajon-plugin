@@ -27,9 +27,9 @@ class AssertThatEnumerableIsEmptyInspection : AbstractAssertJInspection() {
                 val value = expression.calculateConstantParameterValue(0) ?: return
 
                 val isEmpty = (CallMatcher.anyOf(HAS_SIZE, HAS_SIZE_LESS_THAN_OR_EQUAL_TO_INT).test(expression) && (value == 0)) ||
-                        (HAS_SIZE_LESS_THAN_INT.test(expression) && (value == 1));
+                        (HAS_SIZE_LESS_THAN_INT.test(expression) && (value == 1))
                 val isNotEmpty = (HAS_SIZE_GREATER_THAN_INT.test(expression) && (value == 0)) ||
-                        (HAS_SIZE_GREATER_THAN_OR_EQUAL_TO_INT.test(expression) && (value == 1));
+                        (HAS_SIZE_GREATER_THAN_OR_EQUAL_TO_INT.test(expression) && (value == 1))
 
                 if (isEmpty && isLastExpression) {
                     registerSimplifyMethod(holder, expression, MethodNames.IS_EMPTY)

@@ -25,16 +25,16 @@ class BogusAssertionInspection : AbstractAssertJInspection() {
             ).parameterCount(1)
 
         private val ARRAY_METHODS = arrayOf(
-            "hasSameSizeAs",
+            MethodNames.HAS_SAME_SIZE_AS,
             MethodNames.CONTAINS,
             "containsAnyOf",
-            "containsExactly",
+            MethodNames.CONTAINS_EXACTLY,
             "containsExactlyInAnyOrder",
             "containsOnly",
             "containsSequence",
             "containsSubsequence",
-            "startsWith",
-            "endsWith"
+            MethodNames.STARTS_WITH,
+            MethodNames.ENDS_WITH
         )
 
         private val SAME_BOOLEAN_ARRAY_CONTENTS =

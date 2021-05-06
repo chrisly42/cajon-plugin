@@ -2,6 +2,7 @@ package de.platon42.intellij.jupiter;
 
 import com.intellij.jarRepository.JarRepositoryManager;
 import com.intellij.jarRepository.RemoteRepositoryDescription;
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
@@ -133,14 +134,19 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
         @Override
         public void setUp() throws Exception {
             super.setUp();
+            Store store = getStore(extensionContext);
+            store.put("disposable", Disposer.newDisposable("LightCodeInsightFixtureTestCaseWrapper"));
         }
 
         @Override
         public void tearDown() throws Exception {
             super.tearDown();
+            Store store = getStore(extensionContext);
+            Disposable disposable = (Disposable) store.get("disposable");
             UsefulTestCase.clearFields(this);
-            if (myFixture != null && getProject() != null && !getProject().isDisposed()) {
-                Disposer.dispose(getProject());
+            if (myFixture != null && disposable != null) {
+                Disposer.dispose(disposable);
+                store.remove("disposable");
             }
         }
 
@@ -172,7 +178,7 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
             };
         }
 
-        void addJarContaining(ModifiableRootModel model, Class clazz) {
+        void addJarContaining(ModifiableRootModel model, Class<?> clazz) {
             try {
                 Path jarPath = Paths.get(clazz.getProtectionDomain().getCodeSource().getLocation().toURI());
 

@@ -177,12 +177,12 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
             .parameterCount(0)!!
         val CHAR_SEQUENCE_LENGTH = CallMatcher.instanceCall("java.lang.CharSequence", "length")
             .parameterCount(0)!!
-        val OBJECT_EQUALS = CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_OBJECT, "equals")
+        val OBJECT_EQUALS = CallMatcher.instanceCall(CommonClassNames.JAVA_LANG_OBJECT, MethodNames.EQUALS)
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
 
         val OPTIONAL_GET = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_OPTIONAL, "get")
             .parameterCount(0)!!
-        val OPTIONAL_IS_PRESENT = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_OPTIONAL, "isPresent")
+        val OPTIONAL_IS_PRESENT = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_OPTIONAL, MethodNames.IS_PRESENT)
             .parameterCount(0)!!
         val OPTIONAL_OR_ELSE = CallMatcher.instanceCall(CommonClassNames.JAVA_UTIL_OPTIONAL, "orElse")
             .parameterCount(1)!!
@@ -196,7 +196,7 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
 
         val GUAVA_OPTIONAL_GET = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, "get")
             .parameterCount(0)!!
-        val GUAVA_OPTIONAL_IS_PRESENT = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, "isPresent")
+        val GUAVA_OPTIONAL_IS_PRESENT = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, MethodNames.IS_PRESENT)
             .parameterCount(0)!!
         val GUAVA_OPTIONAL_OR_NULL = CallMatcher.instanceCall(GUAVA_OPTIONAL_CLASSNAME, "orNull")
             .parameterCount(0)!!

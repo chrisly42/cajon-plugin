@@ -817,13 +817,21 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
+### V1.12 (06-May-21)
+
+- Maintenance. Updated various dependencies (Kotlin 1.50.0) and AssertJ 3.19.0
+- Fixed issue#3 reported by hankem where usingRecursiveComparison() was not considered a complex transformation.
+
 #### V1.11 (03-Oct-20) Day of German Unity Edition
+
 - Now is being built with JDK 11 (with Java 8 target).
 - Updated various dependencies (Kotlin 1.40.10) and AssertJ 3.17.2.
-- Fixed the ImplicitAssertion inspection that broke the plugin with IntelliJ 2020.3 EAP as reported by Frédéric Thomas. Thanks!
+- Fixed the ImplicitAssertion inspection that broke the plugin with IntelliJ 2020.3 EAP as reported by Frédéric Thomas.
+  Thanks!
 - Added new singleElement() from AssertJ >= 3.17.0 to ImplicitAssertionInspection.
 - Added several cases for ```hasSizeGreaterThan/LessThan/OrEqualTo()``` for EnumerablesEmpty inspection.
-- Added inversion of boolean conditions inside ```isEqualTo()``` and ```isNotEqualTo()``` for InvertedBooleanCondition inspection.
+- Added inversion of boolean conditions inside ```isEqualTo()``` and ```isNotEqualTo()``` for InvertedBooleanCondition
+  inspection.
 
 #### V1.10 (31-Jul-20) Friday the 31st Edition
 - Updated libraries to the latest versions (including AssertJ 3.16.1 and Kotlin 1.40-rc).

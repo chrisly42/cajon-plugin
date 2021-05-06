@@ -5,6 +5,7 @@ import com.intellij.psi.JavaElementVisitor
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiExpressionStatement
 import com.siyeh.ig.callMatcher.CallMatcher
+import de.platon42.intellij.plugins.cajon.MethodNames
 
 
 class AssertThatPathExpressionInspection : AbstractMoveOutInspection() {
@@ -19,11 +20,11 @@ class AssertThatPathExpressionInspection : AbstractMoveOutInspection() {
                 "isAbsolute", "isRelative", expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(JAVA_NIO_PATH, "startsWith").parameterTypes(JAVA_NIO_PATH),
+                CallMatcher.instanceCall(JAVA_NIO_PATH, MethodNames.STARTS_WITH).parameterTypes(JAVA_NIO_PATH),
                 "startsWithRaw", expectBoolean = true
             ),
             MoveOutMapping(
-                CallMatcher.instanceCall(JAVA_NIO_PATH, "endsWith").parameterTypes(JAVA_NIO_PATH),
+                CallMatcher.instanceCall(JAVA_NIO_PATH, MethodNames.ENDS_WITH).parameterTypes(JAVA_NIO_PATH),
                 "endsWithRaw", expectBoolean = true
             ),
             MoveOutMapping(

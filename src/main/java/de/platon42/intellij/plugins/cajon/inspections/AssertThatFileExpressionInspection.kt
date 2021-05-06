@@ -79,25 +79,25 @@ class AssertThatFileExpressionInspection : AbstractMoveOutInspection() {
         private val MAPPINGS_SINCE_ASSERTJ_3_14_0 = listOf(
             MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "length").parameterCount(0),
-                "isEmpty", expectedMatcher = IS_ZERO_LONG, noExpectedExpression = true
+                MethodNames.IS_EMPTY, expectedMatcher = IS_ZERO_LONG, noExpectedExpression = true
             ),
             MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "length").parameterCount(0),
-                "isEmpty", expectedMatcher = IS_EQUAL_TO_LONG, noExpectedExpression = true,
+                MethodNames.IS_EMPTY, expectedMatcher = IS_EQUAL_TO_LONG, noExpectedExpression = true,
                 additionalCondition = ARG_IS_ZERO_CONST
             ),
             MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "length").parameterCount(0),
-                "isNotEmpty", expectedMatcher = IS_NOT_ZERO_LONG, noExpectedExpression = true
+                MethodNames.IS_NOT_EMPTY, expectedMatcher = IS_NOT_ZERO_LONG, noExpectedExpression = true
             ),
             MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "length").parameterCount(0),
-                "isNotEmpty", expectedMatcher = IS_NOT_EQUAL_TO_LONG, noExpectedExpression = true,
+                MethodNames.IS_NOT_EMPTY, expectedMatcher = IS_NOT_EQUAL_TO_LONG, noExpectedExpression = true,
                 additionalCondition = ARG_IS_ZERO_CONST
             ),
             MoveOutMapping(
                 CallMatcher.instanceCall(CommonClassNames.JAVA_IO_FILE, "length").parameterCount(0),
-                "hasSize", expectedMatcher = IS_EQUAL_TO_LONG,
+                MethodNames.HAS_SIZE, expectedMatcher = IS_EQUAL_TO_LONG,
                 additionalCondition = ARG_IS_NOT_ZERO_CONST
             )
         )

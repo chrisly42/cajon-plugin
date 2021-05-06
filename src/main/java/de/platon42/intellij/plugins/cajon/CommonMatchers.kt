@@ -21,13 +21,27 @@ val EXTRACTING_CALL_MATCHERS = CallMatcher.anyOf(
 
 val DESCRIBED_AS = CallMatcher.instanceCall(AssertJClassNames.DESCRIPTABLE_INTERFACE, MethodNames.DESCRIBED_AS, MethodNames.AS)!!
 val WITH_REPRESENTATION_AND_SUCH = CallMatcher.instanceCall(AssertJClassNames.ASSERT_INTERFACE, "withRepresentation", "withThreadDumpOnError")!!
-val USING_COMPARATOR = CallMatcher.instanceCall(AssertJClassNames.ASSERT_INTERFACE, "usingComparator", "usingDefaultComparator")!!
+val USING_COMPARATOR = CallMatcher.anyOf(
+    CallMatcher.instanceCall(
+        AssertJClassNames.ASSERT_INTERFACE,
+        "usingComparator",
+        "usingDefaultComparator"
+    ),
+    CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_ASSERT_CLASSNAME, "usingRecursiveComparison"),
+    CallMatcher.instanceCall(
+        AssertJClassNames.ABSTRACT_OBJECT_ASSERT_CLASSNAME,
+        "usingComparatorForFields",
+        "usingComparatorForType"
+    )
+)!!
+
 val IN_HEXADECIMAL_OR_BINARY = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_ASSERT_CLASSNAME, MethodNames.IN_HEXADECIMAL, MethodNames.IN_BINARY)!!
 val EXTENSION_POINTS = CallMatcher.instanceCall(
     AssertJClassNames.EXTENSION_POINTS_INTERFACE,
     "is", "isNot", "has", "doesNotHave",
     "satisfies"
 )!!
+
 val MORE_EXTENSION_POINTS = CallMatcher.instanceCall(
     AssertJClassNames.OBJECT_ENUMERABLE_ASSERT_INTERFACE,
     "are", "areNot", "have", "doNotHave",
