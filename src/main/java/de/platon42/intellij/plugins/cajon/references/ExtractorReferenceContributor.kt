@@ -70,7 +70,7 @@ class ExtractorReferenceContributor : PsiReferenceContributor() {
     class ExtractorReference(literal: PsiLiteralExpression, range: TextRange, private val targets: List<PsiElement>) :
         PsiPolyVariantReferenceBase<PsiLiteralExpression>(literal, range, true) {
 
-        // Do not remove due to compatiblity issue with IDEA <= 2018.2
+        // Do not remove due to compatibility issue with IDEA <= 2018.2
         override fun getVariants(): Array<Any> {
             return ArrayUtil.EMPTY_OBJECT_ARRAY
         }
