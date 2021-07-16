@@ -16,7 +16,10 @@ import com.intellij.openapi.roots.libraries.ui.OrderRoot;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.*;
+import com.intellij.testFramework.EdtTestUtilKt;
+import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.PsiTestUtil;
+import com.intellij.testFramework.TestLoggerFactory;
 import com.intellij.testFramework.fixtures.IdeaTestExecutionPolicy;
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
@@ -140,14 +143,13 @@ public class LightCodeInsightExtension implements ParameterResolver, AfterTestEx
 
         @Override
         public void tearDown() throws Exception {
-            super.tearDown();
             Store store = getStore(extensionContext);
             Disposable disposable = (Disposable) store.get("disposable");
-            UsefulTestCase.clearFields(this);
             if (myFixture != null && disposable != null) {
                 Disposer.dispose(disposable);
                 store.remove("disposable");
             }
+            super.tearDown();
         }
 
         @NotNull
