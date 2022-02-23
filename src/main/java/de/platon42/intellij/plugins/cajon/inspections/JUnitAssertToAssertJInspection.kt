@@ -29,90 +29,120 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_TRUE_METHOD).parameterTypes(JAVA_LANG_STRING, BOOLEAN),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_TRUE_METHOD).parameterTypes(BOOLEAN, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_TRUE_METHOD).parameterTypes(BOOLEAN),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_TRUE_METHOD).parameterTypes(BOOLEAN),
                 ),
                 MethodNames.IS_TRUE, hasExpected = false
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_FALSE_METHOD).parameterTypes(JAVA_LANG_STRING, BOOLEAN),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_FALSE_METHOD).parameterTypes(BOOLEAN, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_FALSE_METHOD).parameterTypes(BOOLEAN),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_FALSE_METHOD).parameterTypes(BOOLEAN),
                 ),
                 MethodNames.IS_FALSE, hasExpected = false
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NULL_METHOD).parameterTypes(JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NULL_METHOD).parameterTypes(JAVA_LANG_OBJECT, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NULL_METHOD).parameterTypes(JAVA_LANG_OBJECT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NULL_METHOD).parameterTypes(JAVA_LANG_OBJECT),
                 ),
                 MethodNames.IS_NULL, hasExpected = false
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_NULL_METHOD).parameterTypes(JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_NULL_METHOD).parameterTypes(JAVA_LANG_OBJECT, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_NULL_METHOD).parameterTypes(JAVA_LANG_OBJECT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_NULL_METHOD).parameterTypes(JAVA_LANG_OBJECT),
                 ),
                 MethodNames.IS_NOT_NULL, hasExpected = false
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(JAVA_LANG_STRING, DOUBLE, DOUBLE, DOUBLE),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(DOUBLE, DOUBLE, DOUBLE, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(DOUBLE, DOUBLE, DOUBLE),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(DOUBLE, DOUBLE, DOUBLE),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(JAVA_LANG_STRING, FLOAT, FLOAT, FLOAT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(FLOAT, FLOAT, FLOAT, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(FLOAT, FLOAT, FLOAT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterTypes(FLOAT, FLOAT, FLOAT),
                 ),
                 MethodNames.IS_CLOSE_TO, hasDelta = true
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterCount(3),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterCount(3),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterCount(2),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_EQUALS_METHOD).parameterCount(2),
                 ),
                 MethodNames.IS_EQUAL_TO
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(JAVA_LANG_STRING, DOUBLE, DOUBLE, DOUBLE),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(DOUBLE, DOUBLE, DOUBLE, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(DOUBLE, DOUBLE, DOUBLE),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(DOUBLE, DOUBLE, DOUBLE),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(JAVA_LANG_STRING, FLOAT, FLOAT, FLOAT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(FLOAT, FLOAT, FLOAT, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(FLOAT, FLOAT, FLOAT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterTypes(FLOAT, FLOAT, FLOAT),
                 ),
                 MethodNames.IS_NOT_CLOSE_TO, hasDelta = true
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterCount(3),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterCount(3),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterCount(2),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_EQUALS_METHOD).parameterCount(2),
                 ),
                 MethodNames.IS_NOT_EQUAL_TO
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_SAME_METHOD).parameterCount(3),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_SAME_METHOD).parameterCount(3),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_SAME_METHOD).parameterCount(2),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_SAME_METHOD).parameterCount(2),
                 ),
                 MethodNames.IS_SAME_AS
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_SAME_METHOD).parameterCount(3),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_SAME_METHOD).parameterCount(3),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_NOT_SAME_METHOD).parameterCount(2),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_NOT_SAME_METHOD).parameterCount(2),
                 ),
                 MethodNames.IS_NOT_SAME_AS
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(JAVA_LANG_STRING, DOUBLE_ARR, DOUBLE_ARR, DOUBLE),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(DOUBLE_ARR, DOUBLE_ARR, DOUBLE, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(DOUBLE_ARR, DOUBLE_ARR, DOUBLE),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(DOUBLE_ARR, DOUBLE_ARR, DOUBLE),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(JAVA_LANG_STRING, FLOAT_ARR, FLOAT_ARR, FLOAT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(FLOAT_ARR, FLOAT_ARR, FLOAT, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(FLOAT_ARR, FLOAT_ARR, FLOAT),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterTypes(FLOAT_ARR, FLOAT_ARR, FLOAT),
                 ),
                 MethodNames.CONTAINS_EXACTLY, hasDelta = true
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterCount(2),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterCount(2),
                     staticCall(JUNIT4_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterCount(3),
+                    staticCall(JUNIT5_ASSERT_CLASSNAME, ASSERT_ARRAY_EQUALS_METHOD).parameterCount(3),
                 ),
                 MethodNames.CONTAINS_EXACTLY
             )
@@ -122,27 +152,34 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSUME_CLASSNAME, ASSUME_TRUE_METHOD).parameterTypes(JAVA_LANG_STRING, BOOLEAN),
+                    staticCall(JUNIT5_ASSUME_CLASSNAME, ASSUME_TRUE_METHOD).parameterTypes(BOOLEAN, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSUME_CLASSNAME, ASSUME_TRUE_METHOD).parameterTypes(BOOLEAN),
+                    staticCall(JUNIT5_ASSUME_CLASSNAME, ASSUME_TRUE_METHOD).parameterTypes(BOOLEAN),
                 ),
                 MethodNames.IS_TRUE, hasExpected = false
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSUME_CLASSNAME, ASSUME_FALSE_METHOD).parameterTypes(JAVA_LANG_STRING, BOOLEAN),
+                    staticCall(JUNIT5_ASSUME_CLASSNAME, ASSUME_FALSE_METHOD).parameterTypes(BOOLEAN, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSUME_CLASSNAME, ASSUME_FALSE_METHOD).parameterTypes(BOOLEAN),
+                    staticCall(JUNIT5_ASSUME_CLASSNAME, ASSUME_FALSE_METHOD).parameterTypes(BOOLEAN),
                 ),
                 MethodNames.IS_FALSE, hasExpected = false
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSUME_CLASSNAME, ASSUME_NOT_NULL_METHOD).parameterCount(1),
+                    staticCall(JUNIT5_ASSUME_CLASSNAME, ASSUME_NOT_NULL_METHOD).parameterCount(1),
                 ),
                 MethodNames.IS_NOT_NULL, hasExpected = false, singleArgument = true
             ),
             Mapping(
                 anyOf(
                     staticCall(JUNIT4_ASSUME_CLASSNAME, ASSUME_NO_EXCEPTION).parameterTypes(JAVA_LANG_STRING, JAVA_LANG_THROWABLE),
+                    staticCall(JUNIT5_ASSUME_CLASSNAME, ASSUME_NO_EXCEPTION).parameterTypes(JAVA_LANG_THROWABLE, JAVA_LANG_STRING),
                     staticCall(JUNIT4_ASSUME_CLASSNAME, ASSUME_NO_EXCEPTION).parameterTypes(JAVA_LANG_THROWABLE),
+                    staticCall(JUNIT5_ASSUME_CLASSNAME, ASSUME_NO_EXCEPTION).parameterTypes(JAVA_LANG_THROWABLE),
                 ),
                 "doesNotThrowAnyException", hasExpected = false
             )
@@ -156,35 +193,37 @@ class JUnitAssertToAssertJInspection : AbstractJUnitAssertInspection() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
                 super.visitMethodCallExpression(expression)
                 when (expression.resolveMethod()?.containingClass?.qualifiedName) {
-                    JUNIT4_ASSERT_CLASSNAME -> visitMethodCallExpressionAssert(holder, expression)
-                    JUNIT4_ASSUME_CLASSNAME -> visitMethodCallExpressionAssume(holder, expression)
+                    JUNIT4_ASSERT_CLASSNAME -> visitMethodCallExpressionAssert(holder, expression, false)
+                    JUNIT5_ASSERT_CLASSNAME -> visitMethodCallExpressionAssert(holder, expression, true)
+                    JUNIT4_ASSUME_CLASSNAME -> visitMethodCallExpressionAssume(holder, expression, false)
+                    JUNIT5_ASSUME_CLASSNAME -> visitMethodCallExpressionAssume(holder, expression, true)
                 }
             }
         }
     }
 
-    private fun visitMethodCallExpressionAssert(holder: ProblemsHolder, expression: PsiMethodCallExpression) {
+    private fun visitMethodCallExpressionAssert(holder: ProblemsHolder, expression: PsiMethodCallExpression, junit5: Boolean) {
         JavaPsiFacade.getInstance(expression.project)
             .findClass(AssertJClassNames.ASSERTIONS_CLASSNAME, GlobalSearchScope.allScope(expression.project)) ?: return
         val mapping = ASSERT_MAPPINGS.firstOrNull { it.callMatcher.test(expression) } ?: return
         if (mapping.hasDelta) {
             registerConvertMethod(holder, expression, mapping.replacement, MethodNames.ASSERT_THAT) { desc, method ->
-                ReplaceJUnitDeltaAssertMethodCallQuickFix(desc, method)
+                ReplaceJUnitDeltaAssertMethodCallQuickFix(desc, method, junit5)
             }
         } else {
             registerConvertMethod(holder, expression, mapping.replacement, MethodNames.ASSERT_THAT) { desc, method ->
-                ReplaceJUnitAssertMethodCallQuickFix(desc, method, !mapping.hasExpected)
+                ReplaceJUnitAssertMethodCallQuickFix(desc, method, !mapping.hasExpected, junit5)
             }
         }
     }
 
-    private fun visitMethodCallExpressionAssume(holder: ProblemsHolder, expression: PsiMethodCallExpression) {
+    private fun visitMethodCallExpressionAssume(holder: ProblemsHolder, expression: PsiMethodCallExpression, junit5: Boolean) {
         JavaPsiFacade.getInstance(expression.project)
             .findClass(AssertJClassNames.ASSUMPTIONS_CLASSNAME, GlobalSearchScope.allScope(expression.project)) ?: return
         val mapping = ASSUME_MAPPINGS.firstOrNull { it.callMatcher.test(expression) } ?: return
         if (!mapping.singleArgument || expression.argumentList.expressions.size == 1) {
             registerConvertMethod(holder, expression, mapping.replacement, MethodNames.ASSUME_THAT) { desc, method ->
-                ReplaceJUnitAssumeMethodCallQuickFix(desc, method)
+                ReplaceJUnitAssumeMethodCallQuickFix(desc, method, junit5)
             }
         }
     }

@@ -11,7 +11,13 @@ abstract class AbstractJUnitAssertInspection : AbstractBaseJavaLocalInspectionTo
         const val JUNIT4_ASSERT_CLASSNAME = "org.junit.Assert"
 
         @NonNls
+        const val JUNIT5_ASSERT_CLASSNAME = "org.junit.jupiter.api.Assertions"
+
+        @NonNls
         const val JUNIT4_ASSUME_CLASSNAME = "org.junit.Assume"
+
+        @NonNls
+        const val JUNIT5_ASSUME_CLASSNAME = "org.junit.jupiter.api.Assumptions"
 
         @NonNls
         const val ASSERT_TRUE_METHOD = "assertTrue"

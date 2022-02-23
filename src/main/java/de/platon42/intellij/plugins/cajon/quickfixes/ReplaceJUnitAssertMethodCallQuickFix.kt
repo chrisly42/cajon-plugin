@@ -7,7 +7,7 @@ import com.intellij.psi.PsiMethodCallExpression
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_ASSERTIONS_CLASSNAME
 
-class ReplaceJUnitAssertMethodCallQuickFix(description: String, private val replacementMethod: String, private val noExpectedExpression: Boolean) :
+class ReplaceJUnitAssertMethodCallQuickFix(description: String, private val replacementMethod: String, private val noExpectedExpression: Boolean, private val junit5: Boolean) :
     AbstractCommonQuickFix(description) {
 
     companion object {
@@ -23,14 +23,20 @@ class ReplaceJUnitAssertMethodCallQuickFix(description: String, private val repl
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
         val args = methodCallExpression.argumentList
         val count = args.expressions.size
-        val actualExpression = args.expressions[count - 1] ?: return
-        val (expectedExpressions, messageExpression) = if (noExpectedExpression) {
-            val message = args.expressions.getOrNull(count - 2)
-            emptyArray<PsiExpression>() to message
+        val hasMessage = if (noExpectedExpression) count == 1 else count == 2;
+
+        val actualExpression: PsiExpression
+        val expectedExpressions: Array<PsiExpression>
+        val messageExpression: PsiExpression?
+
+        if (junit5) {
+            actualExpression = args.expressions[if (noExpectedExpression) 0 else 1] ?: return
+            messageExpression = if (hasMessage) null else args.expressions[count - 1]
+            expectedExpressions = if (noExpectedExpression) emptyArray() else arrayOf(args.expressions[0])
         } else {
-            val expected = args.expressions[count - 2] ?: return
-            val message = args.expressions.getOrNull(count - 3)
-            arrayOf(expected) to message
+            actualExpression = args.expressions[count - 1] ?: return
+            messageExpression = if (hasMessage) null else args.expressions[0]
+            expectedExpressions = if (noExpectedExpression) emptyArray() else arrayOf(args.expressions[count - 2])
         }
 
         val swapActualAndExpected = ((expectedExpressions.getOrNull(0)?.calculateConstantValue() == null)

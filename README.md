@@ -32,7 +32,7 @@ Then AssertJ would tell you the _actual contents_ of the collection on failure.
 
 ## Conversion of JUnit assertions to AssertJ
 
-The plugin also supports the conversion of the most common JUnit 4 assertions to AssertJ.
+The plugin also supports the conversion of the most common JUnit 4 and JUnit 5 assertions to AssertJ.
 
 ## Wrong use of AssertJ
 
@@ -694,7 +694,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   However, this suggests that the test has actually been run and passed instead of showing the test
   as being skipped.
 
-  Return statements in ```if``` statements in main test methods (must be annotated with JUnit 4 or 
+  Return statements in ```if``` statements in main test methods (must be annotated with JUnit 4 or JUnit 5 or
   Jupiter ```@Test``` annotations) will be verified to have at least one ```assertThat()``` statement in the code flow.
   Method calls within the same class will be examined for ```assertThat()``` statements, too.
   However, at most 50 statements and down to five recursions will be tolerated before giving up.
@@ -731,7 +731,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 - JUnitAssertToAssertJ
 
-  Tries to convert most of the JUnit 4 assertions and assumptions to AssertJ format.
+  Tries to convert most of the JUnit 4 and JUnit 5 assertions and assumptions to AssertJ format.
   Sometimes the expected and actual expressions are specified in wrong order -- 
   Cajon tries to swap these when it detects the supposed actual expression to be a
   constant while the expected one is not.
@@ -816,6 +816,10 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
   ```
 
 ## Changelog
+
+#### V1.13 (unreleased)
+
+- Added support for converting JUnit 5 tests to AssertJ
 
 ### V1.12 (06-May-21)
 

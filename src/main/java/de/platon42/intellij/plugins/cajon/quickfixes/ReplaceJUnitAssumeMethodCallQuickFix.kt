@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiMethodCallExpression
 import de.platon42.intellij.plugins.cajon.*
 
-class ReplaceJUnitAssumeMethodCallQuickFix(description: String, private val replacementMethod: String) :
+class ReplaceJUnitAssumeMethodCallQuickFix(description: String, private val replacementMethod: String, private val junit5: Boolean) :
     AbstractCommonQuickFix(description) {
 
     companion object {
@@ -21,8 +21,8 @@ class ReplaceJUnitAssumeMethodCallQuickFix(description: String, private val repl
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
         val args = methodCallExpression.argumentList
         val count = args.expressions.size
-        val actualExpression = args.expressions[count - 1] ?: return
-        val messageExpression = args.expressions.getOrNull(count - 2)
+        val actualExpression = args.expressions[if (junit5) 0 else count - 1] ?: return
+        val messageExpression = args.expressions.getOrNull(if (junit5) 1 else count - 2)
 
         val expectedMethodCall = createExpectedMethodCall(element, replacementMethod)
         val newMethodCall = createAssumeThat(element, actualExpression)

@@ -6,7 +6,7 @@ import com.intellij.psi.PsiMethodCallExpression
 import de.platon42.intellij.plugins.cajon.*
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.GUAVA_ASSERTIONS_CLASSNAME
 
-class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val replacementMethod: String) : AbstractCommonQuickFix(description) {
+class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val replacementMethod: String, private val junit5: Boolean) : AbstractCommonQuickFix(description) {
 
     companion object {
         private const val CONVERT_DESCRIPTION = "Convert JUnit assertions with delta to assertJ"
@@ -21,10 +21,10 @@ class ReplaceJUnitDeltaAssertMethodCallQuickFix(description: String, private val
         val methodCallExpression = element as? PsiMethodCallExpression ?: return
         val args = methodCallExpression.argumentList
         val count = args.expressions.size
-        val messageExpression = args.expressions.getOrNull(count - 4)
-        val expectedExpression = args.expressions[count - 3] ?: return
-        val actualExpression = args.expressions[count - 2] ?: return
-        val deltaExpression = args.expressions[count - 1] ?: return
+        val messageExpression = args.expressions.getOrNull(if (junit5) 3 else count - 4)
+        val expectedExpression = args.expressions[if (junit5) 0 else count - 3] ?: return
+        val actualExpression = args.expressions[if (junit5) 1 else count - 2] ?: return
+        val deltaExpression = args.expressions[if (junit5) 2 else count - 1] ?: return
 
         val offsetMethodCall = createMethodCall(element, "org.assertj.core.data.Offset.offset", deltaExpression)
 

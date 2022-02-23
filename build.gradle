@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'de.platon42'
-version '1.12'
+version '1.12.1'
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
@@ -48,10 +48,9 @@ intellij {
 
 patchPluginXml {
     setChangeNotes("""
-  <h4>V1.12 (06-May-21)</h4>
+  <h4>V1.13 (unreleased)</h4>
     <ul>
-      <li>Maintenance. Updated various dependencies (Kotlin 1.50.0) and AssertJ 3.19.0
-      <li>Fixed issue#3 reported by hankem where usingRecursiveComparison() was not considered a complex transformation.
+      <li>Added support for converting JUnit 5 tests to AssertJ
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """)
