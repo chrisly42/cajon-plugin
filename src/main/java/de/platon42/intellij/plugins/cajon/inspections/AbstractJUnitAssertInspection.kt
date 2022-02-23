@@ -8,10 +8,10 @@ abstract class AbstractJUnitAssertInspection : AbstractBaseJavaLocalInspectionTo
 
     companion object {
         @NonNls
-        const val JUNIT_ASSERT_CLASSNAME = "org.junit.Assert"
+        const val JUNIT4_ASSERT_CLASSNAME = "org.junit.Assert"
 
         @NonNls
-        const val JUNIT_ASSUME_CLASSNAME = "org.junit.Assume"
+        const val JUNIT4_ASSUME_CLASSNAME = "org.junit.Assume"
 
         @NonNls
         const val ASSERT_TRUE_METHOD = "assertTrue"
