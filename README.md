@@ -178,13 +178,13 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   constant expressions, too.
 
   ```
-  from: assertThat(numeric).isEqualTo(0);  
+  from: assertThat(numeric).isEqualTo(0);
     to: assertThat(numeric).isZero();
 
-  from: assertThat(numeric).isNotEqualTo(0);  
+  from: assertThat(numeric).isNotEqualTo(0);
     to: assertThat(numeric).isNotZero();
 
-  from: assertThat(numeric).isEqualTo(1);  
+  from: assertThat(numeric).isEqualTo(1);
     to: assertThat(numeric).isOne();
   ```
 
@@ -834,6 +834,14 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 - Support primitives in assertThat(map.containsKey(1)).isTrue();
 
 ## Changelog
+
+### V1.13 (15-Aug-22)
+
+- Maintenance. Updated various dependencies (Kotlin 1.7.10) and AssertJ 3.23.1 and AssertJ-Guava 3.5.0.
+- Tried to fix unreproducible issue #9.
+- Added workaround for upcoming API change in IntelliJ breaking older releases.
+- Added AssertThatIsZeroOne inspection demanded by issue #5.
+- Fix for wrongly joining statements that cannot be trivially joined (e.g. with filteredOn). Fixes issue #6.
 
 ### V1.12 (06-May-21)
 

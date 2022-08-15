@@ -56,7 +56,7 @@ patchPluginXml {
   <h4>V1.13 (15-Aug-22)</h4>
     <ul>
       <li>Maintenance. Updated various dependencies (Kotlin 1.7.10) and AssertJ 3.23.1 and AssertJ-Guava 3.5.0.
-      <li>Tried to fix unreproducable issue #9.
+      <li>Tried to fix unreproducible issue #9.
       <li>Added workaround for upcoming API change in IntelliJ breaking older releases.
       <li>Added AssertThatIsZeroOne inspection demanded by issue #5.
       <li>Fix for wrongly joining statements that cannot be trivially joined (e.g. with filteredOn). Fixes issue #6.
