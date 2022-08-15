@@ -798,7 +798,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 
 ## Development notice
 
-Cajon is written in Kotlin 1.4.
+Cajon is written in Kotlin 1.7.
 
 Cajon is probably the only plugin that uses JUnit 5 Jupiter for unit testing so far (or at least the only one I'm aware of ;) ).
 The IntelliJ framework actually uses the JUnit 3 TestCase for plugin testing, and it took me quite a while to make it work with JUnit 5.
@@ -814,6 +814,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
   from: assertThat(object).extracting("propOne", "propNoGetter", "propTwo.innerProp")...
     to: assertThat(object).extracting(type::getPropOne, it -> it.propNoGetter, it -> it.getPropTwo().getInnerProp())...
   ```
+- Support primitives in assertThat(map.containsKey(1)).isTrue();
 
 ## Changelog
 

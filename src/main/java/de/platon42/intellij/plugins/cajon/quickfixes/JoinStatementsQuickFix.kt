@@ -56,9 +56,14 @@ class JoinStatementsQuickFix(private val separateLineLimit: Int) : AbstractCommo
     }
 
     private fun addLineBreak(project: Project, lastElementBeforeConcat: PsiElement) {
-        val newLineNode =
+        val newLineNode = try {
+            PsiParserFacade.getInstance(project).createWhiteSpaceFromText("\n\t")
+        } catch (ex: NoSuchMethodError) {
+            // scheduled for removal, but alternate version not even available in 2020.3.
+            // So keep it here until we run into a problem.
+            // Changing the min version from 2017.3 to 2021.x is a major thing.
             PsiParserFacade.SERVICE.getInstance(project).createWhiteSpaceFromText("\n\t")
-
+        }
         lastElementBeforeConcat.addAfter(newLineNode, lastElementBeforeConcat.firstChild)
     }
 

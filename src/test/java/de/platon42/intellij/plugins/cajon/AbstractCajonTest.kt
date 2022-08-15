@@ -8,6 +8,7 @@ import de.platon42.intellij.jupiter.LightCodeInsightExtension
 import de.platon42.intellij.jupiter.TestDataPath
 import de.platon42.intellij.jupiter.TestJdk
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Condition
 import org.junit.jupiter.api.DisplayNameGeneration
 import org.junit.jupiter.api.DisplayNameGenerator
 import org.junit.jupiter.api.extension.ExtendWith
@@ -39,11 +40,8 @@ abstract class AbstractCajonTest {
     }
 
     protected fun assertHighlightings(myFixture: JavaCodeInsightTestFixture, count: Int, snippet: String) {
-        val highlights = myFixture.doHighlighting()
-            .asSequence()
-            .filter { it.description?.contains(snippet) ?: false }
-            .toList()
-        assertThat(highlights).hasSize(count)
+        assertThat(myFixture.doHighlighting())
+            .areExactly(count, Condition({ it.description?.contains(snippet) ?: false }, "containing"))
     }
 
     class CutOffFixtureDisplayNameGenerator : DisplayNameGenerator.ReplaceUnderscores() {

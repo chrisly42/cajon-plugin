@@ -115,8 +115,7 @@ fun PsiMethodCallExpression.getExpectedNullNonNullResult(): Boolean? {
 }
 
 fun PsiMethodCallExpression.calculateConstantParameterValue(argIndex: Int): Any? {
-    if (argIndex >= argumentList.expressions.size) return null
-    return getArg(argIndex).calculateConstantValue()
+    return getArgOrNull(argIndex)?.calculateConstantValue()
 }
 
 fun PsiExpression.calculateConstantValue(): Any? {

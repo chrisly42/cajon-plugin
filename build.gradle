@@ -1,13 +1,13 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.1.3'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
+    id 'org.jetbrains.intellij' version '1.8.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
     id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.11.0'
+    id 'com.github.kt3k.coveralls' version '2.12.0'
 }
 
 group 'de.platon42'
-version '1.12'
+version '1.13'
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
@@ -22,10 +22,10 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testImplementation "org.assertj:assertj-core:3.20.2"
-    testImplementation "org.assertj:assertj-guava:3.4.0"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0-M1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0-M1'
+    testImplementation "org.assertj:assertj-core:3.23.1"
+    testImplementation "org.assertj:assertj-guava:3.5.0"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
     testImplementation "org.jetbrains.kotlin:kotlin-test"
     testImplementation "org.jetbrains.kotlin:kotlin-reflect"
 //    testImplementation "org.jetbrains.kotlin:kotlin-test-junit"
@@ -40,18 +40,24 @@ compileTestKotlin {
 }
 
 intellij {
-    setVersion("2021.1.3") // LATEST-EAP-SNAPSHOT
+    setVersion("2022.2") // LATEST-EAP-SNAPSHOT
     //pluginName.set(provider { 'Concise AssertJ Optimizing Nitpicker (Cajon)' })
     setUpdateSinceUntilBuild(false)
     setPlugins(["com.intellij.java"])
 }
 
+runPluginVerifier {
+    ideVersions = ["IC-193.5662.53", "IC-222.3345.118"] // 2020.3 - 2022.2
+    downloadDir = System.getProperty("user.home") + "/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/verifier"
+}
+
 patchPluginXml {
     setChangeNotes("""
-  <h4>V1.12 (06-May-21)</h4>
+  <h4>V1.13 (15-Aug-22)</h4>
     <ul>
-      <li>Maintenance. Updated various dependencies (Kotlin 1.50.0) and AssertJ 3.19.0
-      <li>Fixed issue#3 reported by hankem where usingRecursiveComparison() was not considered a complex transformation.
+      <li>Maintenance. Updated various dependencies (Kotlin 1.70.0) and AssertJ 3.23.1 and AssertJ-Guava 3.5.0.
+      <li>Tried to fix unreproducable issue#9.
+      <li>Added workaround for upcoming API change in IntelliJ breaking older releases.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """)
@@ -64,8 +70,12 @@ test {
     }
 }
 
+tasks.test {
+    systemProperty("idea.force.use.core.classloader", "true")
+}
+
 jacoco {
-    toolVersion = '0.8.7'
+    toolVersion = '0.8.8'
 }
 
 jacocoTestReport {
