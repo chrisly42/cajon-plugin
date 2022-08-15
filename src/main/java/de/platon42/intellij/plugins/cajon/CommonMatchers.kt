@@ -50,9 +50,21 @@ val MORE_EXTENSION_POINTS = CallMatcher.instanceCall(
     "singleElement", "hasOnlyOneElementSatisfying", "anyMatch", "noneMatch", "anySatisfy", "noneSatisfy"
 )!!
 
+val FILTERED_ON = CallMatcher.instanceCall(AssertJClassNames.ABSTRACT_ITERABLE_ASSERT_CLASSNAME, "filteredOn", "filteredOnNull", "filteredOnAssertions")!!
+
 val COMPLEX_CALLS_THAT_MAKES_STUFF_TRICKY = CallMatcher.anyOf(
+    EXTRACTING_CALL_MATCHERS,
     DESCRIBED_AS,
     WITH_REPRESENTATION_AND_SUCH,
+    FILTERED_ON,
+    USING_COMPARATOR,
+    IN_HEXADECIMAL_OR_BINARY
+)!!
+
+val COMPLEX_STUFF_THAT_MAKES_JOINING_IMPOSSIBLE = CallMatcher.anyOf(
+    EXTRACTING_CALL_MATCHERS,
+    WITH_REPRESENTATION_AND_SUCH,
+    FILTERED_ON,
     USING_COMPARATOR,
     IN_HEXADECIMAL_OR_BINARY
 )!!

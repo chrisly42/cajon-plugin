@@ -72,7 +72,7 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                     if (!statement.hasAssertThat()) return null
 
                     val assertThatCall = PsiTreeUtil.findChildrenOfType(statement, PsiMethodCallExpression::class.java).find { ALL_ASSERT_THAT_MATCHERS.test(it) }
-                    return assertThatCall?.takeIf { it.findFluentCallTo(EXTRACTING_CALL_MATCHERS) == null }
+                    return assertThatCall?.takeIf { it.findFluentCallTo(COMPLEX_STUFF_THAT_MAKES_JOINING_IMPOSSIBLE) == null }
                 }
                 return null
             }
@@ -83,6 +83,7 @@ class JoinAssertThatStatementsInspection : AbstractAssertJInspection() {
                     val matched = when (element) {
                         is PsiUnaryExpression -> (element.operationTokenType == JavaTokenType.PLUSPLUS)
                                 || (element.operationTokenType == JavaTokenType.MINUSMINUS)
+
                         is PsiMethodCallExpression -> KNOWN_METHODS_WITH_SIDE_EFFECTS.test(element)
                         else -> false
                     }

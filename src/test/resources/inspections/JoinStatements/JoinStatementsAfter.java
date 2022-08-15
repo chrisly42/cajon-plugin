@@ -66,6 +66,9 @@ public class JoinStatements {
         assertThat(list.get(--i)).isEqualTo("foo");
         assertThat(list.get(--i)).isEqualTo("foo");
 
+        assertThat(list).filteredOn("foo", "foo").contains("narf");
+        assertThat(list).filteredOn("bar", "bar").contains("puit");
+
         org.junit.Assert.assertThat(list, null);
         fail("oh no!");
     }
