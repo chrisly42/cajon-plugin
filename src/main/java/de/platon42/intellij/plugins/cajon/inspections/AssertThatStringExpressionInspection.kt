@@ -94,7 +94,7 @@ class AssertThatStringExpressionInspection : AbstractMoveOutInspection() {
 
             MoveOutMapping(
                 STRING_INDEX_OF,
-                MethodNames.CONTAINS, expectedMatcher = IS_NOT_NEGATIVE, replaceFromOriginalMethod = true
+                MethodNames.CONTAINS, expectedMatcher = IS_NOT_NEGATIVE_INT, replaceFromOriginalMethod = true
             ),
             MoveOutMapping(
                 STRING_INDEX_OF,
@@ -119,7 +119,7 @@ class AssertThatStringExpressionInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 STRING_INDEX_OF,
-                MethodNames.DOES_NOT_CONTAIN, expectedMatcher = IS_NEGATIVE, replaceFromOriginalMethod = true
+                MethodNames.DOES_NOT_CONTAIN, expectedMatcher = IS_NEGATIVE_INT, replaceFromOriginalMethod = true
             ),
             MoveOutMapping(
                 STRING_INDEX_OF,

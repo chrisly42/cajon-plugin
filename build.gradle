@@ -58,6 +58,7 @@ patchPluginXml {
       <li>Maintenance. Updated various dependencies (Kotlin 1.70.0) and AssertJ 3.23.1 and AssertJ-Guava 3.5.0.
       <li>Tried to fix unreproducable issue#9.
       <li>Added workaround for upcoming API change in IntelliJ breaking older releases.
+      <li>Added AssertThatIsZeroOne inspection demanded by issue#5.
     </ul>
   <p>Full changelog available at <a href="https://github.com/chrisly42/cajon-plugin#changelog">Github project site</a>.</p>
 """)

@@ -160,7 +160,7 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
 - AssertThatInstanceOf
 
   Moves ```instanceof``` expressions out of ```assertThat()```.
-  
+
   ```
   from: assertThat(object instanceof classname).isEqualTo(true);
   from: assertThat(object instanceof classname).isTrue();
@@ -169,6 +169,23 @@ You can toggle the various inspections in the Settings/Editor/Inspections in the
   from: assertThat(object instanceof classname).isEqualTo(false);
   from: assertThat(object instanceof classname).isFalse();
     to: assertThat(object).isNotInstanceOf(classname.class);
+  ```
+
+- AssertThatIsZeroOne
+
+  Uses ```isZero()```, ```isNotZero()``` and ```isOne()``` instead.
+  Works with shorts, integers, longs, floats and doubles, and tries to evaluate
+  constant expressions, too.
+
+  ```
+  from: assertThat(numeric).isEqualTo(0);  
+    to: assertThat(numeric).isZero();
+
+  from: assertThat(numeric).isNotEqualTo(0);  
+    to: assertThat(numeric).isNotZero();
+
+  from: assertThat(numeric).isEqualTo(1);  
+    to: assertThat(numeric).isOne();
   ```
 
 - AssertThatStringIsEmpty

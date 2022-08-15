@@ -52,7 +52,7 @@ class AssertThatComparableInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 COMPARABLE_COMPARE_TO,
-                MethodNames.IS_GREATER_THAN_OR_EQUAL_TO, expectedMatcher = IS_NOT_NEGATIVE, replaceFromOriginalMethod = true
+                MethodNames.IS_GREATER_THAN_OR_EQUAL_TO, expectedMatcher = IS_NOT_NEGATIVE_INT, replaceFromOriginalMethod = true
             ),
 
             MoveOutMapping(
@@ -67,7 +67,7 @@ class AssertThatComparableInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 COMPARABLE_COMPARE_TO,
-                MethodNames.IS_GREATER_THAN, expectedMatcher = CallMatcher.anyOf(IS_POSITIVE, IS_ONE), replaceFromOriginalMethod = true
+                MethodNames.IS_GREATER_THAN, expectedMatcher = CallMatcher.anyOf(IS_POSITIVE_INT, IS_ONE_INT), replaceFromOriginalMethod = true
             ),
 
             MoveOutMapping(
@@ -82,7 +82,7 @@ class AssertThatComparableInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 COMPARABLE_COMPARE_TO,
-                MethodNames.IS_LESS_THAN_OR_EQUAL_TO, expectedMatcher = IS_NOT_POSITIVE, replaceFromOriginalMethod = true
+                MethodNames.IS_LESS_THAN_OR_EQUAL_TO, expectedMatcher = IS_NOT_POSITIVE_INT, replaceFromOriginalMethod = true
             ),
 
             MoveOutMapping(
@@ -97,7 +97,7 @@ class AssertThatComparableInspection : AbstractMoveOutInspection() {
             ),
             MoveOutMapping(
                 COMPARABLE_COMPARE_TO,
-                MethodNames.IS_LESS_THAN, expectedMatcher = IS_NEGATIVE, replaceFromOriginalMethod = true
+                MethodNames.IS_LESS_THAN, expectedMatcher = IS_NEGATIVE_INT, replaceFromOriginalMethod = true
             )
         )
     }

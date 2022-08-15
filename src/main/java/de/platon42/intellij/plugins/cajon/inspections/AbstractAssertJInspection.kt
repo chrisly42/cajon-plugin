@@ -15,6 +15,7 @@ import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_D
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_FLOAT_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_INTEGER_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_LONG_ASSERT_CLASSNAME
+import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_SHORT_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ABSTRACT_STRING_ASSERT_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERTIONS_CLASSNAME
 import de.platon42.intellij.plugins.cajon.AssertJClassNames.Companion.ASSERT_INTERFACE
@@ -88,6 +89,8 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
         val IS_EQUAL_TO_STRING = CallMatcher.instanceCall(ABSTRACT_STRING_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes(CommonClassNames.JAVA_LANG_STRING)!!
+        val IS_EQUAL_TO_SHORT = CallMatcher.instanceCall(ABSTRACT_SHORT_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
+            .parameterTypes("short")!!
         val IS_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
             .parameterTypes("int")!!
         val IS_EQUAL_TO_LONG = CallMatcher.instanceCall(ABSTRACT_LONG_ASSERT_CLASSNAME, MethodNames.IS_EQUAL_TO)
@@ -103,6 +106,8 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
             .parameterTypes(CommonClassNames.JAVA_LANG_OBJECT)!!
         val IS_NOT_EQUAL_TO_BOOLEAN = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
             .parameterTypes("boolean")!!
+        val IS_NOT_EQUAL_TO_SHORT = CallMatcher.instanceCall(ABSTRACT_SHORT_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
+            .parameterTypes("short")!!
         val IS_NOT_EQUAL_TO_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
             .parameterTypes("int")!!
         val IS_NOT_EQUAL_TO_LONG = CallMatcher.instanceCall(ABSTRACT_LONG_ASSERT_CLASSNAME, MethodNames.IS_NOT_EQUAL_TO)
@@ -155,15 +160,15 @@ abstract class AbstractAssertJInspection : AbstractBaseJavaLocalInspectionTool()
             .parameterCount(0)!!
         val IS_NOT_ZERO_LONG = CallMatcher.instanceCall(ABSTRACT_LONG_ASSERT_CLASSNAME, MethodNames.IS_NOT_ZERO)
             .parameterCount(0)!!
-        val IS_ONE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isOne")
+        val IS_ONE_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isOne")
             .parameterCount(0)!!
-        val IS_NEGATIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNegative")
+        val IS_NEGATIVE_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNegative")
             .parameterCount(0)!!
-        val IS_NOT_NEGATIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNotNegative")
+        val IS_NOT_NEGATIVE_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNotNegative")
             .parameterCount(0)!!
-        val IS_POSITIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isPositive")
+        val IS_POSITIVE_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isPositive")
             .parameterCount(0)!!
-        val IS_NOT_POSITIVE = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNotPositive")
+        val IS_NOT_POSITIVE_INT = CallMatcher.instanceCall(ABSTRACT_INTEGER_ASSERT_CLASSNAME, "isNotPositive")
             .parameterCount(0)!!
 
         val IS_TRUE = CallMatcher.instanceCall(ABSTRACT_BOOLEAN_ASSERT_CLASSNAME, MethodNames.IS_TRUE)
