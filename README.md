@@ -834,7 +834,7 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-### V1.13 (15-Aug-22)
+### V1.13 (17-Aug-22)
 
 - Maintenance. Updated various dependencies (Kotlin 1.7.10) and AssertJ 3.23.1 and AssertJ-Guava 3.5.0.
 - Tried to fix unreproducible issue #9.
