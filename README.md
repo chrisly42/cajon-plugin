@@ -834,11 +834,11 @@ Feel free to use the code (in package ```de.platon42.intellij.jupiter```) for yo
 
 ## Changelog
 
-### V1.13 (17-Aug-22)
+### V1.13 (18-Aug-22)
 
+- API change in IntelliJ platforms now requires minimum version 2019.3.1. Sorry, giving up to maintain compatibilty after four attempts.
 - Maintenance. Updated various dependencies (Kotlin 1.7.10) and AssertJ 3.23.1 and AssertJ-Guava 3.5.0.
 - Tried to fix unreproducible issue #9.
-- Added workaround for upcoming API change in IntelliJ breaking older releases.
 - Added AssertThatIsZeroOne inspection demanded by issue #5.
 - Fix for wrongly joining statements that cannot be trivially joined (e.g. with filteredOn). Fixes issue #6.
 

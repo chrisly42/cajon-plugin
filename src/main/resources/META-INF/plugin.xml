@@ -14,7 +14,7 @@
     <a href="https://github.com/chrisly42/cajon-plugin/blob/master/README.md">Full documentation here...</a>
     ]]></description>
 
-    <idea-version since-build="173.2696.26"/>
+    <idea-version since-build="193.5662.53"/>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
